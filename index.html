@@ -4,41 +4,65 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Uteservering i solen – Malmö</title>
+  <meta name="description" content="Se vilka uteserveringar i Malmö som har sol just nu, med hänsyn till skuggor från byggnader." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header id="app-header">
-    <h1>☀️ Uteservering i solen – Malmö</h1>
+    <p class="eyebrow">Ett soltest för Malmös uteserveringar</p>
+    <h1>Var skiner solen just nu?</h1>
     <p class="subtitle">
-      Visar vilka uteserveringar som har direkt solljus just nu (eller vid valfri tid),
-      med hänsyn till skuggor från omkringliggande byggnader.
+      Solens vinkel skiftar med tid på dygnet och årstid — och byggnaderna runt varje
+      uteservering avgör om den faktiskt når fram. Välj tid och se vem som får sol.
     </p>
   </header>
 
   <div id="controls">
     <label>
-      Datum
+      <span class="control-label">Datum</span>
       <input type="date" id="date-input" />
     </label>
     <label class="time-label">
-      Tid
+      <span class="control-label">Tid</span>
       <input type="range" id="time-slider" min="0" max="1439" step="5" />
       <span id="time-display">--:--</span>
     </label>
     <button id="now-button">Nu</button>
   </div>
 
+  <div id="search-row">
+    <label class="search-label">
+      <span class="control-label">Sök</span>
+      <input type="search" id="search-input" placeholder="t.ex. Spoonery, Pickwick…" list="terrace-names" autocomplete="off" />
+      <datalist id="terrace-names"></datalist>
+    </label>
+    <span id="search-status"></span>
+  </div>
+
   <div id="map"></div>
 
   <div id="legend">
-    <div><span class="dot sun"></span> Sol</div>
-    <div><span class="dot shade"></span> Skugga</div>
-    <div><span class="dot night"></span> Mörkt (solen under horisonten)</div>
-    <div><span class="dot anomaly"></span> Osäker (dataproblem)</div>
+    <div class="chip"><span class="dot sun"></span> Sol</div>
+    <div class="chip"><span class="dot shade"></span> Skugga</div>
+    <div class="chip"><span class="dot night"></span> Mörkt</div>
+    <div class="chip"><span class="dot anomaly"></span> Osäker data</div>
+    <div class="chip"><span class="ring ring-up"></span> Du sa 👍 nu</div>
+    <div class="chip"><span class="ring ring-down"></span> Du sa 👎 nu</div>
   </div>
 
   <p id="status-line"></p>
+
+  <footer id="vote-footer">
+    <span id="vote-count"></span>
+    <div class="vote-footer-actions">
+      <button type="button" id="export-votes-button" class="link-button">Exportera bedömningar (JSON)</button>
+      <button type="button" id="clear-votes-button" class="link-button link-button-danger">Rensa mina bedömningar</button>
+    </div>
+  </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>

@@ -8,6 +8,14 @@ const HOME_BUILDING_THRESHOLD_METERS = 3;
 const DEFAULT_BUILDING_HEIGHT_METERS = 15;
 const METERS_PER_LEVEL = 3.0;
 
+// Spatial grid cell size, in degrees (~500-550m at Malmo's latitude).
+// Chosen to match MAX_RAY_METERS so a single query rarely needs more than
+// a handful of cells. Without this grid, checking every terrace against
+// every building linearly (thousands of buildings once the covered area
+// grew past central Malmo) took multiple seconds per recompute — far too
+// slow for a live time slider.
+const GRID_CELL_DEG = 0.005;
+
 function resolveBuildingHeight(properties) {
   if (properties?.height) {
     const parsed = parseFloat(String(properties.height).replace(/[^\d.]/g, ""));
@@ -27,12 +35,65 @@ function bboxesOverlap(a, b) {
   return a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
 }
 
+function cellRange(bbox) {
+  const [minX, minY, maxX, maxY] = bbox;
+  return {
+    colMin: Math.floor(minX / GRID_CELL_DEG),
+    colMax: Math.floor(maxX / GRID_CELL_DEG),
+    rowMin: Math.floor(minY / GRID_CELL_DEG),
+    rowMax: Math.floor(maxY / GRID_CELL_DEG),
+  };
+}
+
+function buildGrid(list) {
+  const grid = new Map();
+  list.forEach((building, index) => {
+    const { colMin, colMax, rowMin, rowMax } = cellRange(building.bbox);
+    for (let c = colMin; c <= colMax; c++) {
+      for (let r = rowMin; r <= rowMax; r++) {
+        const key = `${c},${r}`;
+        let bucket = grid.get(key);
+        if (!bucket) grid.set(key, (bucket = []));
+        bucket.push(index);
+      }
+    }
+  });
+  return grid;
+}
+
 /**
- * Precomputes buffered polygons, bboxes and resolved heights for every
- * building feature. Call this once after loading buildings.geojson.
+ * Returns buildings whose bbox overlaps the query bbox, using the grid to
+ * avoid scanning the full building list. May include a few extra buildings
+ * from coarse cell overlap — callers that need exact overlap should still
+ * bbox-check the returned candidates (cheap, since the candidate set is
+ * now small).
+ */
+function queryNearby(index, bbox) {
+  const { colMin, colMax, rowMin, rowMax } = cellRange(bbox);
+  const seen = new Set();
+  const result = [];
+  for (let c = colMin; c <= colMax; c++) {
+    for (let r = rowMin; r <= rowMax; r++) {
+      const bucket = index.grid.get(`${c},${r}`);
+      if (!bucket) continue;
+      for (const i of bucket) {
+        if (!seen.has(i)) {
+          seen.add(i);
+          result.push(index.list[i]);
+        }
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * Precomputes buffered polygons, bboxes, resolved heights and a spatial
+ * grid index for every building feature. Call this once after loading
+ * buildings.geojson.
  */
 export function prepareBuildings(buildingsGeojson) {
-  const prepared = [];
+  const list = [];
   for (const feature of buildingsGeojson.features) {
     if (!feature.geometry) continue;
     try {
@@ -40,7 +101,7 @@ export function prepareBuildings(buildingsGeojson) {
         units: "meters",
       });
       if (!buffered) continue;
-      prepared.push({
+      list.push({
         feature,
         buffered,
         bbox: turf.bbox(buffered),
@@ -54,7 +115,7 @@ export function prepareBuildings(buildingsGeojson) {
       // Skip malformed geometries (rare in OSM extracts) rather than crash the app.
     }
   }
-  return prepared;
+  return { list, grid: buildGrid(list) };
 }
 
 /**
@@ -90,19 +151,19 @@ function distanceToBoundary(point, polygon) {
  * This depends only on geometry (not time), so callers should compute it
  * once per terrace at load time and pass the result into computeShading()
  * on every recompute, rather than re-scanning all buildings per call.
+ *
+ * @param {GeoJSON.Point} terracePoint
+ * @param {{list: Array, grid: Map}} buildingIndex - output of prepareBuildings()
  */
-export function findHomeBuilding(terracePoint, preparedBuildings) {
-  // Cheap bbox reject first: only buildings near the terrace can possibly
-  // be within HOME_BUILDING_THRESHOLD_METERS. Without this, checking every
-  // terrace against every building (potentially thousands) with full
-  // polygon-boundary distance math is slow enough to freeze the page.
+export function findHomeBuilding(terracePoint, buildingIndex) {
   const searchBbox = turf.bbox(
     turf.buffer(terracePoint, HOME_BUILDING_THRESHOLD_METERS + 5, { units: "meters" })
   );
+  const candidates = queryNearby(buildingIndex, searchBbox);
 
   let closest = null;
   let closestDist = Infinity;
-  for (const b of preparedBuildings) {
+  for (const b of candidates) {
     if (!bboxesOverlap(searchBbox, b.bbox)) continue;
     // A point strictly inside a building's footprint is distance 0 from it
     // (distanceToBoundary would otherwise measure to the nearest edge,
@@ -120,17 +181,18 @@ export function findHomeBuilding(terracePoint, preparedBuildings) {
 
 /**
  * @param {GeoJSON.Point} terracePoint - turf point feature for the terrace
- * @param {Array} preparedBuildings - output of prepareBuildings()
+ * @param {{list: Array, grid: Map}} buildingIndex - output of prepareBuildings()
  * @param {{altitudeDeg: number, bearingDeg: number}} sunInfo
  * @param {object|null} homeBuilding - precomputed via findHomeBuilding(), or null
  * @returns {{ status: 'night'|'sun'|'shade'|'anomaly', blocker: object|null, sunInfo: object }}
  */
-export function computeShading(terracePoint, preparedBuildings, sunInfo, homeBuilding = null) {
+export function computeShading(terracePoint, buildingIndex, sunInfo, homeBuilding = null) {
   if (sunInfo.altitudeDeg <= 0) {
     return { status: "night", blocker: null, sunInfo };
   }
 
-  for (const b of preparedBuildings) {
+  const pointBbox = turf.bbox(turf.buffer(terracePoint, 1, { units: "meters" }));
+  for (const b of queryNearby(buildingIndex, pointBbox)) {
     if (b === homeBuilding) continue;
     if (turf.booleanPointInPolygon(terracePoint, b.buffered)) {
       return { status: "anomaly", blocker: b, sunInfo };
@@ -150,7 +212,7 @@ export function computeShading(terracePoint, preparedBuildings, sunInfo, homeBui
   let closestBlocker = null;
   let closestDist = Infinity;
 
-  for (const b of preparedBuildings) {
+  for (const b of queryNearby(buildingIndex, rayBbox)) {
     if (b === homeBuilding) continue;
     if (!bboxesOverlap(rayBbox, b.bbox)) continue;
 

@@ -5,9 +5,9 @@
 import { prepareBuildings, findHomeBuilding } from "./shadow.js";
 
 /**
- * @returns {Promise<{ terraces: Array, buildings: Array }>}
- *   terraces: [{ name, point (turf Point feature), homeBuilding }]
- *   buildings: output of prepareBuildings()
+ * @returns {Promise<{ terraces: Array, buildings: {list: Array, grid: Map} }>}
+ *   terraces: [{ id, name, point (turf Point feature), homeBuilding }]
+ *   buildings: output of prepareBuildings() (a spatial-grid-indexed building list)
  */
 export async function loadData() {
   const [terracesGeojson, buildingsGeojson] = await Promise.all([
@@ -31,8 +31,9 @@ export async function loadData() {
         feature.properties?.name ||
         feature.properties?.["addr:street"] ||
         "Namnlös uteservering";
+      const id = feature.id ?? feature.properties?.id ?? name;
       const homeBuilding = findHomeBuilding(point, buildings);
-      return { name, point, feature, homeBuilding };
+      return { id, name, point, feature, homeBuilding };
     })
     .filter(Boolean);
 

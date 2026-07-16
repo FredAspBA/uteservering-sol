@@ -12,12 +12,12 @@ import * as turf from "@turf/turf";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dataDir = join(__dirname, "..", "data");
 
-// Bbox roughly covering central Malmo: Gamla Vaster, Davidshall,
-// Mollevangen, Stortorget/Lilla Torg (south,west,north,east).
+// Bbox covering central Malmo plus Limhamn, Slottsstaden, Fridhem,
+// Erikslust, Fagelbacken, Nobel and Dalaplan (south,west,north,east).
 // Used only for the terraces query; the buildings query below uses a
 // tighter bbox derived from where the terraces actually turned out to be,
 // since "out geom" over the full area was too slow for Overpass (504s).
-const SEARCH_BBOX = "55.592,12.978,55.615,13.020";
+const SEARCH_BBOX = "55.558,12.895,55.615,13.035";
 
 // How far buildings might realistically shade a terrace (matches
 // MAX_RAY_METERS in src/shadow.js), plus a margin.
@@ -30,12 +30,18 @@ const BUILDING_PADDING_METERS = 600;
 // working again in your environment, add it back as a second entry.
 const ENDPOINTS = ["https://overpass-api.de/api/interpreter"];
 
+// amenity types that commonly have outdoor seating in Malmo: cafes,
+// restaurants, bars/pubs, ice cream places ("glasstallen"), fast food
+// (food trucks/kiosks with picnic tables), biergartens and food courts.
+const OUTDOOR_SEATING_AMENITIES =
+  "cafe|restaurant|bar|pub|ice_cream|fast_food|biergarten|food_court";
+
 function terracesQuery(bbox) {
   return `
 [out:json][timeout:60];
 (
-  node["amenity"~"^(cafe|restaurant|bar|pub)$"]["outdoor_seating"~"^(yes|only)$"](${bbox});
-  way["amenity"~"^(cafe|restaurant|bar|pub)$"]["outdoor_seating"~"^(yes|only)$"](${bbox});
+  node["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"~"^(yes|only)$"](${bbox});
+  way["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"~"^(yes|only)$"](${bbox});
   node["leisure"="outdoor_seating"](${bbox});
   way["leisure"="outdoor_seating"](${bbox});
 );
@@ -75,6 +81,7 @@ async function runQuery(query) {
           signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
         });
         if (res.status === 429 || res.status === 504) {
+          lastErr = new Error(`${endpoint} responded ${res.status} after ${attempt} attempts`);
           const waitMs = RETRY_DELAYS_MS[attempt - 1] ?? 45000;
           console.warn(
             `${endpoint} responded ${res.status}, retrying in ${waitMs}ms (attempt ${attempt}/${MAX_ATTEMPTS})`
@@ -114,8 +121,8 @@ function bboxFromTerraces(terracesGeojson) {
  * Splits a [west, south, east, north] bbox into a cols x rows grid of
  * "south,west,north,east" strings for Overpass. The full-extent buildings
  * query times out (504) on the public Overpass instance, since terraces
- * span a wide area of central Malmo and "out geom" over the whole extent
- * is too much work for one request — smaller tiles complete reliably.
+ * span a wide area of Malmo and "out geom" over the whole extent is too
+ * much work for one request — smaller tiles complete reliably.
  */
 function tileBbox([west, south, east, north], cols, rows) {
   const tiles = [];
@@ -131,6 +138,24 @@ function tileBbox([west, south, east, north], cols, rows) {
     }
   }
   return tiles;
+}
+
+// Target tile size that reliably avoids Overpass 504 timeouts (empirically
+// ~1.5-2 km^2 tiles completed fine; bigger tiles started timing out).
+const TARGET_TILE_KM2 = 1.8;
+
+/** Picks a cols x rows grid sized so each tile is roughly TARGET_TILE_KM2,
+ * matching the grid's aspect ratio to the bbox's aspect ratio. */
+function pickTileGrid([west, south, east, north]) {
+  const midLatRad = (((south + north) / 2) * Math.PI) / 180;
+  const widthKm = (east - west) * 111 * Math.cos(midLatRad);
+  const heightKm = (north - south) * 111;
+  const areaKm2 = widthKm * heightKm;
+  const totalTiles = Math.max(4, Math.ceil(areaKm2 / TARGET_TILE_KM2));
+  const aspect = widthKm / heightKm;
+  const rows = Math.max(1, Math.round(Math.sqrt(totalTiles / aspect)));
+  const cols = Math.max(1, Math.round(totalTiles / rows));
+  return { cols, rows, areaKm2 };
 }
 
 async function main() {
@@ -152,8 +177,11 @@ async function main() {
   console.log("Sample terrace names:", sampleNames);
 
   const paddedBbox = bboxFromTerraces(terracesGeojson);
-  const tiles = tileBbox(paddedBbox, 3, 3);
-  console.log(`Fetching buildings from Overpass across ${tiles.length} tiles...`);
+  const { cols, rows, areaKm2 } = pickTileGrid(paddedBbox);
+  const tiles = tileBbox(paddedBbox, cols, rows);
+  console.log(
+    `Fetching buildings from Overpass across ${tiles.length} tiles (${cols}x${rows} grid, ~${areaKm2.toFixed(1)} km^2 total)...`
+  );
 
   const buildingsById = new Map();
   const failedTiles = [];

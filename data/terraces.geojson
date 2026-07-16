@@ -88,6 +88,26 @@
     },
     {
       "type": "Feature",
+      "id": "way/189255291",
+      "properties": {
+        "amenity": "fast_food",
+        "building": "yes",
+        "diet:vegetarian": "yes",
+        "indoor_seating": "yes",
+        "name": "MENYn Grill & Sallad",
+        "outdoor_seating": "yes",
+        "id": "way/189255291"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0013333,
+          55.6081031
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "way/220245481",
       "properties": {
         "addr:city": "Malmö",
@@ -127,6 +147,78 @@
     },
     {
       "type": "Feature",
+      "id": "way/231512599",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "21",
+        "addr:postcode": "21218",
+        "addr:street": "Sallerupsvägen",
+        "amenity": "fast_food",
+        "building": "kiosk",
+        "cuisine": "balkan",
+        "drive_through": "no",
+        "name": "Malmös Burek&Cevapi",
+        "opening_hours": "Mo-Sa 10:00-20:00; Su 11:00-20:00",
+        "outdoor_seating": "yes",
+        "phone": "+46 73 677 91 41",
+        "id": "way/231512599"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0295264,
+          55.6031331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/235026319",
+      "properties": {
+        "alt_name": "Café Kulturbolaget Blå Kiosken",
+        "amenity": "fast_food",
+        "building": "yes",
+        "cuisine": "ice_cream",
+        "drive_through": "no",
+        "indoor_seating": "no",
+        "name": "Café Blå Kiosken",
+        "outdoor_seating": "yes",
+        "shop": "kiosk",
+        "smoking": "no",
+        "id": "way/235026319"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9559704,
+          55.5991231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/289957233",
+      "properties": {
+        "amenity": "fast_food",
+        "building": "yes",
+        "check_date": "2023-07-12",
+        "indoor_seating": "no",
+        "name": "Ammo Falafel",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "id": "way/289957233"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0013677,
+          55.5969464
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "way/383042808",
       "properties": {
         "access": "customers",
@@ -139,6 +231,28 @@
         "coordinates": [
           13.0028943,
           55.6044821
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/395053199",
+      "properties": {
+        "amenity": "ice_cream",
+        "building": "yes",
+        "name": "Cellos glassbar",
+        "opening_hours": "\"12-18 mid Apr-end of Aug; 12-19 end of Aug-mid Sep\"",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "id": "way/395053199"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.931581,
+          55.5788629
         ]
       }
     },
@@ -158,6 +272,33 @@
         "coordinates": [
           13.0031744,
           55.6028782
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/444822081",
+      "properties": {
+        "amenity": "ice_cream",
+        "changing_table": "yes",
+        "changing_table:location": "unisex_toilet",
+        "cuisine": "ice_cream;italian",
+        "highchair": "yes",
+        "indoor_seating": "yes",
+        "name": "Dolce Sicilia",
+        "opening_hours": "Jan PH,Tu-Su 11:00-17:00; Feb,Dec PH,Mo-Su 11:00-17:00; Mar,Nov PH,Mo-Su 11:00-18:00; Apr,Jul-Aug PH,Mo-Su 11:00-20:00; May-Jun PH,Mo-Su 11:00-21:00; Sep-Oct PH,Mo-Su 11:00-19:00",
+        "outdoor_seating": "yes",
+        "smoking": "no",
+        "toilets": "yes",
+        "toilets:access": "customers",
+        "wheelchair": "no",
+        "id": "node/444822081"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0108216,
+          55.6081888
         ]
       }
     },
@@ -215,6 +356,68 @@
         "coordinates": [
           12.9995021,
           55.6088778
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/444845105",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "19",
+        "addr:postcode": "21119",
+        "addr:street": "Sundspromenaden",
+        "amenity": "cafe",
+        "brand": "Espresso House",
+        "brand:wikidata": "Q10489162",
+        "brand:wikipedia": "sv:Espresso House",
+        "cuisine": "coffee_shop",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "indoor_seating": "yes",
+        "internet_access": "yes",
+        "name": "Espresso House",
+        "opening_hours": "Mo-Su 07:30-21:00",
+        "operator": "Espresso House",
+        "outdoor_seating": "yes",
+        "phone": "+46 76 521 91 17",
+        "takeaway": "yes",
+        "website": "https://espressohouse.com/hitta-oss/vastra-hamnen",
+        "wheelchair": "no",
+        "id": "node/444845105"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9729934,
+          55.6106266
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/444853562",
+      "properties": {
+        "amenity": "fast_food",
+        "brand": "Burger King",
+        "brand:wikidata": "Q177054",
+        "brand:wikipedia": "sv:Burger King",
+        "cuisine": "burger",
+        "indoor_seating": "yes",
+        "name": "Burger King",
+        "opening_hours": "Mo,Tu 10:00-24:00, We,Th 10:00-01:00, Fr 10:00-04:00, Sa 11:00-04:00, Su 11:00-24:00",
+        "operator": "Burger King",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "wheelchair": "yes",
+        "id": "node/444853562"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0019224,
+          55.6024211
         ]
       }
     },
@@ -347,6 +550,28 @@
     },
     {
       "type": "Feature",
+      "id": "node/514143378",
+      "properties": {
+        "amenity": "fast_food",
+        "brand": "McDonald's",
+        "brand:wikidata": "Q38076",
+        "cuisine": "burger",
+        "indoor_seating": "yes",
+        "name": "McDonald's",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "id": "node/514143378"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9961702,
+          55.6094318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/534648804",
       "properties": {
         "addr:city": "Malmö",
@@ -373,6 +598,49 @@
         "coordinates": [
           13.0075321,
           55.5940805
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/536828523",
+      "properties": {
+        "amenity": "restaurant",
+        "check_date": "2025-06-20",
+        "indoor_seating": "yes",
+        "name": "Nyhavn",
+        "opening_hours": "Mo-Th 14:00-01:00, Fr-Su 12:00-01:00",
+        "outdoor_seating": "yes",
+        "id": "node/536828523"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0084674,
+          55.5919597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/536833709",
+      "properties": {
+        "amenity": "cafe",
+        "check_date": "2026-06-20",
+        "cuisine": "cake;sandwich",
+        "name": "Kaffebaren",
+        "opening_hours": "Mo-Fr 08:00-18:00; Sa 09:00-18:00; Su 09:00-17:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "takeaway": "yes",
+        "wheelchair": "no",
+        "id": "node/536833709"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.008788,
+          55.5910629
         ]
       }
     },
@@ -597,6 +865,61 @@
         "coordinates": [
           13.0145578,
           55.5939518
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/926225600",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:postcode": "21747",
+        "addr:street": "Bellevuevägen",
+        "amenity": "fast_food",
+        "building": "yes",
+        "cuisine": "kebab;falafel",
+        "drive_through": "no",
+        "name": "Bellevue Kebab & Falafel",
+        "outdoor_seating": "yes",
+        "id": "way/926225600"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9725379,
+          55.5933883
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/940880772",
+      "properties": {
+        "leisure": "outdoor_seating",
+        "operator": "Hekajo AB",
+        "id": "way/940880772"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9659445,
+          55.6049375
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/940880773",
+      "properties": {
+        "leisure": "outdoor_seating",
+        "operator": "Hekajo AB",
+        "id": "way/940880773"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.965516,
+          55.6048074
         ]
       }
     },
@@ -881,6 +1204,43 @@
     },
     {
       "type": "Feature",
+      "id": "way/1091108910",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "25",
+        "addr:postcode": "211 34",
+        "addr:street": "Stortorget",
+        "amenity": "fast_food",
+        "brand": "Max",
+        "brand:wikidata": "Q1912172",
+        "brand:wikipedia": "sv:Max Hamburgerrestauranger",
+        "cuisine": "burger",
+        "delivery": "yes",
+        "drive_through": "no",
+        "emergency": "defibrillator",
+        "indoor_seating": "yes",
+        "internet_access": "wlan",
+        "name": "Max",
+        "opening_hours": "Su-Tu 10:00-02:00, We,Th 10:00-04:00, Fr,Sa 10:00-06:00",
+        "operator": "Max",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "takeaway": "yes",
+        "website": "https://www.max.se/hitta-max/restauranger/malmo-stortorget/",
+        "wheelchair": "yes",
+        "id": "way/1091108910"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.000103,
+          55.6054698
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "way/1091108929",
       "properties": {
         "addr:country": "SE",
@@ -909,6 +1269,35 @@
         "coordinates": [
           13.0001251,
           55.6071199
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1091108930",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "9",
+        "addr:postcode": "211 21",
+        "addr:street": "Västergatan",
+        "amenity": "fast_food",
+        "check_date:opening_hours": "2025-12-31",
+        "highchair": "yes",
+        "indoor_seating": "yes",
+        "name": "Surf shack",
+        "opening_hours:signed": "no",
+        "outdoor_seating": "yes",
+        "phone": "+46 76 176 40 18",
+        "toilets:wheelchair": "no",
+        "wheelchair": "no",
+        "id": "way/1091108930"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9974131,
+          55.6067772
         ]
       }
     },
@@ -1096,6 +1485,26 @@
     },
     {
       "type": "Feature",
+      "id": "node/1279343571",
+      "properties": {
+        "amenity": "restaurant",
+        "cuisine": "polish;svensk",
+        "name": "Fregatten",
+        "opening_hours": "Tu-Sa 16:00-24:00, Su 11:00-20:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "id": "node/1279343571"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.023187,
+          55.605028
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "way/1284932632",
       "properties": {
         "heating": "no",
@@ -1227,6 +1636,40 @@
     },
     {
       "type": "Feature",
+      "id": "way/1417235026",
+      "properties": {
+        "leisure": "outdoor_seating",
+        "place": "square",
+        "id": "way/1417235026"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0237471,
+          55.6071391
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "way/1432495983",
+      "properties": {
+        "heating": "no",
+        "leisure": "outdoor_seating",
+        "lit": "no",
+        "seasonal": "yes",
+        "id": "way/1432495983"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9316693,
+          55.5788535
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "way/1472493134",
       "properties": {
         "leisure": "outdoor_seating",
@@ -1238,6 +1681,75 @@
         "coordinates": [
           13.0075276,
           55.5940162
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1624179498",
+      "properties": {
+        "amenity": "cafe",
+        "cuisine": "coffee_shop;breakfast;brunch",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "only",
+        "internet_access": "wlan",
+        "internet_access:fee": "customers",
+        "name": "Café Grannen",
+        "opening_hours": "Mo-Fr 09:30-14:00; Sa,Su 09:30-15:00",
+        "outdoor_seating": "yes",
+        "id": "node/1624179498"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0263175,
+          55.6055065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1670692580",
+      "properties": {
+        "amenity": "ice_cream",
+        "check_date": "2023-07-16",
+        "indoor_seating": "yes",
+        "name": "Bar Italia",
+        "outdoor_seating": "yes",
+        "id": "node/1670692580"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.972367,
+          55.6124717
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1670692583",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "4",
+        "addr:postcode": "21117",
+        "addr:street": "Lilla Varvsgatan",
+        "amenity": "restaurant",
+        "contact:phone": "+46 40 611 99 99",
+        "contact:website": "http://noll1restaurang.gastrogate.com/",
+        "cuisine": "pizza",
+        "indoor_seating": "yes",
+        "name": "Turning food",
+        "opening_hours": "Mo-Sa 11:30-22:00; Su 12:30-22:00",
+        "outdoor_seating": "yes",
+        "id": "node/1670692583"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9743451,
+          55.6128342
         ]
       }
     },
@@ -1299,6 +1811,52 @@
     },
     {
       "type": "Feature",
+      "id": "node/1677336061",
+      "properties": {
+        "amenity": "restaurant",
+        "outdoor_seating": "yes",
+        "wheelchair": "limited",
+        "id": "node/1677336061"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9758785,
+          55.6135843
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1677336189",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "9",
+        "addr:postcode": "21116",
+        "addr:street": "Sundspromenaden",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "indoor_seating": "yes",
+        "name": "Kontrast Ghee by the Sea",
+        "opening_hours": "Su-Th 11:30-22:00; Fr,Sa 11:30-23:00",
+        "outdoor_seating": "yes",
+        "phone": "+46 40 677 14 03",
+        "website": "https://www.kontrastrestaurang.se/vastra-hamnen/",
+        "id": "node/1677336189"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9736671,
+          55.6101936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/1685937003",
       "properties": {
         "amenity": "cafe",
@@ -1322,6 +1880,35 @@
     },
     {
       "type": "Feature",
+      "id": "node/1692398174",
+      "properties": {
+        "addr:housenumber": "5",
+        "addr:postcode": "215 32",
+        "addr:street": "Hyllie stationsväg",
+        "amenity": "fast_food",
+        "brand": "Subway",
+        "brand:wikidata": "Q244457",
+        "brand:wikipedia": "en:Subway (restaurant)",
+        "cuisine": "sandwich",
+        "drive_through": "no",
+        "name": "Subway",
+        "opening_hours": "Mo-Fr 08:00-22:00; Sa,Su 10:00-22:00",
+        "outdoor_seating": "yes",
+        "phone": "+46 40 616 07 70",
+        "takeaway": "yes",
+        "website": "https://restaurants.subway.com",
+        "id": "node/1692398174"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9764176,
+          55.5633239
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/1726889462",
       "properties": {
         "amenity": "restaurant",
@@ -1335,6 +1922,29 @@
         "coordinates": [
           13.008086,
           55.593092
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1855366439",
+      "properties": {
+        "addr:street": "Spånehusvägen",
+        "amenity": "fast_food",
+        "check_date": "2025-06-20",
+        "cuisine": "kebab",
+        "name": "Popeye Grill",
+        "opening_hours": "Mo-Fr 11:00-23:00+, Sa 11:00-24:00+",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "takeaway": "yes",
+        "id": "node/1855366439"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0236394,
+          55.5942131
         ]
       }
     },
@@ -1456,6 +2066,27 @@
     },
     {
       "type": "Feature",
+      "id": "node/2293729021",
+      "properties": {
+        "amenity": "fast_food",
+        "cuisine": "kebab",
+        "indoor_seating": "yes",
+        "name": "Shwarma King",
+        "opening_hours": "Su-Th 11:00-22:00, Fr,Sa 11:00-05:00",
+        "outdoor_seating": "yes",
+        "wheelchair": "yes",
+        "id": "node/2293729021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0006888,
+          55.605774
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/2293729033",
       "properties": {
         "addr:city": "Malmö",
@@ -1542,6 +2173,50 @@
         "coordinates": [
           13.0190992,
           55.5923458
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/2469122693",
+      "properties": {
+        "addr:place": "T-bryggan",
+        "addr:street": "Limhamnsvägen",
+        "amenity": "ice_cream",
+        "contact:phone": "+46 40 98 20 35",
+        "ice_cream:brand": "Sia glass",
+        "name": "Ribban Green Golf",
+        "opening_hours": "Su-Th 12:00-18:00, Fr-Sa 12:00-19:00",
+        "outdoor_seating": "yes",
+        "website": "https://www.ribbangreengolf.se/glass",
+        "id": "node/2469122693"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9604112,
+          55.5998494
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/2958276010",
+      "properties": {
+        "amenity": "cafe",
+        "check_date": "2023-07-15",
+        "indoor_seating": "yes",
+        "name": "Konditori Regementet",
+        "opening_hours": "Mo-Fr 07:00-17:30;Sa 07:30-16:00;08:00-16:00",
+        "outdoor_seating": "yes",
+        "smoking": "no",
+        "id": "node/2958276010"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9752977,
+          55.5979625
         ]
       }
     },
@@ -1825,6 +2500,39 @@
     },
     {
       "type": "Feature",
+      "id": "node/3777446768",
+      "properties": {
+        "addr:city": "Limhamn",
+        "addr:country": "SE",
+        "addr:housenumber": "42",
+        "addr:postcode": "21614",
+        "addr:street": "Linnégatan",
+        "amenity": "cafe",
+        "brand": "Espresso House",
+        "brand:wikidata": "Q10489162",
+        "brand:wikipedia": "sv:Espresso House",
+        "cuisine": "coffee_shop",
+        "name": "Espresso House",
+        "opening_hours": "Mo-Fr 07:30-19:00; Sa 08:00-18:00; Su 09:00-18:00",
+        "operator": "Espresso House",
+        "outdoor_seating": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "phone": "+46765219251",
+        "takeaway": "yes",
+        "website": "https://espressohouse.com/coffee-shops/limhamn/",
+        "id": "node/3777446768"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9340302,
+          55.5819228
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/3794979825",
       "properties": {
         "amenity": "bar",
@@ -1839,6 +2547,35 @@
         "coordinates": [
           12.9978126,
           55.606553
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4254792462",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "34",
+        "addr:postcode": "21433",
+        "addr:street": "Nobelvägen",
+        "amenity": "restaurant",
+        "check_date": "2024-07-08",
+        "diet:lacto_vegetarian": "yes",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "name": "Mr Falafel",
+        "opening_hours": "Mo-Su 11:00-23:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "phone": "+46700470042",
+        "id": "node/4254792462"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.017256,
+          55.5912179
         ]
       }
     },
@@ -1873,6 +2610,30 @@
         "coordinates": [
           13.00514,
           55.6047901
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4367945997",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "34",
+        "addr:street": "Per Albin Hanssons väg",
+        "amenity": "restaurant",
+        "name": "Fabriken Restaurang & Café",
+        "outdoor_seating": "yes",
+        "phone": "+46 40 19 28 00",
+        "website": "http://www.restaurang-fabriken.se",
+        "wheelchair": "yes",
+        "id": "node/4367945997"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0044542,
+          55.5819266
         ]
       }
     },
@@ -1944,6 +2705,92 @@
         "coordinates": [
           12.9908631,
           55.6078399
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4496976894",
+      "properties": {
+        "amenity": "fast_food",
+        "check_date": "2026-05-20",
+        "contact:facebook": "falafelandburgers",
+        "contact:instagram": "falafelandburgers",
+        "cuisine": "burger",
+        "email": "falafelburgare@gmail.com",
+        "indoor_seating": "yes",
+        "level": "0",
+        "name": "Falafel & Burgers",
+        "outdoor_seating": "yes",
+        "phone": "+46 70 828 02 10",
+        "website:menu": "https://weiq.tech/malmosaluhall?seller=e69d42bb-d06d-4b41-ae8f-0a0cfe89b0a0",
+        "id": "node/4496976894"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.991152,
+          55.6078378
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4533652812",
+      "properties": {
+        "addr:city": "Limhamn",
+        "addr:country": "SE",
+        "addr:housenumber": "77",
+        "addr:postcode": "216 14",
+        "addr:street": "Sveagatan",
+        "amenity": "fast_food",
+        "cuisine": "burger",
+        "diet:vegetarian": "yes",
+        "drive_through": "no",
+        "email": "info@helsingburger.se",
+        "name": "Helsingburger",
+        "opening_hours": "Mo-Fr 11:00-21:00; Sa-Su 15:00-21:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "phone": "+46 40 91 30 70",
+        "website": "https://www.helsingburger.se/",
+        "id": "node/4533652812"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9373644,
+          55.5840279
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/4582102396",
+      "properties": {
+        "addr:country": "SE",
+        "addr:housenumber": "1",
+        "addr:street": "Masttorget",
+        "amenity": "fast_food",
+        "brand": "Subway",
+        "brand:wikidata": "Q244457",
+        "brand:wikipedia": "sv:Subway",
+        "cuisine": "sandwich",
+        "name": "Subway",
+        "opening_hours": "Mo-Fr 08:30-22:00; Sa,Su 10:00-20:00",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "website": "https://restaurants.subway.com/sweden/malmo/masttorget-1",
+        "wheelchair": "yes",
+        "id": "node/4582102396"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9814919,
+          55.6115196
         ]
       }
     },
@@ -2082,6 +2929,31 @@
     },
     {
       "type": "Feature",
+      "id": "node/6302266975",
+      "properties": {
+        "amenity": "fast_food",
+        "brand": "German Doner Kebab",
+        "brand:wikidata": "Q112913418",
+        "cuisine": "kebab",
+        "drive_through": "no",
+        "indoor_seating": "yes",
+        "name": "German Doner Kebab",
+        "opening_hours": "Su-Tu 11:00-21:00, We,Th 11:00-23:00, Fr,Sa 11:00-04:00",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "website": "https://www.germandonerkebab.com/",
+        "id": "node/6302266975"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.001733,
+          55.6025638
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/6303839491",
       "properties": {
         "amenity": "restaurant",
@@ -2148,6 +3020,38 @@
         "coordinates": [
           12.9911992,
           55.6141445
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/6466666264",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "17",
+        "addr:postcode": "21623",
+        "addr:street": "Hyllie Stationstorg",
+        "amenity": "fast_food",
+        "brand": "McDonald's",
+        "brand:wikidata": "Q38076",
+        "brand:wikipedia": "sv:McDonald's",
+        "cuisine": "burger",
+        "delivery": "yes",
+        "diet:meat": "yes",
+        "diet:vegetarian": "yes",
+        "drive_through": "no",
+        "internet_access": "wlan",
+        "name": "McDonald's",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "id": "node/6466666264"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9764192,
+          55.5627097
         ]
       }
     },
@@ -2304,6 +3208,46 @@
     },
     {
       "type": "Feature",
+      "id": "node/7283438902",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "10",
+        "addr:postcode": "214 23",
+        "addr:street": "Simrishamnsgatan",
+        "amenity": "restaurant",
+        "brewery": "various",
+        "changing_table": "yes",
+        "check_date": "2026-06-20",
+        "check_date:opening_hours": "2026-06-20",
+        "cuisine": "ramen",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "highchair": "yes",
+        "name": "Ramen to Bíiru",
+        "name:ja": "らーめんとビール",
+        "opening_hours": "Mo-Th 11:30-22:00; Fr 11:30-23:00; Sa 12:00-23:00; Su 12:00-22:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "no",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "toilets": "yes",
+        "toilets:menstrual_products": "yes",
+        "toilets:wheelchair": "no",
+        "website": "https://ramentobiiru.se/mollevangstorget/",
+        "wheelchair": "no",
+        "id": "node/7283438902"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0088715,
+          55.5918507
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/7283459646",
       "properties": {
         "addr:city": "Malmö",
@@ -2325,6 +3269,32 @@
         "coordinates": [
           13.0059611,
           55.5949555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/7794349939",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "12-14",
+        "addr:street": "Möllevångstorget",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "name": "Möllan Curry",
+        "opening_hours": "11:00-15:00",
+        "outdoor_seating": "yes",
+        "phone": "+46406114656",
+        "website": "https://www.mollancurry.se",
+        "wheelchair": "no",
+        "id": "node/7794349939"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0090387,
+          55.5914995
         ]
       }
     },
@@ -2463,6 +3433,26 @@
     },
     {
       "type": "Feature",
+      "id": "node/8528307494",
+      "properties": {
+        "amenity": "cafe",
+        "cuisine": "burger;sandwich;seafood",
+        "name": "Hamncaféet",
+        "opening_hours": "Tu-Th,Su 11:00-15:00; Fr-Sa 11:00-16:00",
+        "outdoor_seating": "yes",
+        "website": "http://www.hamncafet.dk/",
+        "id": "node/8528307494"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9236248,
+          55.5858264
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/8824252442",
       "properties": {
         "amenity": "restaurant",
@@ -2566,6 +3556,38 @@
         "coordinates": [
           12.9996197,
           55.5983477
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9431278828",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "53",
+        "addr:postcode": "216 19",
+        "addr:street": "Geijersgatan",
+        "amenity": "cafe",
+        "check_date": "2026-06-29",
+        "check_date:opening_hours": "2026-06-29",
+        "contact:instagram": "geijersgatan53_cafe",
+        "name": "Geijersgatan 53 Café",
+        "name:en": "Geijersgatan 53 Café & Shop",
+        "opening_hours": "Mo-Fr 09:00-17:00; Sa-Su 09:00-17:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "no",
+        "payment:mastercard": "yes",
+        "payment:swish": "yes",
+        "payment:visa": "yes",
+        "phone": "+46 70 493 73 43",
+        "id": "node/9431278828"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9554806,
+          55.5853331
         ]
       }
     },
@@ -2680,6 +3702,67 @@
     },
     {
       "type": "Feature",
+      "id": "node/9576567318",
+      "properties": {
+        "addr:city": "Limhamn",
+        "addr:country": "SE",
+        "addr:housenumber": "14",
+        "addr:postcode": "216 13",
+        "addr:street": "Idrottsgatan",
+        "amenity": "cafe",
+        "contact:facebook": "100086216932604",
+        "contact:instagram": "ateljen_limhamn",
+        "cuisine": "cake;italian;sandwich;chocolate",
+        "diet:meat": "yes",
+        "diet:mediterranean": "yes",
+        "diet:vegetarian": "yes",
+        "email": "beata@atom47.se",
+        "level": "0",
+        "name": "Ateljén Limhamn",
+        "opening_hours": "Su-Th 10:00-17:00; Fr 10:00-20:00; Sa 10:00-18:00",
+        "outdoor_seating": "yes",
+        "phone": "+46 73 552 00 72",
+        "toilets": "yes",
+        "website": "https://ateljenlimhamn.se/",
+        "id": "node/9576567318"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9354003,
+          55.5852942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9891391562",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "76",
+        "addr:postcode": "217 61",
+        "addr:street": "John Ericssons väg",
+        "amenity": "cafe",
+        "contact:email": "info@smorgasbutiken.com",
+        "contact:phone": "+46 40 98 05 06",
+        "cuisine": "sandwich;salad;smørrebrød",
+        "name": "Smörgåsbutiken",
+        "opening_hours": "Mo-Su 10:00-16:00",
+        "outdoor_seating": "yes",
+        "website": "https://xn--wrldshuset-q5a.se/smorgasbutiken/",
+        "id": "node/9891391562"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9729451,
+          55.5910629
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/9949588101",
       "properties": {
         "amenity": "cafe",
@@ -2702,6 +3785,69 @@
         "coordinates": [
           13.0009306,
           55.5972809
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/9976912495",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:country": "SE",
+        "addr:housenumber": "37",
+        "addr:postcode": "217 45",
+        "addr:street": "Mariedalsvägen",
+        "amenity": "fast_food",
+        "check_date": "2022-08-25",
+        "check_date:opening_hours": "2024-04-26",
+        "contact:email": "info@mixandeat.se",
+        "contact:phone": "+46 40 267 53 3",
+        "contact:website": "https://mixandeat.se/kontakta-oss-hitta-till-mixeat/",
+        "cuisine": "salad",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "drive_through": "no",
+        "level": "0",
+        "name": "Mix & Eat",
+        "opening_hours": "Mo-Fr 11:00-15:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "takeaway": "yes",
+        "wheelchair": "no",
+        "id": "node/9976912495"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9831796,
+          55.5961976
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10048295602",
+      "properties": {
+        "addr:place": "T-bryggan",
+        "addr:street": "Limhamnsvägen",
+        "amenity": "fast_food",
+        "contact:phone": "+46 40 98 20 35",
+        "cuisine": "burger;fish_and_chips;sausage;salad",
+        "diet:vegetarian": "yes",
+        "drive_through": "no",
+        "name": "Ribban Green Golf",
+        "opening_hours": "Su-Th 12:00-18:00, Fr-Sa 12:00-19:00",
+        "outdoor_seating": "yes",
+        "website": "https://www.ribbangreengolf.se/street-kitchen",
+        "id": "node/10048295602"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9603783,
+          55.599886
         ]
       }
     },
@@ -2845,6 +3991,45 @@
     },
     {
       "type": "Feature",
+      "id": "node/10756703279",
+      "properties": {
+        "amenity": "restaurant",
+        "indoor_seating": "yes",
+        "name": "7 Days pizza & Grill",
+        "outdoor_seating": "yes",
+        "id": "node/10756703279"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9994125,
+          55.5856729
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/10934200837",
+      "properties": {
+        "addr:street": "Bryggövägen",
+        "amenity": "fast_food",
+        "cuisine": "burger;hot_dog;kebab",
+        "level": "0",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "wheelchair": "limited",
+        "id": "node/10934200837"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9197374,
+          55.5847208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/11109485805",
       "properties": {
         "addr:country": "SE",
@@ -2920,6 +4105,38 @@
         "coordinates": [
           13.0052115,
           55.5950136
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/11635574088",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:housenumber": "20",
+        "addr:postcode": "21423",
+        "addr:street": "Simrishamnsgatan",
+        "amenity": "restaurant",
+        "check_date": "2024-07-05",
+        "contact:facebook": "storasystermastiomollan",
+        "contact:instagram": "storasystermastio_mollan",
+        "cuisine": "italian;pizza",
+        "diet:vegetarian": "yes",
+        "email": "hej@storasystermastio.se",
+        "name": "Storasyster Mastio",
+        "opening_hours": "Mo-Tu 16:00-23:00; We-Th 11:30-23:00; Fr-Sa 11:30-00:00; Su 11:30-23:00",
+        "outdoor_seating": "yes",
+        "phone": "+46 40 621 20 22",
+        "takeaway": "yes",
+        "website": "https://mastio.se/MASTIO/mollan.html",
+        "wheelchair": "no",
+        "id": "node/11635574088"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0111237,
+          55.5914681
         ]
       }
     },
@@ -3020,6 +4237,48 @@
     },
     {
       "type": "Feature",
+      "id": "node/12100103736",
+      "properties": {
+        "amenity": "fast_food",
+        "building": "no",
+        "cuisine": "burger",
+        "name": "burgRs",
+        "outdoor_seating": "yes",
+        "takeaway": "only",
+        "toilets": "no",
+        "id": "node/12100103736"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0345472,
+          55.5871973
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/12100103737",
+      "properties": {
+        "amenity": "fast_food",
+        "building": "no",
+        "cuisine": "syrian;arab;kebab;shawarma",
+        "name": "Taste of Damascus",
+        "outdoor_seating": "yes",
+        "takeaway": "only",
+        "toilets": "no",
+        "id": "node/12100103737"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.034581,
+          55.5871485
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/12133643644",
       "properties": {
         "addr:city": "Malmö",
@@ -3065,6 +4324,24 @@
         "coordinates": [
           13.0064727,
           55.6060594
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/12201030542",
+      "properties": {
+        "amenity": "cafe",
+        "indoor_seating": "yes",
+        "name": "Graffiti Café WTC",
+        "outdoor_seating": "yes",
+        "id": "node/12201030542"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9772851,
+          55.609948
         ]
       }
     },
@@ -3182,6 +4459,30 @@
     },
     {
       "type": "Feature",
+      "id": "node/12836554259",
+      "properties": {
+        "addr:postcode": "211 18",
+        "amenity": "ice_cream",
+        "check_date": "2026-03-05",
+        "check_date:opening_hours": "2026-03-05",
+        "contact:instagram": "orummejeri",
+        "level": "0",
+        "name": "Örum Mejeri",
+        "opening_hours": "Th-Fr 11:00-18:00; Sa-Su 11:00-17:00",
+        "outdoor_seating": "yes",
+        "takeaway": "yes",
+        "id": "node/12836554259"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9851912,
+          55.6064612
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "node/12854950552",
       "properties": {
         "amenity": "restaurant",
@@ -3287,6 +4588,32 @@
         "coordinates": [
           12.9872929,
           55.6068411
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/13977195675",
+      "properties": {
+        "addr:city": "Malmö",
+        "addr:housenumber": "13",
+        "addr:postcode": "216 19",
+        "addr:street": "Sövdeborgsgatan",
+        "amenity": "restaurant",
+        "contact:instagram": "solidarmalmo",
+        "email": "solidarvinbar@gmail.com",
+        "name": "Solidar",
+        "opening_hours": "Tu-Sa 16:00-22:00, Fr-Sa 16:00-23:00",
+        "outdoor_seating": "yes",
+        "website": "https://www.solidarmalmo.com",
+        "website:menu": "https://www.solidarmalmo.com/meny",
+        "id": "node/13977195675"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9546439,
+          55.5844525
         ]
       }
     }

@@ -1,46 +1,149 @@
+/* ---------- Design tokens ---------- */
+/* Palette grounded in the subject: Öresund sea-glass for the ground, brass
+   sundial gold for sun, deep petrol for shade — the sun/shade duality that
+   the whole tool is about, not a generic UI palette. */
+:root {
+  --color-bg: #eef3f1;
+  --color-surface: #fbfdfc;
+  --color-surface-border: #d8e1dd;
+  --color-ink: #1e2a2e;
+  --color-ink-muted: #52625f;
+
+  --color-sun: #e8a63d;
+  --color-sun-strong: #c9852a;
+  --color-shade: #3a6472;
+  --color-night: #1b2430;
+  --color-anomaly: #b0483b;
+  --color-confirm: #2f8f4e;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius: 10px;
+  --shadow-sm: 0 1px 2px rgba(30, 42, 46, 0.08), 0 1px 1px rgba(30, 42, 46, 0.05);
+  --shadow-md: 0 4px 14px rgba(30, 42, 46, 0.1);
+
+  --day-progress: 55%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #141b1e;
+    --color-surface: #1b2529;
+    --color-surface-border: #2c3a3f;
+    --color-ink: #eaf1ef;
+    --color-ink-muted: #9fb0ac;
+
+    --color-sun: #f0b453;
+    --color-sun-strong: #f6c876;
+    --color-shade: #6d97a6;
+    --color-night: #0c1216;
+    --color-anomaly: #e08272;
+    --color-confirm: #59c17e;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: #f4f1ea;
-  color: #2b2620;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-ink);
 }
 
+a,
+button,
+input {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sun-strong);
+  outline-offset: 2px;
+}
+
+/* ---------- Header ---------- */
 #app-header {
-  padding: 1rem 1.25rem 0.5rem;
+  padding: 1.5rem 1.25rem 1.1rem;
+  background:
+    radial-gradient(560px circle at var(--day-progress) -40%, rgba(232, 166, 61, 0.32), transparent 62%),
+    var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #app-header {
+    transition: background 0.6s ease;
+  }
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-sun-strong);
 }
 
 #app-header h1 {
-  margin: 0 0 0.25rem;
-  font-size: 1.4rem;
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.15rem + 1.4vw, 2.1rem);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 .subtitle {
   margin: 0;
-  color: #5c554a;
-  font-size: 0.9rem;
-  max-width: 60ch;
+  color: var(--color-ink-muted);
+  font-size: 0.92rem;
+  max-width: 62ch;
+  line-height: 1.5;
 }
 
-#controls {
+/* ---------- Controls ---------- */
+#controls,
+#search-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 1.25rem;
   padding: 0.75rem 1.25rem;
-  background: #fff;
-  border-top: 1px solid #e2ddd0;
-  border-bottom: 1px solid #e2ddd0;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-border);
 }
 
-#controls label {
+#controls label,
+.search-label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   font-size: 0.9rem;
+}
+
+.control-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+#date-input {
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-ink);
 }
 
 .time-label {
@@ -48,112 +151,296 @@ body {
   min-width: 260px;
 }
 
+/* Range slider styled as a day-arc: night -> dawn -> gold daylight ->
+   dusk -> night, with a brass sun-disc thumb. Grounded in the subject
+   (a literal arc of the day) rather than a default browser slider. */
 #time-slider {
   flex: 1;
   min-width: 180px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-night) 0%,
+    var(--color-night) 18%,
+    var(--color-sun) 32%,
+    var(--color-sun) 68%,
+    var(--color-night) 82%,
+    var(--color-night) 100%
+  );
+  cursor: pointer;
+}
+
+#time-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-sun);
+  border: 2px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  margin-top: -5px;
+}
+
+#time-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-sun);
+  border: 2px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+#time-slider::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-night) 0%,
+    var(--color-night) 18%,
+    var(--color-sun) 32%,
+    var(--color-sun) 68%,
+    var(--color-night) 82%,
+    var(--color-night) 100%
+  );
 }
 
 #time-display {
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  min-width: 3.2em;
+  min-width: 3.4em;
+  font-size: 0.95rem;
 }
 
 #now-button {
-  padding: 0.4rem 0.9rem;
-  border: 1px solid #cc8a1f;
-  background: #f5a623;
-  color: #2b2620;
-  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--color-sun-strong);
+  background: var(--color-sun);
+  color: var(--color-night);
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
 #now-button:hover {
-  background: #e6961a;
+  background: var(--color-sun-strong);
 }
 
+/* ---------- Search ---------- */
+.search-label {
+  flex: 1;
+}
+
+#search-input {
+  flex: 1;
+  max-width: 320px;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-size: 0.9rem;
+}
+
+#search-status {
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+/* ---------- Map ---------- */
 #map {
   height: 65vh;
   min-height: 420px;
 }
 
+/* Soft elevation + smooth color transitions on the sun/shade markers
+   (Leaflet renders circleMarkers as plain SVG elements this can target). */
+path.terrace-marker {
+  filter: drop-shadow(0 1px 2px rgba(20, 27, 30, 0.35));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  path.terrace-marker {
+    transition: fill 0.35s ease, stroke 0.35s ease, stroke-width 0.2s ease;
+  }
+}
+
+path.terrace-marker:hover {
+  filter: drop-shadow(0 2px 5px rgba(20, 27, 30, 0.45)) brightness(1.08);
+}
+
+/* ---------- Legend ---------- */
 #legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding: 0.6rem 1.25rem;
-  background: #fff;
-  border-bottom: 1px solid #e2ddd0;
-  font-size: 0.85rem;
+  gap: 0.5rem 0.75rem;
+  padding: 0.7rem 1.25rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-border);
 }
 
-#legend div {
+.chip {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   display: inline-block;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.dot.sun {
-  background: #f5a623;
+.dot.sun { background: var(--color-sun); }
+.dot.shade { background: var(--color-shade); }
+.dot.night { background: var(--color-night); }
+.dot.anomaly { background: var(--color-anomaly); }
+
+.ring {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+  background: transparent;
 }
 
-.dot.shade {
-  background: #5b7a9d;
-}
+.ring-up { border: 2px solid var(--color-confirm); }
+.ring-down { border: 2px solid var(--color-anomaly); }
 
-.dot.night {
-  background: #333844;
-}
-
-.dot.anomaly {
-  background: #b23a48;
-}
-
+/* ---------- Status line & footer ---------- */
 #status-line {
-  padding: 0 1.25rem;
+  padding: 0.6rem 1.25rem 0;
   font-size: 0.85rem;
-  color: #5c554a;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#vote-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+}
+
+.vote-footer-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-shade);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-button-danger {
+  color: var(--color-anomaly);
+}
+
+/* ---------- Popup ---------- */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-md);
+}
+
+.leaflet-popup-tip {
+  background: var(--color-surface);
 }
 
 .popup-title {
+  font-family: var(--font-display);
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
 }
 
 .popup-status {
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.popup-status.sun { color: #b06a00; }
-.popup-status.shade { color: #345876; }
-.popup-status.night { color: #333844; }
-.popup-status.anomaly { color: #b23a48; }
+.popup-status.sun { color: var(--color-sun-strong); }
+.popup-status.shade { color: var(--color-shade); }
+.popup-status.night { color: var(--color-night); }
+.popup-status.anomaly { color: var(--color-anomaly); }
 
 .popup-detail {
-  font-size: 0.85rem;
-  color: #5c554a;
-  margin-top: 0.25rem;
+  font-size: 0.83rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.3rem;
+  line-height: 1.4;
 }
 
+.popup-vote {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--color-surface-border);
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+}
+
+.vote-btn {
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-bg);
+  border-radius: 6px;
+  padding: 0.15rem 0.45rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.vote-btn:hover {
+  filter: brightness(0.97);
+}
+
+.vote-btn.active.vote-up {
+  background: color-mix(in srgb, var(--color-confirm) 18%, var(--color-surface));
+  border-color: var(--color-confirm);
+}
+
+.vote-btn.active.vote-down {
+  background: color-mix(in srgb, var(--color-anomaly) 18%, var(--color-surface));
+  border-color: var(--color-anomaly);
+}
+
+/* ---------- Small screens ---------- */
 @media (max-width: 640px) {
   #app-header {
-    padding: 0.75rem 1rem 0.5rem;
+    padding: 1.1rem 1rem 0.85rem;
   }
 
   #app-header h1 {
-    font-size: 1.15rem;
+    font-size: 1.3rem;
   }
 
   .subtitle {
-    font-size: 0.82rem;
+    font-size: 0.85rem;
   }
 
   #controls {
@@ -179,6 +466,17 @@ body {
     width: 100%;
   }
 
+  #search-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+  }
+
+  #search-input {
+    max-width: none;
+  }
+
   #map {
     height: 55vh;
     min-height: 320px;
@@ -187,10 +485,17 @@ body {
   #legend {
     padding: 0.6rem 1rem;
     font-size: 0.8rem;
-    gap: 0.6rem 1rem;
+    gap: 0.4rem;
   }
 
-  #status-line {
-    padding: 0 1rem;
+  #status-line,
+  #vote-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  #vote-footer {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

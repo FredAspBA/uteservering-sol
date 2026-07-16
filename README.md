@@ -1,8 +1,11 @@
 # Uteservering i solen – Malmö
 
-Visar vilka uteserveringar i centrala Malmö som har direkt solljus just nu,
+Visar vilka uteserveringar i Malmö som har direkt solljus just nu,
 eller vid valfri tid/datum du väljer — med hänsyn till skuggor från
 omkringliggande byggnader (inte bara om solen är uppe eller inte).
+Täcker centrala Malmö plus Limhamn, Slottsstaden, Fridhem, Erikslust,
+Fågelbacken, Nobel och Dalaplan. Sök på namn, och ge tummen upp/ner på om
+sol/skugga-bedömningen stämmer just nu.
 
 **Live:** https://fredaspba.github.io/uteservering-sol/
 
@@ -64,6 +67,30 @@ Kända förenklingar:
 - En uteservering exkluderar sin egen "hem-byggnad" (den byggnad den ligger
   direkt intill) från skuggberäkningen, så att den inte felaktigt räknas
   som skuggad av sin egen vägg.
+
+## Sök och kvalitetssäkring (tumme upp/ner)
+
+Sökfältet filtrerar uteserveringar på namn (fritext, med autocomplete) och
+zoomar/öppnar automatiskt om exakt en träff matchar.
+
+Varje popup har 👍/👎 för "stämmer sol/skugga-bedömningen just nu?". Detta
+loggar en post (byggnad/terrass-id, exakt visat datum+tid, en ögonblicksbild
+av vad algoritmen räknat ut, och ditt svar) till `localStorage` i din
+webbläsare — **bara lokalt på din enhet**, inte delat med andra användare.
+Tanken är att kunna exportera loggen (knappen "Exportera bedömningar" längst
+ner på sidan) och använda den för att i efterhand se var skuggberäkningen
+träffar fel, och förbättra `src/shadow.js`. "Rensa mina bedömningar" tömmer
+loggen på den här enheten.
+
+## Prestanda: spatialt index för byggnader
+
+Med tusentals byggnader (Malmö-området har f.n. ~22 000) är det för
+långsamt att för varje uteservering och varje omberäkning leta igenom hela
+byggnadslistan linjärt — testat gav det ~4-5 sekunder per omberäkning, vilket
+gör tidsreglaget oanvändbart. `src/shadow.js` bygger därför ett enkelt
+rutnätsindex (grid, ~500 m rutor) vid inläsning, så att bara byggnader nära
+varje uteservering behöver kollas. Det sänkte omberäkningstiden till under
+en halv sekund.
 
 ## Känd sårbarhet i utvecklingsberoende
 
