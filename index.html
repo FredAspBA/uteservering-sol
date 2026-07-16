@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uteservering i solen – Malmö</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header id="app-header">
+    <h1>☀️ Uteservering i solen – Malmö</h1>
+    <p class="subtitle">
+      Visar vilka uteserveringar som har direkt solljus just nu (eller vid valfri tid),
+      med hänsyn till skuggor från omkringliggande byggnader.
+    </p>
+  </header>
+
+  <div id="controls">
+    <label>
+      Datum
+      <input type="date" id="date-input" />
+    </label>
+    <label class="time-label">
+      Tid
+      <input type="range" id="time-slider" min="0" max="1439" step="5" />
+      <span id="time-display">--:--</span>
+    </label>
+    <button id="now-button">Nu</button>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="legend">
+    <div><span class="dot sun"></span> Sol</div>
+    <div><span class="dot shade"></span> Skugga</div>
+    <div><span class="dot night"></span> Mörkt (solen under horisonten)</div>
+    <div><span class="dot anomaly"></span> Osäker (dataproblem)</div>
+  </div>
+
+  <p id="status-line"></p>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

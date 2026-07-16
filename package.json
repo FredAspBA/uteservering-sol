@@ -1,0 +1,15 @@
+{
+  "name": "uteservering-sol",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Visar vilka uteserveringar i Malmo som har sol just nu, med hansyn till byggnadsskuggor.",
+  "type": "module",
+  "scripts": {
+    "fetch-data": "node scripts/fetch-data.js",
+    "start": "node scripts/static-server.js"
+  },
+  "dependencies": {
+    "@turf/turf": "^7.3.5",
+    "osmtogeojson": "^3.0.0-beta.5"
+  }
+}
