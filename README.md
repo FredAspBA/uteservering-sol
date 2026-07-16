@@ -4,7 +4,21 @@ Visar vilka uteserveringar i centrala Malmö som har direkt solljus just nu,
 eller vid valfri tid/datum du väljer — med hänsyn till skuggor från
 omkringliggande byggnader (inte bara om solen är uppe eller inte).
 
-## Köra appen
+**Live:** https://fredaspba.github.io/uteservering-sol/
+
+## Publicera ändringar (GitHub Pages)
+
+Sidan hostas gratis via GitHub Pages direkt från `main`-branchen av det här
+repot. Så fort du pushar till `main` byggs och uppdateras den publika sidan
+automatiskt (tar oftast under en minut):
+
+```
+git add -A
+git commit -m "..."
+git push
+```
+
+## Köra appen lokalt
 
 Appen är statisk (ingen backend), men måste köras via en lokal webbserver
 (inte öppnas direkt som `file://`), eftersom den hämtar `.geojson`-filer med
