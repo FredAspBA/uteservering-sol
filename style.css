@@ -261,6 +261,21 @@ input {
   font-size: 0.9rem;
 }
 
+#near-me-button {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+#near-me-button:hover {
+  border-color: var(--color-sun-strong);
+}
+
 #search-status {
   font-size: 0.8rem;
   color: var(--color-ink-muted);
@@ -410,6 +425,22 @@ path.terrace-marker:hover {
   line-height: 1.4;
 }
 
+.popup-timeline {
+  margin-top: 0.5rem;
+}
+
+.timeline-svg {
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timeline-loading {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+
 .popup-vote {
   display: flex;
   align-items: center;
@@ -519,6 +550,11 @@ path.terrace-marker:hover {
 
   #search-input {
     max-width: none;
+  }
+
+  #near-me-button {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
   }
 
   #map {

@@ -12,6 +12,13 @@ const STATUS_LABELS = {
   anomaly: "Osäker",
 };
 
+const STATUS_COLOR_VAR = {
+  sun: "--color-sun",
+  shade: "--color-shade",
+  night: "--color-night",
+  anomaly: "--color-anomaly",
+};
+
 // Read from the CSS custom properties (style.css) rather than duplicating
 // hex values here, so the palette only ever lives in one place.
 function cssVar(name) {
@@ -49,9 +56,10 @@ const terraceNamesList = document.getElementById("terrace-names");
 const voteCount = document.getElementById("vote-count");
 const exportVotesButton = document.getElementById("export-votes-button");
 const clearVotesButton = document.getElementById("clear-votes-button");
+const nearMeButton = document.getElementById("near-me-button");
 
 let terraces = [];
-let buildings = [];
+let buildings = null;
 let markers = [];
 
 function minutesToHHMM(minutes) {
@@ -90,6 +98,89 @@ function predictionSnapshot(result) {
   };
 }
 
+function computeOne(terrace, date) {
+  const [lon, lat] = terrace.point.geometry.coordinates;
+  const sunInfo = getSunInfo(lat, lon, date);
+  return computeShading(terrace.point, buildings, sunInfo, terrace.homeBuilding);
+}
+
+// ---------- Mini day-timeline ----------
+// Computed on demand (only for the terrace whose popup is open, see
+// ensureTimeline()) rather than for all terraces up front — a single
+// terrace's 48 half-hour samples is cheap; doing that for ~200 terraces
+// on every load would not be.
+const TIMELINE_STEP_MINUTES = 30;
+const timelineCache = new Map(); // `${terraceId}|${dateOnly}` -> points array
+
+function computeTimeline(terrace, dateOnly) {
+  const [year, month, day] = dateOnly.split("-").map(Number);
+  const points = [];
+  for (let minutes = 0; minutes < 24 * 60; minutes += TIMELINE_STEP_MINUTES) {
+    const date = new Date(year, month - 1, day, Math.floor(minutes / 60), minutes % 60);
+    const { status } = computeOne(terrace, date);
+    points.push({ minutes, status });
+  }
+  return points;
+}
+
+function timelineHtml(points, currentMinutes) {
+  const width = 224;
+  const height = 22;
+  const barWidth = width / points.length;
+  const bars = points
+    .map((p, i) => {
+      const varName = STATUS_COLOR_VAR[p.status] ?? STATUS_COLOR_VAR.night;
+      return `<rect x="${(i * barWidth).toFixed(1)}" y="0" width="${(barWidth + 0.5).toFixed(1)}" height="${height}" fill="var(${varName})" />`;
+    })
+    .join("");
+  const hourMarks = [0, 6, 12, 18, 24]
+    .map((h) => {
+      const x = (h / 24) * width;
+      return `<line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="var(--color-surface)" stroke-width="1" opacity="0.5" />`;
+    })
+    .join("");
+  const nowX = (currentMinutes / (24 * 60)) * width;
+  return `
+    <svg class="timeline-svg" viewBox="0 0 ${width} ${height + 12}" width="${width}" height="${height + 12}">
+      ${bars}
+      ${hourMarks}
+      <line x1="${nowX}" y1="-2" x2="${nowX}" y2="${height + 2}" stroke="var(--color-ink)" stroke-width="1.5" />
+      <text x="0" y="${height + 10}" font-family="var(--font-mono)" font-size="8" fill="var(--color-ink-muted)">00</text>
+      <text x="${width / 2}" y="${height + 10}" font-family="var(--font-mono)" font-size="8" fill="var(--color-ink-muted)" text-anchor="middle">12</text>
+      <text x="${width}" y="${height + 10}" font-family="var(--font-mono)" font-size="8" fill="var(--color-ink-muted)" text-anchor="end">24</text>
+    </svg>
+  `;
+}
+
+function timelineSectionHtml(entry) {
+  const dateOnly = dateInput.value;
+  if (entry.timelineDateOnly === dateOnly && entry.timelinePoints) {
+    return timelineHtml(entry.timelinePoints, Number(timeSlider.value));
+  }
+  return `<span class="timeline-loading">Laddar dagsöversikt…</span>`;
+}
+
+// Only ever called for a terrace whose popup is open (see popupopen
+// handler below), so this never runs 200 times in a row.
+function ensureTimeline(entry) {
+  const dateOnly = dateInput.value;
+  if (entry.timelineDateOnly === dateOnly && entry.timelinePoints) return;
+
+  const cacheKey = `${entry.terrace.id}|${dateOnly}`;
+  let points = timelineCache.get(cacheKey);
+  if (!points) {
+    points = computeTimeline(entry.terrace, dateOnly);
+    timelineCache.set(cacheKey, points);
+  }
+  entry.timelinePoints = points;
+  entry.timelineDateOnly = dateOnly;
+  if (entry.marker.isPopupOpen()) {
+    entry.marker.setPopupContent(popupHtml(entry));
+    updateMarkerVoteStroke(entry.marker, entry.terrace.id, entry.lastViewedAt);
+    wireVoteButtons(entry);
+  }
+}
+
 function popupHtml(entry) {
   const { terrace, lastResult: result, lastViewedAt } = entry;
   const { status, blocker, sunInfo } = result;
@@ -109,6 +200,7 @@ function popupHtml(entry) {
     <div class="popup-title">${escapeHtml(terrace.name)}</div>
     <div class="popup-status ${status}">${label}</div>
     <div class="popup-detail">${detail}</div>
+    <div class="popup-timeline">${timelineSectionHtml(entry)}</div>
     <div class="popup-vote">
       Stämmer det just nu?
       <button type="button" class="vote-btn vote-up ${vote === "up" ? "active" : ""}" data-vote="up">👍</button>
@@ -184,8 +276,18 @@ function renderMarkers() {
     }).addTo(markersLayer);
     marker.bindPopup("");
 
-    const entry = { terrace, marker, lastResult: null, lastViewedAt: null };
-    marker.on("popupopen", () => wireVoteButtons(entry));
+    const entry = {
+      terrace,
+      marker,
+      lastResult: null,
+      lastViewedAt: null,
+      timelinePoints: null,
+      timelineDateOnly: null,
+    };
+    marker.on("popupopen", () => {
+      wireVoteButtons(entry);
+      ensureTimeline(entry);
+    });
 
     markers.push(entry);
   }
@@ -197,12 +299,20 @@ function renderMarkers() {
 
 // On a fresh page load, the first recompute() has to lazily buffer every
 // nearby building it touches for the first time (see ensureBuffered() in
-// shadow.js) — for ~180 terraces that's still enough synchronous work to
+// shadow.js) — for ~200 terraces that's still enough synchronous work to
 // visibly freeze the tab for several seconds. Yielding to the browser
 // every CHUNK_SIZE terraces keeps the page responsive (repaints, accepts
 // input) while it works through the rest. Later recomputes (time slider
 // changes) reuse the now-memoized buffered geometry and finish inside a
 // single chunk anyway, so this costs them nothing noticeable.
+//
+// (A Web Worker would offload this entirely instead of just chunking it,
+// which is strictly better — but this environment's automated browser
+// couldn't deliver worker postMessage events at all when tested, even for
+// a trivial worker with no dependencies, so there was no way to verify a
+// worker-based rewrite actually works before shipping it. Chunking is the
+// same fix's proven-working fallback; revisit the worker if that gets
+// re-tested successfully in a normal browser.)
 const CHUNK_SIZE = 20;
 const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -226,9 +336,7 @@ async function recompute() {
 
     const entry = markers[i];
     const { terrace, marker } = entry;
-    const [lon, lat] = terrace.point.geometry.coordinates;
-    const sunInfo = getSunInfo(lat, lon, date);
-    const result = computeShading(terrace.point, buildings, sunInfo, terrace.homeBuilding);
+    const result = computeOne(terrace, date);
     entry.lastResult = result;
     entry.lastViewedAt = viewedAt;
 
@@ -236,6 +344,13 @@ async function recompute() {
     updateMarkerVoteStroke(marker, terrace.id, viewedAt);
     marker.setPopupContent(popupHtml(entry));
     wireVoteButtons(entry);
+    // If this terrace's popup is open and the date changed since its
+    // timeline was last computed, popupHtml() just rendered a "loading"
+    // placeholder above — nothing else re-triggers a refresh (ensureTimeline
+    // otherwise only runs on popupopen), so without this the popup would be
+    // stuck on "Laddar dagsöversikt…" forever whenever the date changes
+    // while it's already open.
+    if (marker.isPopupOpen()) ensureTimeline(entry);
 
     if (result.status === "sun") sunCount++;
     else if (result.status === "shade") shadeCount++;
@@ -276,6 +391,57 @@ function applySearchFilter() {
   }
 }
 
+// ---------- "Nearest sunny terrace to me" ----------
+const EARTH_RADIUS_M = 6371000;
+function haversineMeters(lat1, lon1, lat2, lon2) {
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(a));
+}
+
+function findNearestSunny() {
+  if (!navigator.geolocation) {
+    searchStatus.textContent = "Din webbläsare stödjer inte platsdelning.";
+    return;
+  }
+  searchStatus.textContent = "Hämtar din plats…";
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      const sunny = markers.filter((entry) => entry.lastResult?.status === "sun");
+      if (!sunny.length) {
+        searchStatus.textContent = "Ingen uteservering har sol just nu.";
+        return;
+      }
+      let closest = null;
+      let closestDist = Infinity;
+      for (const entry of sunny) {
+        const [lon, lat] = entry.terrace.point.geometry.coordinates;
+        const d = haversineMeters(latitude, longitude, lat, lon);
+        if (d < closestDist) {
+          closestDist = d;
+          closest = entry;
+        }
+      }
+      const [lon, lat] = closest.terrace.point.geometry.coordinates;
+      searchStatus.textContent = `Närmast med sol: ${closest.terrace.name} (${Math.round(closestDist)} m bort)`;
+      map.flyTo([lat, lon], Math.max(map.getZoom(), 17));
+      closest.marker.openPopup();
+    },
+    (err) => {
+      searchStatus.textContent =
+        err.code === err.PERMISSION_DENIED
+          ? "Platsdelning nekades — kan inte hitta närmaste."
+          : "Kunde inte hämta din plats just nu.";
+    },
+    { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+  );
+}
+
 function downloadVotesJson() {
   const blob = new Blob([exportVotesAsJson()], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -314,6 +480,7 @@ clearVotesButton.addEventListener("click", () => {
   updateVoteCount();
   recompute();
 });
+nearMeButton.addEventListener("click", findNearestSunny);
 
 async function init() {
   setInputsToNow();
