@@ -35,6 +35,16 @@ function bboxesOverlap(a, b) {
   return a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
 }
 
+/** Expands a [minX, minY, maxX, maxY] bbox by `meters` in every direction,
+ * without any turf call — plain arithmetic, so it's cheap enough to run
+ * for every one of the ~20k buildings during indexing. */
+function padBboxMeters([minX, minY, maxX, maxY], meters) {
+  const midLatRad = (((minY + maxY) / 2) * Math.PI) / 180;
+  const dLon = meters / (111320 * Math.cos(midLatRad));
+  const dLat = meters / 110540;
+  return [minX - dLon, minY - dLat, maxX + dLon, maxY + dLat];
+}
+
 function cellRange(bbox) {
   const [minX, minY, maxX, maxY] = bbox;
   return {
@@ -88,34 +98,51 @@ function queryNearby(index, bbox) {
 }
 
 /**
- * Precomputes buffered polygons, bboxes, resolved heights and a spatial
- * grid index for every building feature. Call this once after loading
- * buildings.geojson.
+ * Indexes every building by its (unbuffered) bbox and a spatial grid, but
+ * does NOT buffer any geometry yet. Buffering ~20k building polygons
+ * upfront (one turf.buffer() call each) was taking tens of seconds and
+ * freezing the page on load — most of those buildings are never actually
+ * queried, since each terrace only ever looks within ~500-600m of itself.
+ * Buffering is instead done lazily per-building on first actual use (see
+ * ensureBuffered()) and memoized, so the real cost scales with how many
+ * buildings are near the loaded terraces, not with the full dataset size.
  */
 export function prepareBuildings(buildingsGeojson) {
   const list = [];
   for (const feature of buildingsGeojson.features) {
     if (!feature.geometry) continue;
+    let rawBbox;
     try {
-      const buffered = turf.buffer(feature, FOOTPRINT_BUFFER_METERS, {
-        units: "meters",
-      });
-      if (!buffered) continue;
-      list.push({
-        feature,
-        buffered,
-        bbox: turf.bbox(buffered),
-        height: resolveBuildingHeight(feature.properties),
-        name:
-          feature.properties?.name ||
-          feature.properties?.["addr:street"] ||
-          "okänd byggnad",
-      });
+      rawBbox = turf.bbox(feature);
     } catch {
-      // Skip malformed geometries (rare in OSM extracts) rather than crash the app.
+      continue; // malformed geometry (rare in OSM extracts) — skip rather than crash
     }
+    list.push({
+      feature,
+      buffered: null, // filled in lazily by ensureBuffered()
+      bbox: padBboxMeters(rawBbox, FOOTPRINT_BUFFER_METERS + 1),
+      height: resolveBuildingHeight(feature.properties),
+      name:
+        feature.properties?.name ||
+        feature.properties?.["addr:street"] ||
+        "okänd byggnad",
+    });
   }
   return { list, grid: buildGrid(list) };
+}
+
+/** Computes (and memoizes) a building's buffered polygon on first use. */
+function ensureBuffered(building) {
+  if (!building.buffered) {
+    try {
+      building.buffered = turf.buffer(building.feature, FOOTPRINT_BUFFER_METERS, {
+        units: "meters",
+      });
+    } catch {
+      building.buffered = building.feature; // fall back to the raw footprint
+    }
+  }
+  return building.buffered;
 }
 
 /**
@@ -168,9 +195,10 @@ export function findHomeBuilding(terracePoint, buildingIndex) {
     // A point strictly inside a building's footprint is distance 0 from it
     // (distanceToBoundary would otherwise measure to the nearest edge,
     // which can exceed the threshold even though the point is enclosed).
-    const dist = turf.booleanPointInPolygon(terracePoint, b.buffered)
+    const buffered = ensureBuffered(b);
+    const dist = turf.booleanPointInPolygon(terracePoint, buffered)
       ? 0
-      : distanceToBoundary(terracePoint, b.buffered);
+      : distanceToBoundary(terracePoint, buffered);
     if (dist < closestDist) {
       closestDist = dist;
       closest = b;
@@ -194,7 +222,7 @@ export function computeShading(terracePoint, buildingIndex, sunInfo, homeBuildin
   const pointBbox = turf.bbox(turf.buffer(terracePoint, 1, { units: "meters" }));
   for (const b of queryNearby(buildingIndex, pointBbox)) {
     if (b === homeBuilding) continue;
-    if (turf.booleanPointInPolygon(terracePoint, b.buffered)) {
+    if (turf.booleanPointInPolygon(terracePoint, ensureBuffered(b))) {
       return { status: "anomaly", blocker: b, sunInfo };
     }
   }
@@ -218,7 +246,7 @@ export function computeShading(terracePoint, buildingIndex, sunInfo, homeBuildin
 
     let intersections;
     try {
-      intersections = turf.lineIntersect(ray, b.buffered);
+      intersections = turf.lineIntersect(ray, ensureBuffered(b));
     } catch {
       continue;
     }

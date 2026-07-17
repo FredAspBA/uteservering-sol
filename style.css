@@ -1,46 +1,51 @@
 /* ---------- Design tokens ---------- */
-/* Palette grounded in the subject: Öresund sea-glass for the ground, brass
-   sundial gold for sun, deep petrol for shade — the sun/shade duality that
-   the whole tool is about, not a generic UI palette. */
+/* Palette grounded in a Swedish summer garden terrace: sun-bleached grass
+   for the ground, marigold gold for sun (the tool's actual subject, not a
+   decorative accent), fern-canopy green for shade (shade under leaves reads
+   green in real life, not blue-grey) and a rare poppy-red spark for alerts. */
 :root {
-  --color-bg: #eef3f1;
-  --color-surface: #fbfdfc;
-  --color-surface-border: #d8e1dd;
-  --color-ink: #1e2a2e;
-  --color-ink-muted: #52625f;
+  --color-bg: #edf0dc;
+  --color-surface: #fbfaef;
+  --color-surface-border: #d8dcc2;
+  --color-ink: #1e2a16;
+  --color-ink-muted: #5b6b45;
 
-  --color-sun: #e8a63d;
-  --color-sun-strong: #c9852a;
-  --color-shade: #3a6472;
-  --color-night: #1b2430;
-  --color-anomaly: #b0483b;
-  --color-confirm: #2f8f4e;
+  --color-sun: #f0a31a;
+  --color-sun-strong: #d68a0a;
+  --color-shade: #3f6b44;
+  --color-dusk: #8a5a6b;
+  --color-night: #16210f;
+  --color-anomaly: #d6401f;
+  --color-confirm: #5a8f3c;
 
   --font-display: "Bricolage Grotesque", "Segoe UI", sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --radius: 10px;
-  --shadow-sm: 0 1px 2px rgba(30, 42, 46, 0.08), 0 1px 1px rgba(30, 42, 46, 0.05);
-  --shadow-md: 0 4px 14px rgba(30, 42, 46, 0.1);
+  --shadow-sm: 0 1px 2px rgba(30, 42, 22, 0.1), 0 1px 1px rgba(30, 42, 22, 0.06);
+  --shadow-md: 0 4px 14px rgba(30, 42, 22, 0.12);
 
   --day-progress: 55%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #141b1e;
-    --color-surface: #1b2529;
-    --color-surface-border: #2c3a3f;
-    --color-ink: #eaf1ef;
-    --color-ink-muted: #9fb0ac;
+    /* A midnight garden, not a naive invert: still fern-green shade, still
+       marigold sun, just lit by moonlight instead of noon. */
+    --color-bg: #141c10;
+    --color-surface: #1c2717;
+    --color-surface-border: #33422a;
+    --color-ink: #eaf0de;
+    --color-ink-muted: #a8b896;
 
-    --color-sun: #f0b453;
-    --color-sun-strong: #f6c876;
-    --color-shade: #6d97a6;
-    --color-night: #0c1216;
-    --color-anomaly: #e08272;
-    --color-confirm: #59c17e;
+    --color-sun: #f5b646;
+    --color-sun-strong: #f8c874;
+    --color-shade: #6fa377;
+    --color-dusk: #b07e90;
+    --color-night: #0a100a;
+    --color-anomaly: #e58269;
+    --color-confirm: #7fc26b;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
@@ -70,10 +75,16 @@ input {
 }
 
 /* ---------- Header ---------- */
+/* Dappled light through leaves, not one flat glow: a warm sun-blob that
+   slides with the time-of-day slider, plus a couple of soft, static
+   fern-green blobs standing in for leaf-shadow — the layered look of
+   sitting under a tree on a bright day. */
 #app-header {
   padding: 1.5rem 1.25rem 1.1rem;
   background:
-    radial-gradient(560px circle at var(--day-progress) -40%, rgba(232, 166, 61, 0.32), transparent 62%),
+    radial-gradient(420px circle at var(--day-progress) -30%, rgba(240, 163, 26, 0.38), transparent 60%),
+    radial-gradient(220px circle at 12% 15%, rgba(63, 107, 68, 0.14), transparent 65%),
+    radial-gradient(260px circle at 82% 55%, rgba(63, 107, 68, 0.1), transparent 60%),
     var(--color-surface);
   border-bottom: 1px solid var(--color-surface-border);
 }
@@ -164,10 +175,12 @@ input {
   background: linear-gradient(
     to right,
     var(--color-night) 0%,
-    var(--color-night) 18%,
-    var(--color-sun) 32%,
-    var(--color-sun) 68%,
-    var(--color-night) 82%,
+    var(--color-night) 15%,
+    var(--color-dusk) 25%,
+    var(--color-sun) 34%,
+    var(--color-sun) 66%,
+    var(--color-dusk) 75%,
+    var(--color-night) 85%,
     var(--color-night) 100%
   );
   cursor: pointer;
@@ -200,10 +213,12 @@ input {
   background: linear-gradient(
     to right,
     var(--color-night) 0%,
-    var(--color-night) 18%,
-    var(--color-sun) 32%,
-    var(--color-sun) 68%,
-    var(--color-night) 82%,
+    var(--color-night) 15%,
+    var(--color-dusk) 25%,
+    var(--color-sun) 34%,
+    var(--color-sun) 66%,
+    var(--color-dusk) 75%,
+    var(--color-night) 85%,
     var(--color-night) 100%
   );
 }
@@ -261,7 +276,7 @@ input {
 /* Soft elevation + smooth color transitions on the sun/shade markers
    (Leaflet renders circleMarkers as plain SVG elements this can target). */
 path.terrace-marker {
-  filter: drop-shadow(0 1px 2px rgba(20, 27, 30, 0.35));
+  filter: drop-shadow(0 1px 2px rgba(20, 30, 15, 0.35));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -271,7 +286,7 @@ path.terrace-marker {
 }
 
 path.terrace-marker:hover {
-  filter: drop-shadow(0 2px 5px rgba(20, 27, 30, 0.45)) brightness(1.08);
+  filter: drop-shadow(0 2px 5px rgba(20, 30, 15, 0.45)) brightness(1.08);
 }
 
 /* ---------- Legend ---------- */
@@ -296,18 +311,19 @@ path.terrace-marker:hover {
   color: var(--color-ink-muted);
 }
 
-.dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  display: inline-block;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+/* Small status glyphs instead of plain color dots — a leaf for shade
+   specifically encodes *why* (shaded like under foliage), not just "a
+   different color than sun". */
+.status-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
-.dot.sun { background: var(--color-sun); }
-.dot.shade { background: var(--color-shade); }
-.dot.night { background: var(--color-night); }
-.dot.anomaly { background: var(--color-anomaly); }
+.status-icon.icon-sun { color: var(--color-sun); }
+.status-icon.icon-leaf { color: var(--color-shade); }
+.status-icon.icon-moon { color: var(--color-night); }
+.status-icon.icon-alert { color: var(--color-anomaly); }
 
 .ring {
   width: 11px;

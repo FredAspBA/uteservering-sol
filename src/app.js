@@ -12,17 +12,23 @@ const STATUS_LABELS = {
   anomaly: "Osäker",
 };
 
+// Read from the CSS custom properties (style.css) rather than duplicating
+// hex values here, so the palette only ever lives in one place.
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 const STATUS_COLORS = {
-  sun: "#e8a63d",
-  shade: "#3a6472",
-  night: "#1b2430",
-  anomaly: "#b0483b",
+  sun: cssVar("--color-sun"),
+  shade: cssVar("--color-shade"),
+  night: cssVar("--color-night"),
+  anomaly: cssVar("--color-anomaly"),
 };
 
 const VOTE_STROKE_COLORS = {
-  up: "#2f8f4e",
-  down: "#b0483b",
-  none: "#1e2a2e",
+  up: cssVar("--color-confirm"),
+  down: cssVar("--color-anomaly"),
+  none: cssVar("--color-ink"),
 };
 
 const map = L.map("map").setView(MALMO_CENTER, 16);
@@ -172,7 +178,7 @@ function renderMarkers() {
     const marker = L.circleMarker([lat, lon], {
       radius: 8,
       weight: 1.5,
-      color: "#1e2a2e",
+      color: VOTE_STROKE_COLORS.none,
       fillOpacity: 0.92,
       className: "terrace-marker",
     }).addTo(markersLayer);
@@ -189,7 +195,21 @@ function renderMarkers() {
     .join("");
 }
 
-function recompute() {
+// On a fresh page load, the first recompute() has to lazily buffer every
+// nearby building it touches for the first time (see ensureBuffered() in
+// shadow.js) — for ~180 terraces that's still enough synchronous work to
+// visibly freeze the tab for several seconds. Yielding to the browser
+// every CHUNK_SIZE terraces keeps the page responsive (repaints, accepts
+// input) while it works through the rest. Later recomputes (time slider
+// changes) reuse the now-memoized buffered geometry and finish inside a
+// single chunk anyway, so this costs them nothing noticeable.
+const CHUNK_SIZE = 20;
+const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+let computeGeneration = 0;
+
+async function recompute() {
+  const generation = ++computeGeneration;
   const date = dateFromInputs();
   const viewedAt = date.toISOString();
   let sunCount = 0;
@@ -198,7 +218,13 @@ function recompute() {
 
   const centerSun = getSunInfo(MALMO_CENTER[0], MALMO_CENTER[1], date);
 
-  for (const entry of markers) {
+  for (let i = 0; i < markers.length; i++) {
+    if (i > 0 && i % CHUNK_SIZE === 0) await yieldToBrowser();
+    // A newer recompute() started (e.g. the user kept dragging the time
+    // slider) — abandon this stale run rather than race it to the finish.
+    if (generation !== computeGeneration) return;
+
+    const entry = markers[i];
     const { terrace, marker } = entry;
     const [lon, lat] = terrace.point.geometry.coordinates;
     const sunInfo = getSunInfo(lat, lon, date);

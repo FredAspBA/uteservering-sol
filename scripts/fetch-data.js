@@ -23,6 +23,37 @@ const SEARCH_BBOX = "55.558,12.895,55.615,13.035";
 // MAX_RAY_METERS in src/shadow.js), plus a margin.
 const BUILDING_PADDING_METERS = 600;
 
+// Only these OSM tags are ever read by src/shadow.js (height resolution)
+// or the popup UI (blocker name) — everything else (wikidata, source,
+// ref:*, roof:*, ...) is dead weight once shipped to the browser. Across
+// ~20k buildings, dropping unused tags is most of the payload-size win.
+const BUILDING_PROPS_TO_KEEP = ["height", "building:levels", "building", "name", "addr:street"];
+
+// Douglas-Peucker tolerance in degrees (~0.9m at Malmo's latitude). Building
+// footprints have far more vertices (bay windows, rounded corners) than the
+// coarse shadow raycast needs; simplifying shrinks both file size and the
+// per-building turf.buffer()/lineIntersect() cost in the browser.
+const SIMPLIFY_TOLERANCE_DEG = 0.000008;
+
+function slimBuilding(feature) {
+  if (!feature.geometry) return null;
+  const properties = {};
+  for (const key of BUILDING_PROPS_TO_KEEP) {
+    if (feature.properties?.[key] != null) properties[key] = feature.properties[key];
+  }
+  let geometry = feature.geometry;
+  try {
+    geometry = turf.simplify(feature, {
+      tolerance: SIMPLIFY_TOLERANCE_DEG,
+      highQuality: false,
+    }).geometry;
+  } catch {
+    // Keep the original geometry if simplify chokes on unusual input
+    // (e.g. a degenerate ring) rather than dropping the building.
+  }
+  return { type: "Feature", id: feature.id, properties, geometry };
+}
+
 // Note: overpass.kumi.systems is unreachable from this machine (TLS
 // connection resets immediately, 0 bytes read — looks like a network/proxy
 // block rather than a server-side issue) so it's not worth listing as a
@@ -203,21 +234,25 @@ async function main() {
     }
     await sleep(3000); // be polite to the shared public Overpass instance
   }
-  const buildingsGeojson = {
-    type: "FeatureCollection",
-    features: [...buildingsById.values()],
-  };
-  console.log(`  -> ${buildingsGeojson.features.length} unique building features`);
+  const rawFeatures = [...buildingsById.values()];
+  console.log(`  -> ${rawFeatures.length} unique building features`);
   if (failedTiles.length) {
     console.warn(
       `  WARNING: ${failedTiles.length}/${tiles.length} tiles failed and were skipped — building coverage has gaps in those areas. Re-run this script to retry.`
     );
   }
 
-  await writeFile(
-    join(dataDir, "buildings.geojson"),
-    JSON.stringify(buildingsGeojson, null, 2)
+  const slimFeatures = rawFeatures.map(slimBuilding).filter(Boolean);
+  const buildingsGeojson = { type: "FeatureCollection", features: slimFeatures };
+
+  const rawBytes = Buffer.byteLength(JSON.stringify(rawFeatures));
+  const slimJson = JSON.stringify(buildingsGeojson);
+  console.log(
+    `  Slimmed buildings payload: ${(rawBytes / 1e6).toFixed(1)} MB -> ${(Buffer.byteLength(slimJson) / 1e6).toFixed(1)} MB` +
+      ` (stripped tags to only what the shadow calc + popups use, simplified geometry)`
   );
+
+  await writeFile(join(dataDir, "buildings.geojson"), slimJson);
   console.log("Wrote data/buildings.geojson");
 }
 
