@@ -18,7 +18,14 @@ const GRID_CELL_DEG = 0.005;
 
 function resolveBuildingHeight(properties) {
   if (properties?.height) {
-    const parsed = parseFloat(String(properties.height).replace(/[^\d.]/g, ""));
+    // parseFloat naturally stops at the first non-numeric character, so it
+    // degrades gracefully on odd tag formats (e.g. "12;15" from a disputed
+    // OSM edit -> 12, or "12.5 m" -> 12.5). A previous version stripped all
+    // non-digit/dot characters first, which mangled cases like "12;15" into
+    // "1215" — a silently wrong height. Comma-decimals ("12,5") are
+    // normalized to a dot first since parseFloat would otherwise stop at
+    // the comma and lose the fraction.
+    const parsed = parseFloat(String(properties.height).trim().replace(",", "."));
     if (!Number.isNaN(parsed) && parsed > 0) return parsed;
   }
   const levels = properties?.["building:levels"];
@@ -43,6 +50,17 @@ function padBboxMeters([minX, minY, maxX, maxY], meters) {
   const dLon = meters / (111320 * Math.cos(midLatRad));
   const dLat = meters / 110540;
   return [minX - dLon, minY - dLat, maxX + dLon, maxY + dLat];
+}
+
+/** Same idea as padBboxMeters, but starting from a single point rather
+ * than an existing bbox — used in place of turf.buffer()+turf.bbox() for
+ * the small search boxes around a terrace point. Those used to go
+ * through turf's circle-polygon buffer just to get a bounding box out of
+ * it, which is real (if small) overhead multiplied by every terrace on
+ * every recompute — plain arithmetic is equivalent here and effectively free. */
+function pointBboxMeters(point, meters) {
+  const [lon, lat] = point.geometry.coordinates;
+  return padBboxMeters([lon, lat, lon, lat], meters);
 }
 
 function cellRange(bbox) {
@@ -183,9 +201,7 @@ function distanceToBoundary(point, polygon) {
  * @param {{list: Array, grid: Map}} buildingIndex - output of prepareBuildings()
  */
 export function findHomeBuilding(terracePoint, buildingIndex) {
-  const searchBbox = turf.bbox(
-    turf.buffer(terracePoint, HOME_BUILDING_THRESHOLD_METERS + 5, { units: "meters" })
-  );
+  const searchBbox = pointBboxMeters(terracePoint, HOME_BUILDING_THRESHOLD_METERS + 5);
   const candidates = queryNearby(buildingIndex, searchBbox);
 
   let closest = null;
@@ -219,7 +235,7 @@ export function computeShading(terracePoint, buildingIndex, sunInfo, homeBuildin
     return { status: "night", blocker: null, sunInfo };
   }
 
-  const pointBbox = turf.bbox(turf.buffer(terracePoint, 1, { units: "meters" }));
+  const pointBbox = pointBboxMeters(terracePoint, 1);
   for (const b of queryNearby(buildingIndex, pointBbox)) {
     if (b === homeBuilding) continue;
     if (turf.booleanPointInPolygon(terracePoint, ensureBuffered(b))) {

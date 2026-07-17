@@ -204,7 +204,7 @@ function popupHtml(entry) {
     <div class="popup-status ${status}">${label}</div>
     <div class="popup-detail">${detail}</div>
     <div class="popup-timeline">${timelineSectionHtml(entry)}</div>
-    <div class="popup-vote">
+    <div class="popup-vote" title="Stämmer sol/skugga-bedömningen ovan med verkligheten just nu? Hjälper till att förbättra beräkningen framöver.">
       Stämmer det just nu?
       <button type="button" class="vote-btn vote-up ${vote === "up" ? "active" : ""}" data-vote="up">👍</button>
       <button type="button" class="vote-btn vote-down ${vote === "down" ? "active" : ""}" data-vote="down">👎</button>

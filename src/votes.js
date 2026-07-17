@@ -8,16 +8,26 @@ import { pushVote } from "./cloudVotes.js";
 
 const STORAGE_KEY = "uteservering-sol:votes-log";
 
+// In-memory mirror of the log, so popupHtml() — which calls
+// getVoteForView() once per terrace on every recompute (~180 times per
+// time-slider tick) — doesn't re-read and JSON.parse the whole log from
+// localStorage on every single one of those calls. Kept in sync by
+// writeLog(), the only place the log is ever mutated.
+let cachedLog = null;
+
 function readLog() {
+  if (cachedLog) return cachedLog;
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return Array.isArray(parsed) ? parsed : [];
+    cachedLog = Array.isArray(parsed) ? parsed : [];
   } catch {
-    return [];
+    cachedLog = [];
   }
+  return cachedLog;
 }
 
 function writeLog(entries) {
+  cachedLog = entries;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   } catch {
