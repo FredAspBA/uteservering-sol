@@ -109,6 +109,23 @@ rutnätsindex (grid, ~500 m rutor) vid inläsning, så att bara byggnader nära
 varje uteservering behöver kollas. Det sänkte omberäkningstiden till under
 en halv sekund.
 
+## Säkerhet
+
+- **XSS-fix**: byggnadsnamn (`blocker.name` i popupen) kommer från OSM-taggar
+  — öppen, världsredigerbar data. De escapas nu innan de sätts in i popupens
+  HTML (samma `escapeHtml()` som redan användes för uteserveringsnamn), så
+  att ingen kan köra skadlig kod i besökarens webbläsare genom att tagga en
+  byggnad illvilligt i OpenStreetMap.
+- **SRI (Subresource Integrity)**: Leaflet, SunCalc och Turf.js laddas från
+  CDN:er (unpkg/jsdelivr) med `integrity`-hashar och exakta versioner, så att
+  filerna vägras laddas om en CDN skulle manipuleras eller bytas ut i det
+  tysta. (Google Fonts CSS undantaget — det svarar med olika innehåll per
+  webbläsare, vilket gör SRI opraktiskt där.)
+- **Firebase-regler**: se avsnittet ovan — append-only, ingen läsning/
+  ändring/radering via klienten, strikt formatvalidering.
+- Ingen känslig data hanteras (inga lösenord, ingen inloggning, inga
+  personuppgifter utöver frivilligt delade sol/skugga-bedömningar).
+
 ## Känd sårbarhet i utvecklingsberoende
 
 `npm audit` flaggar en kritisk sårbarhet i `@xmldom/xmldom` (transitivt via

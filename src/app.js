@@ -187,7 +187,10 @@ function popupHtml(entry) {
   const label = STATUS_LABELS[status];
   let detail = `Solhöjd: ${sunInfo.altitudeDeg.toFixed(1)}°, riktning mot solen: ${sunInfo.bearingDeg.toFixed(0)}°`;
   if (status === "shade" && blocker) {
-    detail += `<br>Skuggas av ${blocker.name} (${blocker.distanceMeters.toFixed(0)} m bort, behöver ≥${blocker.requiredHeightMeters.toFixed(
+    // blocker.name comes straight from an OSM building's name/addr:street
+    // tag — world-editable data, so it must be escaped like any other
+    // untrusted string before landing in innerHTML (see escapeHtml below).
+    detail += `<br>Skuggas av ${escapeHtml(blocker.name)} (${blocker.distanceMeters.toFixed(0)} m bort, behöver ≥${blocker.requiredHeightMeters.toFixed(
       1
     )} m, är ${blocker.actualHeightMeters.toFixed(1)} m)`;
   }
