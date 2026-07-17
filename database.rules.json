@@ -1,0 +1,27 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "votes": {
+      "$voteId": {
+        ".write": "!data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['terraceId', 'terraceName', 'viewedAt', 'votedAt', 'prediction', 'verdict'])",
+        "terraceId": { ".validate": "newData.isString() && newData.val().length < 100" },
+        "terraceName": { ".validate": "newData.isString() && newData.val().length < 200" },
+        "viewedAt": { ".validate": "newData.isString() && newData.val().length < 40" },
+        "votedAt": { ".validate": "newData.isString() && newData.val().length < 40" },
+        "verdict": { ".validate": "newData.val() === 'up' || newData.val() === 'down'" },
+        "prediction": {
+          ".validate": "newData.hasChildren(['status'])",
+          "status": { ".validate": "newData.isString() && newData.val().length < 20" },
+          "altitudeDeg": { ".validate": "newData.isNumber()" },
+          "bearingDeg": { ".validate": "newData.isNumber()" },
+          "blockerName": { ".validate": "newData.isString() && newData.val().length < 200" },
+          "distanceMeters": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}

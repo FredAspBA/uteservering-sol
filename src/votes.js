@@ -4,6 +4,8 @@
 // verdict — meant to be exported later and used to spot patterns in where
 // the shadow-casting algorithm (src/shadow.js) gets it wrong.
 
+import { pushVote } from "./cloudVotes.js";
+
 const STORAGE_KEY = "uteservering-sol:votes-log";
 
 function readLog() {
@@ -76,6 +78,11 @@ export function recordVote(terraceId, terraceName, viewedAt, prediction, verdict
     log.push(entry);
   }
   writeLog(log);
+  // Fire-and-forget share to the common store (no-op until a Firebase
+  // config is present in firebase-config.js). Only actual verdicts are
+  // pushed — clearing a vote (the early return above) stays local, since
+  // the shared log is append-only and meant for later analysis.
+  pushVote(entry);
   return verdict;
 }
 

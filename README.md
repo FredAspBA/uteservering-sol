@@ -76,11 +76,28 @@ zoomar/öppnar automatiskt om exakt en träff matchar.
 Varje popup har 👍/👎 för "stämmer sol/skugga-bedömningen just nu?". Detta
 loggar en post (byggnad/terrass-id, exakt visat datum+tid, en ögonblicksbild
 av vad algoritmen räknat ut, och ditt svar) till `localStorage` i din
-webbläsare — **bara lokalt på din enhet**, inte delat med andra användare.
-Tanken är att kunna exportera loggen (knappen "Exportera bedömningar" längst
-ner på sidan) och använda den för att i efterhand se var skuggberäkningen
-träffar fel, och förbättra `src/shadow.js`. "Rensa mina bedömningar" tömmer
-loggen på den här enheten.
+webbläsare. Tanken är att i efterhand se var skuggberäkningen träffar fel,
+och förbättra `src/shadow.js`. "Exportera bedömningar" laddar ner loggen
+som JSON; "Rensa mina bedömningar" tömmer den på den här enheten.
+
+### Delad röstlagring (Firebase)
+
+Utöver den lokala loggen skickas varje röst även till en gemensam
+Firebase Realtime Database (projektet `uteservering-040-sol`), så att
+**allas** bedömningar hamnar på ett ställe för analys. Konfigurationen
+ligger i `src/firebase-config.js` (värdena är identifierare, inte
+hemligheter — säkerheten sköts av databasens regler).
+
+Reglerna finns i `database.rules.json` och klistras in under
+Build -> Realtime Database -> fliken "Rules" i Firebase Console
+(console.firebase.google.com), följt av "Publish". De gör loggen
+append-only: vem som helst kan lägga till en röst (appen har ingen
+inloggning), men ingen kan läsa, ändra eller radera via appen. Datan
+läser du själv i Firebase Console under Realtime Database -> Data,
+eller exporterar som JSON därifrån.
+
+Om nätverket/Firebase strular fungerar appen exakt som innan —
+rösterna sparas alltid lokalt först.
 
 ## Prestanda: spatialt index för byggnader
 
