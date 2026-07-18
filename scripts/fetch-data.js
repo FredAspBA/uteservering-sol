@@ -32,8 +32,18 @@ const BUILDING_PROPS_TO_KEEP = ["height", "building:levels", "building", "name",
 // Douglas-Peucker tolerance in degrees (~0.9m at Malmo's latitude). Building
 // footprints have far more vertices (bay windows, rounded corners) than the
 // coarse shadow raycast needs; simplifying shrinks both file size and the
-// per-building turf.buffer()/lineIntersect() cost in the browser.
+// per-building turf.lineIntersect() cost in the browser.
 const SIMPLIFY_TOLERANCE_DEG = 0.000008;
+
+// Must match FOOTPRINT_BUFFER_METERS in src/shadow.js. Buffering here
+// instead of there means the ~500-1000ms-per-building turf.buffer() cost
+// runs once on this machine when the data is (re)generated, not in every
+// visitor's browser on every first page load. With ~900+ terraces now
+// pulling in enough nearby buildings to matter, that runtime cost had
+// grown to a genuine 60-90s freeze on load — moving it here removes it
+// from the hot path entirely, since the shipped geometry is already the
+// buffered footprint shadow.js's raycast needs.
+const FOOTPRINT_BUFFER_METERS = 0.5;
 
 function slimBuilding(feature) {
   if (!feature.geometry) return null;
@@ -43,13 +53,22 @@ function slimBuilding(feature) {
   }
   let geometry = feature.geometry;
   try {
-    geometry = turf.simplify(feature, {
+    const simplified = turf.simplify(feature, {
+      tolerance: SIMPLIFY_TOLERANCE_DEG,
+      highQuality: false,
+    });
+    const buffered = turf.buffer(simplified, FOOTPRINT_BUFFER_METERS, { units: "meters" });
+    // Buffering can add vertices back (rounding corners) — simplify once
+    // more to keep the shipped file size/complexity down.
+    geometry = turf.simplify(buffered, {
       tolerance: SIMPLIFY_TOLERANCE_DEG,
       highQuality: false,
     }).geometry;
   } catch {
-    // Keep the original geometry if simplify chokes on unusual input
-    // (e.g. a degenerate ring) rather than dropping the building.
+    // Keep the original (unbuffered) geometry if buffer/simplify chokes on
+    // unusual input (e.g. a degenerate ring) rather than dropping the
+    // building. A very small number of buildings shipped unbuffered is a
+    // negligible accuracy loss for the shadow raycast.
   }
   return { type: "Feature", id: feature.id, properties, geometry };
 }
@@ -67,12 +86,28 @@ const ENDPOINTS = ["https://overpass-api.de/api/interpreter"];
 const OUTDOOR_SEATING_AMENITIES =
   "cafe|restaurant|bar|pub|ice_cream|fast_food|biergarten|food_court";
 
+// Bakeries/confectioners often have a couple of outdoor tables too
+// ("Deg Bageri" was one of the specific places this was missing).
+const OUTDOOR_SEATING_SHOPS = "bakery|confectionery";
+
+// Checked against a spot-sample of central Malmo venues (591 total in that
+// area): only 139 are explicitly tagged outdoor_seating=yes/only, 34 are
+// explicitly "no", and the remaining 418 simply have no outdoor_seating
+// tag at all either way — untagged is the OSM norm here, not a signal that
+// the place lacks a terrace. Real, well-known spots (Surf Shack Beach
+// Diner, Hygge Mat & Bar, Deg Bageri) all fell in that untagged bucket and
+// were being silently dropped by requiring an explicit "yes". So: include
+// every venue of these types EXCEPT the ones explicitly marked "no" —
+// respect a clear negative signal, but don't require an explicit positive
+// one that most real terraces in this dataset simply never got tagged with.
 function terracesQuery(bbox) {
   return `
-[out:json][timeout:60];
+[out:json][timeout:90];
 (
-  node["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"~"^(yes|only)$"](${bbox});
-  way["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"~"^(yes|only)$"](${bbox});
+  node["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"!="no"](${bbox});
+  way["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"!="no"](${bbox});
+  node["shop"~"^(${OUTDOOR_SEATING_SHOPS})$"]["outdoor_seating"!="no"](${bbox});
+  way["shop"~"^(${OUTDOOR_SEATING_SHOPS})$"]["outdoor_seating"!="no"](${bbox});
   node["leisure"="outdoor_seating"](${bbox});
   way["leisure"="outdoor_seating"](${bbox});
 );

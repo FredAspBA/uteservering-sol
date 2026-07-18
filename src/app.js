@@ -300,24 +300,25 @@ function renderMarkers() {
     .join("");
 }
 
-// On a fresh page load, the first recompute() has to lazily buffer every
-// nearby building it touches for the first time (see ensureBuffered() in
-// shadow.js) — for ~200 terraces that's still enough synchronous work to
-// visibly freeze the tab for several seconds. Yielding to the browser
-// every CHUNK_SIZE terraces keeps the page responsive (repaints, accepts
-// input) while it works through the rest. Later recomputes (time slider
-// changes) reuse the now-memoized buffered geometry and finish inside a
-// single chunk anyway, so this costs them nothing noticeable.
+// A full recompute of all ~938 terraces measures ~150ms after the spatial-
+// grid and ray-pre-filter optimizations in shadow.js, so chunked yielding
+// is only a light safety valve for much slower devices, not a necessity.
 //
-// (A Web Worker would offload this entirely instead of just chunking it,
-// which is strictly better — but this environment's automated browser
-// couldn't deliver worker postMessage events at all when tested, even for
-// a trivial worker with no dependencies, so there was no way to verify a
-// worker-based rewrite actually works before shipping it. Chunking is the
-// same fix's proven-working fallback; revisit the worker if that gets
-// re-tested successfully in a normal browser.)
-const CHUNK_SIZE = 20;
-const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve, 0));
+// The yield itself uses MessageChannel rather than setTimeout(0) on
+// purpose: browsers clamp setTimeout in BACKGROUND tabs to >=1000ms per
+// tick, which turned "47 yields x ~0ms" into "47 yields x ~1s" — a page
+// left loading in another tab took 40-70s to finish for no real reason
+// (this was observed and misdiagnosed as compute cost twice before the
+// throttling was identified). MessageChannel message delivery is exempt
+// from that clamp, so the same code loads fast in fore- and background.
+const CHUNK_SIZE = 100;
+const yieldChannel = new MessageChannel();
+function yieldToBrowser() {
+  return new Promise((resolve) => {
+    yieldChannel.port1.onmessage = () => resolve();
+    yieldChannel.port2.postMessage(null);
+  });
+}
 
 let computeGeneration = 0;
 

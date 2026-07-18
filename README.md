@@ -4,8 +4,17 @@ Visar vilka uteserveringar i Malmö som har direkt solljus just nu,
 eller vid valfri tid/datum du väljer — med hänsyn till skuggor från
 omkringliggande byggnader (inte bara om solen är uppe eller inte).
 Täcker centrala Malmö plus Limhamn, Slottsstaden, Fridhem, Erikslust,
-Fågelbacken, Nobel och Dalaplan. Sök på namn, och ge tummen upp/ner på om
+Fågelbacken, Nobel och Dalaplan — ~940 caféer, restauranger, barer,
+glasställen och bagerier. Sök på namn, och ge tummen upp/ner på om
 sol/skugga-bedömningen stämmer just nu.
+
+Urvalet inkluderar alla ätställen av dessa typer **utom** de som i
+OpenStreetMap uttryckligen taggats `outdoor_seating=no` — de flesta
+riktiga uteserveringar saknar nämligen taggen helt (av 591 ställen i
+centrum var bara 139 taggade "ja" och 34 "nej"; resten otaggade), så att
+kräva ett uttryckligt "ja" gömde välkända ställen som Surf Shack, Hygge
+och Deg Bageri. Baksidan: några ställen utan uteservering kan slinka med
+— tumma gärna ner dem så kan de filtreras i efterhand.
 
 **Live:** https://fredaspba.github.io/uteservering-sol/
 
