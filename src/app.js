@@ -181,6 +181,58 @@ function ensureTimeline(entry) {
   }
 }
 
+// ---------- Venue type & alcohol ----------
+// Swedish labels for the OSM amenity/shop/leisure value each place carries.
+const VENUE_LABELS = {
+  restaurant: "Restaurang",
+  cafe: "Kafé",
+  fast_food: "Snabbmat",
+  bakery: "Bageri",
+  confectionery: "Konditori",
+  ice_cream: "Glass",
+  bar: "Bar",
+  pub: "Pub",
+  biergarten: "Ölträdgård",
+  food_court: "Food court",
+  outdoor_seating: "Uteservering",
+};
+
+/**
+ * Reads the venue category and what we can honestly say about alcohol.
+ *
+ * Alcohol is barely tagged in OSM here — only ~4 of ~940 places carry an
+ * explicit alcohol tag — so most places genuinely are unknown and are
+ * reported as such rather than guessed at. The one sound inference is by
+ * category: OSM defines amenity=bar/pub/biergarten as establishments that
+ * sell alcoholic drinks, so those are definitional, not a guess. Restaurants
+ * and cafes are deliberately NOT inferred either way: plenty of Malmo
+ * restaurants have no license and plenty of cafes serve wine.
+ */
+function venueInfo(properties = {}) {
+  const key = properties.amenity || properties.shop || properties.leisure;
+  const typeLabel = VENUE_LABELS[key] || null;
+
+  const alcoholByCategory = key === "bar" || key === "pub" || key === "biergarten";
+  const explicit = properties.alcohol;
+  const microbrewery = properties.microbrewery === "yes";
+
+  let alcohol = "unknown";
+  if (explicit === "no") alcohol = "no";
+  else if (explicit === "yes" || alcoholByCategory || microbrewery) alcohol = "yes";
+
+  return { typeLabel, alcohol };
+}
+
+function venueLineHtml(properties) {
+  const { typeLabel, alcohol } = venueInfo(properties);
+  const parts = [];
+  if (typeLabel) parts.push(`<span class="venue-type">${escapeHtml(typeLabel)}</span>`);
+  if (alcohol === "yes") parts.push(`<span class="venue-alcohol yes">🍷 Serverar alkohol</span>`);
+  else if (alcohol === "no") parts.push(`<span class="venue-alcohol no">Ingen alkohol</span>`);
+  else parts.push(`<span class="venue-alcohol unknown" title="OpenStreetMap saknar uppgift om alkohol för det här stället">Alkohol: okänt</span>`);
+  return parts.length ? `<div class="popup-venue">${parts.join("")}</div>` : "";
+}
+
 function popupHtml(entry) {
   const { terrace, lastResult: result, lastViewedAt } = entry;
   const { status, blocker, sunInfo } = result;
@@ -201,6 +253,7 @@ function popupHtml(entry) {
   const vote = getVoteForView(terrace.id, lastViewedAt);
   return `
     <div class="popup-title">${escapeHtml(terrace.name)}</div>
+    ${venueLineHtml(terrace.feature?.properties)}
     <div class="popup-status ${status}">${label}</div>
     <div class="popup-detail">${detail}</div>
     <div class="popup-timeline">${timelineSectionHtml(entry)}</div>
