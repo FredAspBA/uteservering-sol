@@ -57,6 +57,7 @@ const voteCount = document.getElementById("vote-count");
 const exportVotesButton = document.getElementById("export-votes-button");
 const clearVotesButton = document.getElementById("clear-votes-button");
 const nearMeButton = document.getElementById("near-me-button");
+const nearMeAlcoholButton = document.getElementById("near-me-alcohol-button");
 
 let terraces = [];
 let buildings = null;
@@ -460,23 +461,35 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(a));
 }
 
-function findNearestSunny() {
+/**
+ * Shared "nearest terrace matching some condition, to my location" flow —
+ * used by both the sun-only and sun+alcohol buttons. Geolocation is only
+ * ever read into a local variable to sort by distance and is never stored,
+ * logged, or sent anywhere (no security/privacy risk); the browser's own
+ * permission prompt gates access.
+ *
+ * @param {(entry) => boolean} predicate - which terraces qualify
+ * @param {{ found: (name, meters) => string, none: string }} messages
+ */
+function findNearestMatching(predicate, messages) {
   if (!navigator.geolocation) {
     searchStatus.textContent = "Din webbläsare stödjer inte platsdelning.";
+    return;
+  }
+  const matches = markers.filter(predicate);
+  if (!matches.length) {
+    // Nothing qualifies regardless of where the user is, so don't even
+    // bother prompting for location.
+    searchStatus.textContent = messages.none;
     return;
   }
   searchStatus.textContent = "Hämtar din plats…";
   navigator.geolocation.getCurrentPosition(
     (position) => {
       const { latitude, longitude } = position.coords;
-      const sunny = markers.filter((entry) => entry.lastResult?.status === "sun");
-      if (!sunny.length) {
-        searchStatus.textContent = "Ingen uteservering har sol just nu.";
-        return;
-      }
       let closest = null;
       let closestDist = Infinity;
-      for (const entry of sunny) {
+      for (const entry of matches) {
         const [lon, lat] = entry.terrace.point.geometry.coordinates;
         const d = haversineMeters(latitude, longitude, lat, lon);
         if (d < closestDist) {
@@ -485,7 +498,7 @@ function findNearestSunny() {
         }
       }
       const [lon, lat] = closest.terrace.point.geometry.coordinates;
-      searchStatus.textContent = `Närmast med sol: ${closest.terrace.name} (${Math.round(closestDist)} m bort)`;
+      searchStatus.textContent = messages.found(closest.terrace.name, Math.round(closestDist));
       map.flyTo([lat, lon], Math.max(map.getZoom(), 17));
       closest.marker.openPopup();
     },
@@ -496,6 +509,26 @@ function findNearestSunny() {
           : "Kunde inte hämta din plats just nu.";
     },
     { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+  );
+}
+
+const servesAlcohol = (entry) =>
+  venueInfo(entry.terrace.feature?.properties).alcohol === "yes";
+
+function findNearestSunny() {
+  findNearestMatching((entry) => entry.lastResult?.status === "sun", {
+    found: (name, m) => `Närmast med sol: ${name} (${m} m bort)`,
+    none: "Ingen uteservering har sol just nu.",
+  });
+}
+
+function findNearestSunnyWithAlcohol() {
+  findNearestMatching(
+    (entry) => entry.lastResult?.status === "sun" && servesAlcohol(entry),
+    {
+      found: (name, m) => `Närmast med sol & alkohol: ${name} (${m} m bort)`,
+      none: "Ingen uteservering med (känd) alkohol har sol just nu.",
+    }
   );
 }
 
@@ -538,6 +571,7 @@ clearVotesButton.addEventListener("click", () => {
   recompute();
 });
 nearMeButton.addEventListener("click", findNearestSunny);
+nearMeAlcoholButton.addEventListener("click", findNearestSunnyWithAlcohol);
 
 async function init() {
   setInputsToNow();
