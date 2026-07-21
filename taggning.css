@@ -1,0 +1,316 @@
+/* Collaborative tagging worklist. Reuses the design tokens (palette, fonts,
+   light/dark) from style.css :root and only adds page-specific layout. */
+
+.tagging-page {
+  padding-bottom: 3rem;
+}
+
+/* ---------- Header ---------- */
+#tagging-header {
+  padding: 1.4rem 1.25rem 1rem;
+  background:
+    radial-gradient(420px circle at 15% -30%, rgba(63, 107, 68, 0.22), transparent 60%),
+    radial-gradient(320px circle at 90% 0%, rgba(240, 163, 26, 0.16), transparent 60%),
+    var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+#tagging-header h1 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.15rem + 1.4vw, 2rem);
+  letter-spacing: -0.01em;
+}
+
+#tagging-header .subtitle {
+  max-width: 66ch;
+}
+
+.tagging-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.82rem;
+  color: var(--color-ink-muted);
+}
+
+.tagging-note a {
+  color: var(--color-shade);
+}
+
+/* ---------- Sync banner ---------- */
+.sync-banner {
+  margin: 0;
+  padding: 0.65rem 1.25rem;
+  background: color-mix(in srgb, var(--color-anomaly) 14%, var(--color-surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--color-anomaly) 40%, var(--color-surface));
+  color: var(--color-ink);
+  font-size: 0.85rem;
+}
+
+/* ---------- Controls (sticky) ---------- */
+#tagging-controls {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.control-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.control-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.control-field .control-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+#search,
+#cat-filter {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+#search {
+  min-width: 200px;
+  flex: 1;
+}
+
+.quick-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.quick-filters button {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-ink-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.quick-filters button:hover {
+  border-color: var(--color-sun-strong);
+}
+
+.quick-filters button.active {
+  background: color-mix(in srgb, var(--color-sun) 22%, var(--color-surface));
+  border-color: var(--color-sun-strong);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.control-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#progress {
+  color: var(--color-shade);
+  font-weight: 600;
+}
+
+/* ---------- List & rows ---------- */
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.7rem 1.25rem;
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.row.is-hidden {
+  display: none;
+}
+
+.row-osm-done {
+  background: color-mix(in srgb, var(--color-confirm) 9%, transparent);
+  box-shadow: inset 3px 0 0 var(--color-confirm);
+}
+
+.row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1 1 240px;
+  min-width: min(100%, 240px);
+}
+
+.row-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+}
+
+.row-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.row-name:hover {
+  border-bottom-color: var(--color-sun-strong);
+}
+
+.row-name.nameless {
+  font-style: italic;
+  color: var(--color-ink-muted);
+}
+
+.row-cat {
+  font-size: 0.72rem;
+  padding: 0.08rem 0.45rem;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  color: var(--color-ink-muted);
+}
+
+.row-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.hint {
+  font-size: 0.68rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.hint-known {
+  background: color-mix(in srgb, var(--color-shade) 12%, var(--color-surface));
+  color: var(--color-shade);
+  border: 1px solid color-mix(in srgb, var(--color-shade) 35%, var(--color-surface));
+}
+
+.hint-missing {
+  color: var(--color-sun-strong);
+  border: 1px dashed var(--color-sun-strong);
+}
+
+/* ---------- Toggles ---------- */
+.row-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.toggle-label {
+  font-size: 0.7rem;
+  color: var(--color-ink-muted);
+  min-width: 5.6em;
+  text-align: right;
+}
+
+.seg {
+  min-width: 38px;
+  min-height: 32px;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-bg);
+  color: var(--color-ink-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.seg-yes {
+  border-radius: 8px 0 0 8px;
+  border-right: none;
+}
+
+.seg-no {
+  border-radius: 0 8px 8px 0;
+}
+
+.seg:hover {
+  filter: brightness(0.97);
+}
+
+.seg-yes.active {
+  background: var(--color-confirm);
+  border-color: var(--color-confirm);
+  color: #fff;
+  font-weight: 600;
+}
+
+.seg-no.active {
+  background: var(--color-anomaly);
+  border-color: var(--color-anomaly);
+  color: #fff;
+  font-weight: 600;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sun-strong);
+  outline-offset: 2px;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 720px) {
+  #tagging-header,
+  #tagging-controls,
+  .row {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .toggle-label {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .row-toggles {
+    width: 100%;
+    gap: 0.5rem 0.9rem;
+  }
+}

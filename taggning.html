@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taggningslista – uteserveringar i Malmö</title>
+  <meta name="description" content="Gemensam lista för att tagga Malmös uteserveringar i OpenStreetMap – alkohol, uteservering och OSM-status, synkat live mellan alla med länken." />
+  <meta name="theme-color" content="#3f6b44" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="taggning.css" />
+</head>
+<body class="tagging-page">
+  <header id="tagging-header">
+    <p class="eyebrow">OpenStreetMap · Malmö</p>
+    <h1>Taggningslista</h1>
+    <p class="subtitle">
+      Alla uteserveringar appen känner till. Beta av dem tillsammans: markera vad ni vet om
+      varje ställe och bocka av när det är uppdaterat i OpenStreetMap. Kryssen delas live
+      med alla som har den här länken.
+    </p>
+    <p class="tagging-note">
+      Tagga bara sådant du själv sett på plats — kopiera aldrig från Google Maps eller
+      liknande. <a href="index.html">← Tillbaka till solkartan</a>
+    </p>
+  </header>
+
+  <p id="sync-banner" class="sync-banner" hidden></p>
+
+  <div id="tagging-controls">
+    <div class="control-line">
+      <label class="control-field">
+        <span class="control-label">Sök</span>
+        <input type="search" id="search" placeholder="Sök på namn…" autocomplete="off" />
+      </label>
+      <label class="control-field">
+        <span class="control-label">Typ</span>
+        <select id="cat-filter">
+          <option value="">Alla typer</option>
+        </select>
+      </label>
+    </div>
+    <div id="quick-filters" class="quick-filters" role="group" aria-label="Snabbfilter">
+      <button type="button" data-filter="all" class="active">Alla</button>
+      <button type="button" data-filter="alcohol-unknown">Alkohol okänt i OSM</button>
+      <button type="button" data-filter="outdoor-missing">Saknar uteservering-tagg</button>
+      <button type="button" data-filter="osm-todo">Kvar att OSM-uppdatera</button>
+      <button type="button" data-filter="started">Påbörjade</button>
+    </div>
+    <div class="control-status">
+      <span id="count"></span>
+      <span id="progress"></span>
+    </div>
+  </div>
+
+  <div id="list" class="list"></div>
+
+  <script type="module" src="src/tagging.js"></script>
+</body>
+</html>

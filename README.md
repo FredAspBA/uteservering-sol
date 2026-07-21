@@ -108,6 +108,34 @@ eller exporterar som JSON därifrån.
 Om nätverket/Firebase strular fungerar appen exakt som innan —
 rösterna sparas alltid lokalt först.
 
+## Gemensam taggningslista (taggning.html)
+
+`taggning.html` är en fristående sida (samma sajt: `.../taggning.html`) för
+att tillsammans beta av vilka ställen som behöver uppdateras i
+OpenStreetMap. Den listar alla ställen från `data/tagging-list.json`
+(genereras från `terraces.geojson` med `npm run build-tagging-list`) och
+ger per ställe tre Ja/Nej-val — **alkohol**, **uteservering**, **OSM
+uppdaterat** — plus en direktlänk till stället i OSM.
+
+Kryssrutornas läge delas live via Firebase Realtime Database under noden
+`/tagging`, så att alla med länken redigerar samma lista i realtid (ingen
+inloggning behövs — tänkt för att kunna dela med en vän).
+
+Säkerhetsmodell (se `/tagging`-reglerna i `database.rules.json`): till
+skillnad från `/votes` är noden avsiktligt **läs- och skrivbar utan
+inloggning** så att en vän kan gå med via länken. För att begränsa
+skadeverkan:
+- Hela `/tagging`-noden saknar `.write`, så ingen enskild begäran kan
+  radera hela trädet — skrivningar tillåts bara per ställe (`$placeId`).
+- Varje skrivning valideras strikt till de tre yes/no-fälten, så ingen kan
+  injicera godtycklig data.
+- Noden innehåller bara kryssrutestatus för publika OSM-platser — inga
+  personuppgifter.
+
+Publicera reglerna på samma sätt som röst-reglerna: klistra in hela
+`database.rules.json` under Realtime Database -> Rules i Firebase Console
+och tryck "Publish".
+
 ## Prestanda: spatialt index för byggnader
 
 Med tusentals byggnader (Malmö-området har f.n. ~22 000) är det för

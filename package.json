@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "fetch-data": "node scripts/fetch-data.js",
+    "build-tagging-list": "node scripts/build-tagging-list.js",
     "start": "node scripts/static-server.js"
   },
   "dependencies": {

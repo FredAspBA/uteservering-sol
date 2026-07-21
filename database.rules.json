@@ -22,6 +22,17 @@
         },
         "$other": { ".validate": false }
       }
+    },
+    "tagging": {
+      ".read": true,
+      "$placeId": {
+        ".write": true,
+        "alcohol": { ".validate": "newData.val() === 'yes' || newData.val() === 'no'" },
+        "outdoor": { ".validate": "newData.val() === 'yes' || newData.val() === 'no'" },
+        "osm": { ".validate": "newData.val() === 'yes' || newData.val() === 'no'" },
+        "updatedAt": { ".validate": "newData.isString() && newData.val().length < 40" },
+        "$other": { ".validate": false }
+      }
     }
   }
 }
