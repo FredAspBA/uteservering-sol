@@ -111,6 +111,11 @@ function osmHintChips(item) {
   if (item.osmOutdoor === "yes" || item.osmOutdoor === "only")
     frag.appendChild(chip("OSM: uteservering ✓", "hint-known"));
   else if (item.osmOutdoor === "no") frag.appendChild(chip("OSM: ingen uteservering", "hint-known"));
+  else if (item.osmOutdoor !== "")
+    // A tagged but non-standard value (e.g. "sidewalk", "pedestrian_zone")
+    // still means outdoor seating is described in OSM — show the value so
+    // it reads as known, matching the dropped Ja/Nej toggle for these.
+    frag.appendChild(chip(`OSM: uteservering (${item.osmOutdoor})`, "hint-known"));
   else frag.appendChild(chip("OSM: uteservering-tagg saknas", "hint-missing"));
   return frag;
 }
@@ -147,14 +152,20 @@ function buildRow(item) {
 
   const toggles = document.createElement("div");
   toggles.className = "row-toggles";
+  // Which yes/no toggles to show. A toggle is only useful while the value
+  // is still unknown in OSM; once outdoor_seating is already tagged (yes/
+  // only/no), collecting it again is pointless, so that toggle is dropped
+  // for those places (the OSM hint chip above still shows what's tagged).
+  const toggleDefs = [{ field: "alcohol", caption: "Alkohol" }];
+  if (item.osmOutdoor === "") toggleDefs.push({ field: "outdoor", caption: "Uteservering" });
+  toggleDefs.push({ field: "osm", caption: "OSM uppdaterat" });
+
   const buttons = {};
-  const alc = fieldToggle(item.key, "alcohol", { caption: "Alkohol" });
-  const out = fieldToggle(item.key, "outdoor", { caption: "Uteservering" });
-  const osm = fieldToggle(item.key, "osm", { caption: "OSM uppdaterat" });
-  buttons.alcohol = alc.buttons;
-  buttons.outdoor = out.buttons;
-  buttons.osm = osm.buttons;
-  toggles.append(alc.wrap, out.wrap, osm.wrap);
+  for (const def of toggleDefs) {
+    const t = fieldToggle(item.key, def.field, { caption: def.caption });
+    buttons[def.field] = t.buttons;
+    toggles.appendChild(t.wrap);
+  }
 
   row.append(main, toggles);
   rowsByKey.set(item.key, { item, rowEl: row, buttons });
@@ -166,6 +177,7 @@ function applyRowState(key) {
   if (!entry) return;
   const state = sharedState[key] || {};
   for (const field of FIELDS) {
+    if (!entry.buttons[field]) continue; // toggle not rendered for this place
     const val = state[field] ?? null;
     entry.buttons[field].yes.classList.toggle("active", val === "yes");
     entry.buttons[field].no.classList.toggle("active", val === "no");
