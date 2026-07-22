@@ -142,29 +142,47 @@ function buildRow(item) {
 
   head.append(nameLink, cat);
 
+  // Street/area, shown mainly to tell same-named chain branches apart
+  // (Espresso House etc.). textContent, so nothing here can inject markup.
+  const main = document.createElement("div");
+  main.className = "row-main";
+  main.append(head);
+  if (item.addr) {
+    const addr = document.createElement("span");
+    addr.className = "row-addr";
+    addr.textContent = item.addr;
+    main.append(addr);
+  }
+
   const hints = document.createElement("div");
   hints.className = "row-hints";
   hints.appendChild(osmHintChips(item));
-
-  const main = document.createElement("div");
-  main.className = "row-main";
-  main.append(head, hints);
+  main.append(hints);
 
   const toggles = document.createElement("div");
   toggles.className = "row-toggles";
-  // Which yes/no toggles to show. A toggle is only useful while the value
-  // is still unknown in OSM; once outdoor_seating is already tagged (yes/
-  // only/no), collecting it again is pointless, so that toggle is dropped
-  // for those places (the OSM hint chip above still shows what's tagged).
-  const toggleDefs = [{ field: "alcohol", caption: "Alkohol" }];
+  // A yes/no toggle is only useful while that value is still unknown in
+  // OSM — once it's tagged, collecting it again is pointless, so the
+  // toggle is dropped (the OSM hint chip above still shows what's tagged).
+  const toggleDefs = [];
+  if (item.osmAlcohol === "unknown") toggleDefs.push({ field: "alcohol", caption: "Alkohol" });
   if (item.osmOutdoor === "") toggleDefs.push({ field: "outdoor", caption: "Uteservering" });
-  toggleDefs.push({ field: "osm", caption: "OSM uppdaterat" });
 
   const buttons = {};
-  for (const def of toggleDefs) {
-    const t = fieldToggle(item.key, def.field, { caption: def.caption });
-    buttons[def.field] = t.buttons;
-    toggles.appendChild(t.wrap);
+  if (toggleDefs.length) {
+    // Something is still missing → also offer the "updated in OSM" tracker.
+    toggleDefs.push({ field: "osm", caption: "OSM uppdaterat" });
+    for (const def of toggleDefs) {
+      const t = fieldToggle(item.key, def.field, { caption: def.caption });
+      buttons[def.field] = t.buttons;
+      toggles.appendChild(t.wrap);
+    }
+  } else {
+    // Both alcohol and outdoor are already in OSM — nothing to tag here.
+    const done = document.createElement("span");
+    done.className = "row-nothing";
+    done.textContent = "Inget att tagga ✓";
+    toggles.appendChild(done);
   }
 
   row.append(main, toggles);
@@ -203,12 +221,19 @@ function matches(item) {
     case "outdoor-missing":
       return item.osmOutdoor === "";
     case "osm-todo":
-      return state.osm !== "yes";
+      // Still to update = has something untagged AND not yet pushed.
+      return needsWork(item) && state.osm !== "yes";
     case "started":
       return Boolean(state.alcohol || state.outdoor || state.osm);
     default:
       return true;
   }
+}
+
+/** A place needs OSM work only if at least one field is still untagged
+ * there — fully-tagged places have nothing to do. */
+function needsWork(item) {
+  return item.osmAlcohol === "unknown" || item.osmOutdoor === "";
 }
 
 function applyFilters() {
