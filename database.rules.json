@@ -30,6 +30,7 @@
         "alcohol": { ".validate": "newData.val() === 'yes' || newData.val() === 'no'" },
         "outdoor": { ".validate": "newData.val() === 'yes' || newData.val() === 'no'" },
         "osm": { ".validate": "newData.val() === 'yes' || newData.val() === 'no'" },
+        "exclude": { ".validate": "newData.isBoolean()" },
         "updatedAt": { ".validate": "newData.isString() && newData.val().length < 40" },
         "$other": { ".validate": false }
       }

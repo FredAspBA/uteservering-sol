@@ -303,6 +303,35 @@
   font-style: italic;
 }
 
+.row-exclude {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  padding-left: 0.4rem;
+  border-left: 1px solid var(--color-surface-border);
+}
+
+.row-exclude input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--color-anomaly);
+  cursor: pointer;
+}
+
+/* A place hidden from the sun map: dim the whole row so it reads as
+   "parked", but keep it operable so you can un-hide it. */
+.row-hidden-app {
+  opacity: 0.5;
+}
+
+.row-hidden-app .row-name {
+  text-decoration: line-through;
+}
+
 .toggle {
   display: flex;
   align-items: center;

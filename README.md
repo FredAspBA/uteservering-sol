@@ -121,6 +121,16 @@ Kryssrutornas läge delas live via Firebase Realtime Database under noden
 `/tagging`, så att alla med länken redigerar samma lista i realtid (ingen
 inloggning behövs — tänkt för att kunna dela med en vän).
 
+### Dölj ställen från sol-appen
+
+Taggningslistan styr även vad sol-appen (`index.html`) visar. Ett ställe
+göms från kartan om det i den delade `/tagging`-datan har antingen
+`outdoor: "no"` (någon tryckt **Uteservering: Nej**) eller `exclude: true`
+(kryssat **Dölj i appen**). Sol-appen läser `/tagging` en gång vid
+inläsning (`fetchExcludedKeys` i `src/cloudVotes.js`) och filtrerar bort
+dessa terrasser innan kartan ritas — ändringar syns vid nästa sidladdning.
+Om Firebase inte svarar visas allt (kartan är aldrig beroende av synken).
+
 Säkerhetsmodell (se `/tagging`-reglerna i `database.rules.json`): till
 skillnad från `/votes` är noden avsiktligt **läs- och skrivbar utan
 inloggning** så att en vän kan gå med via länken. För att begränsa

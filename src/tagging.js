@@ -202,8 +202,24 @@ function buildRow(item) {
     toggles.appendChild(done);
   }
 
+  // "Hide from the sun app" — a shared exclude flag, separate from the
+  // Ja/Nej data. Checking it removes the place from index.html on its next
+  // load. (Uteservering=Nej also auto-hides, handled in applyRowState.)
+  const excludeLabel = document.createElement("label");
+  excludeLabel.className = "row-exclude";
+  const excludeBox = document.createElement("input");
+  excludeBox.type = "checkbox";
+  excludeBox.addEventListener("change", () => {
+    const next = excludeBox.checked ? true : null;
+    sharedState[item.key] = { ...(sharedState[item.key] || {}), exclude: next ?? undefined };
+    applyRowState(item.key);
+    writeField(item.key, "exclude", next);
+  });
+  excludeLabel.append(excludeBox, document.createTextNode("Dölj i appen"));
+  toggles.appendChild(excludeLabel);
+
   row.append(main, toggles);
-  rowsByKey.set(item.key, { item, rowEl: row, buttons });
+  rowsByKey.set(item.key, { item, rowEl: row, buttons, excludeBox });
   return row;
 }
 
@@ -218,6 +234,11 @@ function applyRowState(key) {
     entry.buttons[field].no.classList.toggle("active", val === "no");
   }
   entry.rowEl.classList.toggle("row-osm-done", state.osm === "yes");
+  // A place is hidden from the sun app if explicitly excluded OR marked as
+  // having no outdoor seating. Reflect both in the checkbox + dimmed row.
+  const hiddenFromApp = state.exclude === true || state.outdoor === "no";
+  entry.excludeBox.checked = state.exclude === true;
+  entry.rowEl.classList.toggle("row-hidden-app", hiddenFromApp);
 }
 
 function applyAllState() {
@@ -244,6 +265,8 @@ function matches(item) {
       return needsWork(item) && state.osm !== "yes";
     case "started":
       return Boolean(state.alcohol || state.outdoor || state.osm);
+    case "hidden-app":
+      return state.exclude === true || state.outdoor === "no";
     default:
       return true;
   }

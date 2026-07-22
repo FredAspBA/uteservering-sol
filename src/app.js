@@ -2,6 +2,7 @@ import { loadData } from "./dataLoad.js";
 import { computeShading } from "./shadow.js";
 import { getSunInfo } from "./sun.js";
 import { getVoteForView, recordVote, getAllVotes, clearAllVotes, exportVotesAsJson } from "./votes.js";
+import { fetchExcludedKeys } from "./cloudVotes.js";
 
 const MALMO_CENTER = [55.605, 13.0038];
 
@@ -578,9 +579,15 @@ async function init() {
   statusLine.textContent = "Ställer in solvinkeln och mäter upp skuggorna…";
   updateVoteCount();
   try {
-    const data = await loadData();
-    terraces = data.terraces;
+    // Fetch the shared "hide from app" list and the terrace/building data in
+    // parallel. Excluded = places marked exclude=true or outdoor="no" in the
+    // collaborative tagging list (taggning.html). If the fetch fails, the set
+    // is empty and everything is shown — the map never depends on Firebase.
+    const [data, excludedKeys] = await Promise.all([loadData(), fetchExcludedKeys()]);
     buildings = data.buildings;
+    terraces = data.terraces.filter(
+      (t) => !excludedKeys.has(String(t.id).replace("/", "_"))
+    );
     renderMarkers();
     recompute();
   } catch (err) {

@@ -54,3 +54,28 @@ export async function pushVote(entry) {
     console.warn("Kunde inte skicka bedömningen till den delade lagringen:", err);
   }
 }
+
+/**
+ * Reads the shared /tagging node once and returns the set of Firebase place
+ * keys (e.g. "node_123") that should be hidden from the sun map: places
+ * explicitly excluded (exclude=true) or marked as having no outdoor seating
+ * (outdoor="no") in the collaborative tagging list. Never throws — on any
+ * failure it returns an empty set, so the app just shows everything.
+ */
+export async function fetchExcludedKeys() {
+  const handle = getDb();
+  if (!handle) return new Set();
+  try {
+    const { rtdb, db } = await handle;
+    const snap = await rtdb.get(rtdb.ref(db, "tagging"));
+    const all = snap.val() || {};
+    const excluded = new Set();
+    for (const [key, state] of Object.entries(all)) {
+      if (state && (state.exclude === true || state.outdoor === "no")) excluded.add(key);
+    }
+    return excluded;
+  } catch (err) {
+    console.warn("Kunde inte hämta dölj-listan:", err);
+    return new Set();
+  }
+}
