@@ -102,6 +102,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
+  flex: 1;
 }
 
 .quick-filters button {
@@ -124,6 +125,44 @@
   border-color: var(--color-sun-strong);
   color: var(--color-ink);
   font-weight: 600;
+}
+
+.hide-done-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.hide-done-field input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-confirm);
+  cursor: pointer;
+}
+
+.progress-wrap {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-ink-muted) 22%, var(--color-surface));
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--color-confirm);
+  transition: width 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar {
+    transition: none;
+  }
 }
 
 .control-status {
@@ -214,6 +253,16 @@
 
 .row-addr::before {
   content: "📍 ";
+}
+
+.row-dup {
+  font-size: 0.68rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-sun) 20%, var(--color-surface));
+  border: 1px solid var(--color-sun-strong);
+  color: var(--color-sun-strong);
+  white-space: nowrap;
 }
 
 .row-hints {

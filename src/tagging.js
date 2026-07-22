@@ -34,12 +34,17 @@ const catFilterEl = document.getElementById("cat-filter");
 const quickFiltersEl = document.getElementById("quick-filters");
 const countEl = document.getElementById("count");
 const progressEl = document.getElementById("progress");
+const progressBarEl = document.getElementById("progress-bar");
+const hideDoneEl = document.getElementById("hide-done");
 const bannerEl = document.getElementById("sync-banner");
 
 let items = [];
 const rowsByKey = new Map(); // key -> { item, rowEl, buttons: {field: {yes, nej}} }
 let sharedState = {}; // key -> { alcohol?, outdoor?, osm? }
 let quickFilter = "all";
+let hideDone = false;
+let dupNames = new Set(); // names that occur on more than one place
+let needsWorkTotal = 0; // places with at least one untagged field (progress denominator)
 
 // ---------- Firebase ----------
 let db = null;
@@ -129,11 +134,14 @@ function buildRow(item) {
 
   const nameLink = document.createElement("a");
   nameLink.className = "row-name";
-  nameLink.href = item.osmUrl;
+  // Jump straight into OSM's iD editor with this object selected, rather
+  // than its read-only page — one click fewer per place while tagging.
+  const [osmType, osmNum] = item.id.split("/");
+  nameLink.href = `https://www.openstreetmap.org/edit?${osmType}=${osmNum}`;
   nameLink.target = "_blank";
   nameLink.rel = "noopener noreferrer";
   nameLink.textContent = item.name;
-  nameLink.title = "Öppna i OpenStreetMap (ny flik)";
+  nameLink.title = "Öppna direkt i OSM-redigeraren (ny flik)";
   if (!item.named) nameLink.classList.add("nameless");
 
   const cat = document.createElement("span");
@@ -141,6 +149,15 @@ function buildRow(item) {
   cat.textContent = item.cat;
 
   head.append(nameLink, cat);
+
+  // Chains (same name in several places) get a badge so you know to check
+  // the street line below to tell this branch from the others.
+  if (dupNames.has(item.name)) {
+    const dup = document.createElement("span");
+    dup.className = "row-dup";
+    dup.textContent = "Flera lokaler";
+    head.append(dup);
+  }
 
   // Street/area, shown mainly to tell same-named chain branches apart
   // (Espresso House etc.). textContent, so nothing here can inject markup.
@@ -215,6 +232,8 @@ function matches(item) {
   if (catFilterEl.value && item.catKey !== catFilterEl.value) return false;
 
   const state = sharedState[item.key] || {};
+  if (hideDone && state.osm === "yes") return false;
+
   switch (quickFilter) {
     case "alcohol-unknown":
       return item.osmAlcohol === "unknown";
@@ -254,7 +273,10 @@ function updateProgress() {
     if (state.osm === "yes") osmDone++;
     if (state.alcohol || state.outdoor || state.osm) started++;
   }
-  progressEl.textContent = `${osmDone} markerade OSM-klara · ${started} påbörjade`;
+  const pct = needsWorkTotal ? Math.round((osmDone / needsWorkTotal) * 100) : 0;
+  progressEl.textContent = `${osmDone} av ${needsWorkTotal} klara (${pct}%) · ${started} påbörjade`;
+  progressBarEl.style.width = `${pct}%`;
+  progressBarEl.parentElement.setAttribute("aria-valuenow", String(pct));
 }
 
 // ---------- Init ----------
@@ -284,6 +306,22 @@ function wireControls() {
     );
     applyFilters();
   });
+  hideDoneEl.addEventListener("change", () => {
+    hideDone = hideDoneEl.checked;
+    applyFilters();
+  });
+}
+
+// Names appearing on more than one place, and how many places still have
+// something to tag (the progress-bar denominator). Both derived once from
+// the loaded list.
+function computeDerived() {
+  const counts = new Map();
+  for (const item of items) {
+    if (item.named) counts.set(item.name, (counts.get(item.name) || 0) + 1);
+    if (needsWork(item)) needsWorkTotal++;
+  }
+  dupNames = new Set([...counts].filter(([, n]) => n > 1).map(([name]) => name));
 }
 
 async function init() {
@@ -295,6 +333,8 @@ async function init() {
     showBanner(`Kunde inte ladda listan: ${err.message}`);
     return;
   }
+
+  computeDerived();
 
   const frag = document.createDocumentFragment();
   for (const item of items) frag.appendChild(buildRow(item));

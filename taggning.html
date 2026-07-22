@@ -43,12 +43,21 @@
         </select>
       </label>
     </div>
-    <div id="quick-filters" class="quick-filters" role="group" aria-label="Snabbfilter">
-      <button type="button" data-filter="all" class="active">Alla</button>
-      <button type="button" data-filter="alcohol-unknown">Alkohol okänt i OSM</button>
-      <button type="button" data-filter="outdoor-missing">Saknar uteservering-tagg</button>
-      <button type="button" data-filter="osm-todo">Kvar att OSM-uppdatera</button>
-      <button type="button" data-filter="started">Påbörjade</button>
+    <div class="control-line">
+      <div id="quick-filters" class="quick-filters" role="group" aria-label="Snabbfilter">
+        <button type="button" data-filter="all" class="active">Alla</button>
+        <button type="button" data-filter="alcohol-unknown">Alkohol okänt i OSM</button>
+        <button type="button" data-filter="outdoor-missing">Saknar uteservering-tagg</button>
+        <button type="button" data-filter="osm-todo">Kvar att OSM-uppdatera</button>
+        <button type="button" data-filter="started">Påbörjade</button>
+      </div>
+      <label class="hide-done-field">
+        <input type="checkbox" id="hide-done" />
+        Dölj klara
+      </label>
+    </div>
+    <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Andel klara">
+      <div id="progress-bar" class="progress-bar"></div>
     </div>
     <div class="control-status">
       <span id="count"></span>
