@@ -101,6 +101,73 @@ function fieldToggle(key, field, labels) {
   return { wrap, buttons };
 }
 
+// Turns the Ja/Nej marks for a place into the exact OSM tag lines to paste
+// into iD's raw tag editor (its "Text"/"All tags" view accepts key=value,
+// one per line). Only the two data fields become tags; osm/exclude are
+// internal bookkeeping, not OSM tags.
+function tagLinesFor(key) {
+  const state = sharedState[key] || {};
+  const lines = [];
+  if (state.alcohol) lines.push(`alcohol=${state.alcohol}`);
+  if (state.outdoor) lines.push(`outdoor_seating=${state.outdoor}`);
+  return lines;
+}
+
+function copyTagsButton(key) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "copy-tags";
+  btn.textContent = "⧉ Kopiera taggar";
+  btn.title = "Kopiera OSM-taggarna för dina Ja/Nej-val, att klistra in i redigeraren";
+  btn.addEventListener("click", async () => {
+    const lines = tagLinesFor(key);
+    if (!lines.length) {
+      flash(btn, "Inget markerat", "⧉ Kopiera taggar");
+      return;
+    }
+    const ok = await copyText(lines.join("\n"));
+    flash(btn, ok ? `Kopierat (${lines.length})` : "Kunde ej kopiera", "⧉ Kopiera taggar");
+  });
+  return btn;
+}
+
+// Copy helper with a fallback: the async Clipboard API needs a focused,
+// permitted, secure context; where that's unavailable, fall back to a
+// hidden textarea + execCommand("copy"), which works in more situations.
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    /* fall through to the legacy path */
+  }
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
+// Briefly show a confirmation label on a button, then restore it.
+function flash(btn, temp, original) {
+  btn.textContent = temp;
+  btn.classList.add("flash");
+  setTimeout(() => {
+    btn.textContent = original;
+    btn.classList.remove("flash");
+  }, 1400);
+}
+
 function osmHintChips(item) {
   const frag = document.createDocumentFragment();
   const chip = (text, cls) => {
@@ -194,6 +261,7 @@ function buildRow(item) {
       buttons[def.field] = t.buttons;
       toggles.appendChild(t.wrap);
     }
+    toggles.appendChild(copyTagsButton(item.key));
   } else {
     // Both alcohol and outdoor are already in OSM — nothing to tag here.
     const done = document.createElement("span");

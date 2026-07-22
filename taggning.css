@@ -37,6 +37,14 @@
   color: var(--color-shade);
 }
 
+.tagging-note-hide {
+  margin-top: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-sun) 12%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-sun) 30%, var(--color-surface));
+}
+
 /* ---------- Sync banner ---------- */
 .sync-banner {
   margin: 0;
@@ -301,6 +309,27 @@
   font-size: 0.78rem;
   color: var(--color-shade);
   font-style: italic;
+}
+
+.copy-tags {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.copy-tags:hover {
+  border-color: var(--color-sun-strong);
+}
+
+.copy-tags.flash {
+  background: color-mix(in srgb, var(--color-confirm) 18%, var(--color-surface));
+  border-color: var(--color-confirm);
+  color: var(--color-confirm);
 }
 
 .row-exclude {
