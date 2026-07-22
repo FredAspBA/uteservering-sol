@@ -18,6 +18,32 @@ riktiga byggnaders läge och höjd — inte bara om solen är uppe.
   bygg + deploy automatiskt (~30–60 s).
 - **Språk i UI och kommentarer mot användaren:** svenska.
 
+## Att göra härnäst (uppdatera i takt med att saker blir klara)
+
+Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
+
+- [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
+      (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
+      När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
+      `npm run fetch-data` → `npm run build-tagging-list` → commit → push.
+      Verifiera efteråt att de nya värdena syns i appen/listan.
+- [ ] **Fyll byggnadsluckor.** Senaste `fetch-data`-körningen hoppade över
+      2–3 rutor pga Overpass-504. Kör om `npm run fetch-data` vid tillfälle
+      för att täppa till (påverkar bara skuggprecision i de områdena).
+- [ ] **Lägg till saknade ställen i OSM.** "Andy's" (och ev. fler) finns inte
+      alls i OSM och kan därför inte visas i appen förrän de läggs till där.
+      Fredrik lägger till dem i OSM; sedan plockas de upp vid nästa datasynk.
+- [ ] **(Ev.) Web Worker för skuggberäkningen.** Backades ut eftersom
+      testbrowsern inte kunde leverera worker-postMessage. Kan tas upp igen
+      om det testas i en vanlig browser — skulle ta bort den lilla frysningen
+      vid kall laddning helt.
+- [ ] **Löpande:** verifiera att "Dölj i appen" / "Uteservering: Nej" fortsatt
+      döljer rätt ställen när listan växer, och håll `data/geocode-cache.json`
+      med (ny geokodning sker bara för nya dubblettfilialer).
+
+(Tidigare förslag — kopiera-taggar, dubblett-badge, framstegsstapel, dölj
+klara, direkt-till-redigeraren — är alla byggda och live.)
+
 ## Kör och deploya
 
 ```
