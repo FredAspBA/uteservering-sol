@@ -5,7 +5,7 @@
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { dirname, join, normalize, extname } from "node:path";
+import { dirname, join, normalize, extname, sep } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number(process.env.PORT) || 5500;
@@ -28,7 +28,10 @@ const server = createServer(async (req, res) => {
     const urlPath = decodeURIComponent(req.url.split("?")[0]);
     const relPath = urlPath === "/" ? "/index.html" : urlPath;
     const filePath = normalize(join(root, relPath));
-    if (!filePath.startsWith(root)) {
+    // Guard against path traversal. A bare startsWith(root) would also accept
+    // a sibling directory like "<root>-evil", so require the resolved path to
+    // be root itself or sit strictly inside it (root + separator).
+    if (filePath !== root && !filePath.startsWith(root + sep)) {
       res.writeHead(403);
       res.end("Forbidden");
       return;

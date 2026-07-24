@@ -176,7 +176,7 @@ function ensureTimeline(entry) {
   }
   entry.timelinePoints = points;
   entry.timelineDateOnly = dateOnly;
-  if (entry.marker.isPopupOpen()) {
+  if (entry.marker.isPopupOpen() && entry.lastResult) {
     entry.marker.setPopupContent(popupHtml(entry));
     updateMarkerVoteStroke(entry.marker, entry.terrace.id, entry.lastViewedAt);
     wireVoteButtons(entry);
@@ -343,6 +343,11 @@ function renderMarkers() {
       timelineDateOnly: null,
     };
     marker.on("popupopen", () => {
+      // Closed popups no longer get their content set during recompute(), so
+      // render it here from the latest result when the popup opens. Guarded
+      // against a popup opened before the first recompute has reached this
+      // marker (lastResult still null → popupHtml() would throw).
+      if (entry.lastResult) marker.setPopupContent(popupHtml(entry));
       wireVoteButtons(entry);
       ensureTimeline(entry);
     });
@@ -350,9 +355,18 @@ function renderMarkers() {
     markers.push(entry);
   }
 
-  terraceNamesList.innerHTML = terraces
-    .map((t) => `<option value="${escapeHtml(t.name)}"></option>`)
-    .join("");
+  // Build the search datalist via DOM properties, not an HTML string:
+  // escapeHtml() escapes <,>,& but NOT double quotes, and a terrace name
+  // (world-editable OSM data) containing a " would otherwise break out of
+  // the value="..." attribute and inject attributes. Setting opt.value
+  // sidesteps attribute parsing entirely.
+  const options = document.createDocumentFragment();
+  for (const t of terraces) {
+    const opt = document.createElement("option");
+    opt.value = t.name;
+    options.appendChild(opt);
+  }
+  terraceNamesList.replaceChildren(options);
 }
 
 // A full recompute of all ~938 terraces measures ~150ms after the spatial-
@@ -399,17 +413,27 @@ async function recompute() {
     entry.lastResult = result;
     entry.lastViewedAt = viewedAt;
 
-    marker.setStyle({ fillColor: STATUS_COLORS[result.status] });
-    updateMarkerVoteStroke(marker, terrace.id, viewedAt);
-    marker.setPopupContent(popupHtml(entry));
-    wireVoteButtons(entry);
-    // If this terrace's popup is open and the date changed since its
-    // timeline was last computed, popupHtml() just rendered a "loading"
-    // placeholder above — nothing else re-triggers a refresh (ensureTimeline
-    // otherwise only runs on popupopen), so without this the popup would be
-    // stuck on "Laddar dagsöversikt…" forever whenever the date changes
-    // while it's already open.
-    if (marker.isPopupOpen()) ensureTimeline(entry);
+    // Fill colour (sun/shade/night) and the vote stroke in a single
+    // setStyle — one redraw per marker instead of two. Every marker on the
+    // map needs this each recompute; it's the actual point of the pass.
+    const vote = getVoteForView(terrace.id, viewedAt);
+    marker.setStyle({
+      fillColor: STATUS_COLORS[result.status],
+      color: VOTE_STROKE_COLORS[vote ?? "none"],
+      weight: vote ? 3 : 1.5,
+    });
+
+    // Popup content is only rebuilt for the ONE popup that's actually open.
+    // Building popupHtml() for all ~938 markers on every time-slider tick (as
+    // this used to) was pure waste — a closed popup's content is rendered
+    // lazily on popupopen instead. If the open popup's date changed since its
+    // timeline was computed, popupHtml() just rendered a "loading"
+    // placeholder, so ensureTimeline() refreshes it (nothing else would).
+    if (marker.isPopupOpen()) {
+      marker.setPopupContent(popupHtml(entry));
+      wireVoteButtons(entry);
+      ensureTimeline(entry);
+    }
 
     if (result.status === "sun") sunCount++;
     else if (result.status === "shade") shadeCount++;

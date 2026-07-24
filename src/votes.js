@@ -14,6 +14,12 @@ const STORAGE_KEY = "uteservering-sol:votes-log";
 // localStorage on every single one of those calls. Kept in sync by
 // writeLog(), the only place the log is ever mutated.
 let cachedLog = null;
+// matchKey -> entry, rebuilt lazily from cachedLog. getVoteForView() is
+// called once per marker on every recompute (~938x per time-slider tick);
+// a Map lookup keeps that O(1) instead of a linear .find() over the whole
+// log each time. Invalidated (set to null) whenever the log is (re)read or
+// written, then rebuilt on next getIndex().
+let cachedIndex = null;
 
 function readLog() {
   if (cachedLog) return cachedLog;
@@ -23,11 +29,21 @@ function readLog() {
   } catch {
     cachedLog = [];
   }
+  cachedIndex = null;
   return cachedLog;
+}
+
+function getIndex() {
+  if (!cachedIndex) {
+    cachedIndex = new Map();
+    for (const e of readLog()) cachedIndex.set(matchKey(e.terraceId, e.viewedAt), e);
+  }
+  return cachedIndex;
 }
 
 function writeLog(entries) {
   cachedLog = entries;
+  cachedIndex = null;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   } catch {
@@ -46,8 +62,7 @@ function matchKey(terraceId, viewedAt) {
  *   exact displayed date/time, if any.
  */
 export function getVoteForView(terraceId, viewedAt) {
-  const entry = readLog().find((e) => matchKey(e.terraceId, e.viewedAt) === matchKey(terraceId, viewedAt));
-  return entry?.verdict ?? null;
+  return getIndex().get(matchKey(terraceId, viewedAt))?.verdict ?? null;
 }
 
 /**
