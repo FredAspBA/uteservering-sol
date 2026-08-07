@@ -29,13 +29,15 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       (den var systematiskt pessimistisk förut). Kvar: **fas 3** (Geofabrik +
       osmium i ett GitHub Actions-workflow istället för Overpass) och **fas 4**
       (Overture som höjdkälla) — båda **planerade i detalj med utmaningar och
-      motåtgärder, inväntar OK innan de byggs**. **Fas 5**: Malmö stad har ett
-      **publikt restaurangregister** på
-      `restaurang.malmo.se/AlktWebbforms/Restaurants` (gällande
-      serveringstillstånd, uppdateras varje natt, detaljsidor på
-      `Show/{id}`) — bättre än engångsfilen som begärdes via mejl 2026-08-07.
-      Blockerat från sessionsmiljön; Fredrik behöver committa en exempelsida
-      så parsern kan skrivas mot verklig HTML (kommando finns i planen).
+      motåtgärder, inväntar OK innan de byggs**. **Fas 5**: Malmö stads
+      **publika restaurangregister** på
+      `restaurang.malmo.se/AlktWebbforms/Restaurants` är nu verifierat mot
+      verklig HTML (2026-08-07) — listsidan ensam (1 anrop) ger namn,
+      adress och alla fem alkoholtyper för alla ~551 tillståndshavare;
+      detaljsidor (`Show/{id}`) behövs bara för allmänhet/uteservering/
+      inomhus-utomhus-tid-precisionen. Se `PLAN-datakvalitet.md` fas 5 för
+      fälten, budgeten och personuppgifts-hänsynen (ägarnamn på
+      detaljsidan). Inget blockerat längre — redo att byggas.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan

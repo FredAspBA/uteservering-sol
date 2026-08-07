@@ -95,6 +95,21 @@ och `overpass-api.de`. Bara npm, PyPI och Anthropic släpps igenom.
 Det betyder att jag **inte kan hämta ny data härifrån**, bara bearbeta det
 som redan ligger i repot och skriva script som körs någon annanstans.
 
+**Uppdatering 2026-08-07, senare samma dag:** en annan session (körd
+lokalt i Claude Code CLI på Fredriks dator, inte molnmiljön ovan) testade
+samma fyra värdar och nådde alla fyra utan problem (`overpass-api.de` →
+400 på ett tomt GET, väntat, inte en blockering; `download.geofabrik.de` →
+302; `restaurang.malmo.se` → 200; `overturemaps.org` → 200). Blockeringen
+gäller alltså **den specifika molnmiljön där den här planen skrevs, inte
+nätverksåtkomst i allmänhet** — vilken session eller miljö som helst kan
+ha andra regler. Slutsatsen nedan ändras inte av det: väg D (GitHub
+Actions) är fortfarande rätt val, men numera av andra skäl än
+nätverksblockering — en permanent lösning oavsett vilken session som
+råkar bygga/underhålla den, ingen manuell körning, alltid färsk data. Har
+en session väl åtkomst kan den däremot prototypa och verifiera lokalt
+först, vilket sänker antalet blinda Actions-iterationer (se fas 5, som
+byggde vidare på precis det).
+
 ### Fyra vägar runt det, i stigande ordning av elegans
 
 **A. Fredrik kör lokalt.** Jag skriver scripten, du kör dem på din maskin
@@ -195,42 +210,80 @@ som `shadow.js` konsulterar före typ-/grannskapsgissningen.
 
 ### 🕓 Fas 5 — Serveringstillstånd från Malmö stad
 
-**Det finns ett publikt restaurangregister.** Malmö stad publicerar
-gällande serveringstillstånd på
+**Det finns ett publikt restaurangregister**, och det är nu verifierat
+direkt mot verklig HTML (2026-08-07, en session med nätverksåtkomst — se
+anmärkningen om nätverket ovan):
 `https://restaurang.malmo.se/AlktWebbforms/Restaurants` — sökbart på namn
-och område, visar serveringstider och vad varje ställe får servera, och
-**uppdateras varje natt**. Detaljsidor ligger på
-`/AlktWebbforms/Restaurants/Show/{id}` med löpande id:n (80, 809 och 1268
-observerade), alltså uppräkningsbara.
+och område, **uppdateras varje natt**. Ingen `robots.txt` (404 — inget
+crawl-regelverk finns, men fortsatt gott skick att vara skonsam mot en
+kommuns server: identifierande User-Agent, fördröjning mellan anrop).
 
-Det är bättre än en engångsfil: datan hålls aktuell av kommunen, så en
-schemalagd körning fångar nyöppnade ställen automatiskt. Kan ersätta
-merparten av de 877 "okänd alkohol" med myndighetsdata istället för
-handpåläggning — och till skillnad från OSM-taggningen behöver ingen
-människa beta av en lista.
+**Fyndet som ändrar hela upplägget: listsidan ensam räcker för
+alkoholfrågan.** Ett enda GET-anrop mot listsidan (569 kB, inga
+paginerings-signaler hittade — alla 551 tillståndshavare tycks ligga på
+en sida) ger en tabell med kolumnerna:
+
+```
+Namn | Postadress | Sprit | Vin | Starköl | AJA | ALP | Serveringstider
+```
+
+(AJA = Andra jästa alkoholdrycker, ALP = Alkoholdrycksliknande preparat —
+alkohollagens fem drycktyper, som kryssmarkeringar per ställe.) Det löser
+**hela alkoholtyp-frågan för alla 551 ställen i en enda begäran** — ingen
+per-ställe-skrapning krävs för det.
+
+**Vad som ändå kräver en detaljsida** (`/Show/{id}`, löpande id:n — 80,
+809, 1268 observerade; ren semantisk Bootstrap-tabell,
+`<tr><td>Etikett</td><td>[✓-ikon om det gäller]</td></tr>`, verifierad
+mot id 809 "Modomio, Restaurang"):
+
+- **Servering till: Allmänheten vs Slutet sällskap** — korrekthetsgrinden
+  vi resonerade fram (se nedan): ett tillstånd som bara gäller slutna
+  sällskap (catering/event) ska inte räknas som "ja" för en förbipasserande
+  gäst på uteserveringen.
+- **Serveringstyp: Uteservering** (en av åtta kryssbara typer, ihop med
+  Trafikservering, Pausservering, Roomservice, Minibar, Catering,
+  Provsmakning, Kryddning) — en direkt myndighetssignal för
+  uteserveringstillstånd, starkare än men inte identisk med OSM:s
+  `outdoor_seating`-tagg.
+- **Serveringstider uppdelat inomhus/utomhus** (t.ex. "11:00–01:00
+  inomhus" vs "11:00–23:00 utomhus"). Listsidan visar tider men utan
+  tydlig inomhus/utomhus-etikett; bara detaljsidan är entydig.
+
+**Reviderad budget: 1 anrop (listan) + upp till 551 anrop** (detaljer,
+bara om vi vill ha den extra precisionen, och bara för den delmängd som
+matchar `terraces.geojson`) — inte "ett par tusen" som ursprungligen
+antaget innan HTML:en var sedd.
+
+**Personuppgift att hålla koll på:** detaljsidan visar ägarnamn för
+enskilda firmor (t.ex. "Djamel Boudjedien ensk. firma…"). Offentlig
+handling, men vi extraherar bara ställe-nivå-fälten appen faktiskt
+behöver (namn, adress, tillståndsflaggor, tider) till
+`serving-permits.json` — aldrig ägarnamnet.
 
 En begäran om utlämnande av allmän handling skickades ändå till
-`tillstandsenheten@malmo.se` 2026-08-07. **Får vi en CSV därifrån är den
-att föredra** — renare att tolka och skonsammare mot deras server än att
-hämta sida för sida. Registret är planen om svaret dröjer eller uteblir.
+`tillstandsenheten@malmo.se` 2026-08-07, men är mindre kritisk nu —
+listsidans data är redan så pass komplett och strukturerad att en CSV
+vore en genväg, inte en förutsättning.
 
-**Så här:** ett steg i fas 3-workflowet (samma nätverksskäl som allt
-annat — registret är blockerat härifrån) som:
+**Så här:** ett steg i fas 3-workflowet:
 
-1. hämtar listsidan och plockar ut alla `Show/{id}`-länkar
-2. hämtar varje detaljsida med **fördröjning mellan anropen** och en
-   identifierande User-Agent — det är en kommuns server, inte ett API
-3. skriver `data/serving-permits.json` med namn, adress och tillstånd
-4. matchar mot `data/terraces.geojson` på namn + adress
+1. hämtar listsidan (ett anrop) → `data/serving-permits.json` med namn,
+   adress, alkoholtyper och rå serveringstider för alla ~551
+2. matchar mot `data/terraces.geojson` på normaliserat namn + adress
+3. (andra prioritet, valfritt) hämtar detaljsidor för matchade ställen —
+   fördröjning mellan anrop, identifierande User-Agent — för
+   Allmänheten/Slutet-sällskap-grinden, Uteservering-flaggan och
+   inomhus/utomhus-tider
 
 **Utmaningar och hur vi tar oss runt dem:**
 
 | Utmaning | Lösning |
 |---|---|
-| **Jag har inte sett HTML:en.** Proxyn blockerar registret, så jag kan inte skriva en parser mot verklig markup utan att gissa selektorer. | Fredrik kör en `curl` lokalt och committar en exempelsida; jag skriver parsern mot den. Se nästa steg nedan. |
-| **Belastning på kommunens server.** Ett par tusen detaljsidor. | Fördröjning mellan anrop, kör **månadsvis** (samma takt som fas 3), respektera `robots.txt`, och cacha så bara nya id:n hämtas. |
 | **Namnmatchning.** Krogar heter sällan exakt samma i OSM som i tillståndsregistret, och kedjor har många filialer. | Matcha på normaliserat namn **plus** adress, och skriv osäkra träffar till en separat granskningslista istället för att gissa. Samma mönster som taggningslistan redan använder. |
-| **Tillstånd ≠ uteservering.** Registret säger att stället får servera alkohol, inte att det har uteservering. | Det löser bara alkoholfrågan. Uteservering förblir OSM-taggning — men det är ändå 877 av 938 okända som blir kända. |
+| **Tillstånd ≠ uteservering.** Registret säger att stället får servera alkohol, inte att det har uteservering. | `Serveringstyp: Uteservering`-flaggan på detaljsidan täcker det mesta av luckan, men är fortfarande skild från OSM:s `outdoor_seating`. OSM-taggning behövs ändå för ställen registret inte matchar. |
+| **Personuppgift på detaljsidan.** Ägarnamn för enskilda firmor. | Extrahera bara ställe-nivå-fält (namn/adress/flaggor/tider) till `serving-permits.json` — aldrig ägarnamnet. |
+| **Registret ändras** (nya/upphörda tillstånd). | Månadsvis körning (samma takt som fas 3) håller det i synk utan att någon manuellt beter av en lista. |
 
 ### Fas 6 — Senare, om vi vill längre
 
@@ -252,8 +305,10 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 3. ✅ **Nätverksbeslut** — GitHub Actions (väg D) vald
 4. ⬜ **Fas 3** — pipelinen som Actions-workflow
 5. ⬜ **Fas 4** — Overture, förutsätter fas 3
-6. 🕓 **Fas 5** — publikt register hittat; mejl skickat 2026-08-07 som
-   renare alternativ, inväntar svar
+6. 🕓 **Fas 5** — publikt register hittat OCH verifierat mot verklig HTML
+   2026-08-07; listsidan ensam löser alkoholtyp-frågan i ett anrop,
+   detaljsidor behövs bara för allmänhet/uteservering/tider-precisionen;
+   mejl skickat 2026-08-07 som genväg, mindre kritiskt nu
 
 ### Nästa steg — inväntar OK
 
@@ -270,17 +325,11 @@ eftersom det inte går att provköra härifrån.
 
 #### Vad Fredrik behöver göra för fas 5
 
-Registret är blockerat från sessionsmiljön, så jag kan inte se HTML:en och
-skulle behöva gissa selektorer. Kör detta lokalt och committa resultatet,
-så skriver jag parsern mot verklig markup istället:
-
-```
-curl -sS "https://restaurang.malmo.se/AlktWebbforms/Restaurants" \
-  -o data/sample-register-list.html
-curl -sS "https://restaurang.malmo.se/AlktWebbforms/Restaurants/Show/809" \
-  -o data/sample-register-detalj.html
-curl -sS "https://restaurang.malmo.se/robots.txt" -o data/sample-robots.txt
-```
-
-Listsidan kan vara paginerad eller ladda via POST — syns i HTML:en. Är den
-det behöver jag se sida 2 också.
+Ingenting längre — löst. En session med nätverksåtkomst (se anmärkningen
+om nätverket ovan) hämtade själv listsidan, en detaljsida (id 809) och
+`robots.txt` 2026-08-07 och analyserade strukturen direkt (resultatet
+står ovan). Exempelfilerna ligger i den sessionens scratchpad, inte
+committade än — detaljsidan innehåller ett ägarnamn (personuppgift, se
+ovan), så Fredrik bör godkänna innan ett exempel eventuellt läggs i repot.
+Listsidans exempel innehåller ingen personuppgift och kan committas fritt
+om det är till nytta för nästa session som bygger parsern.
