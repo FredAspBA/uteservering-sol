@@ -193,18 +193,44 @@ som `shadow.js` konsulterar före typ-/grannskapsgissningen.
 | **Overture-höjder är delvis själva ML-gissningar.** Vi kan råka byta en bra gissning mot en sämre. | Mät det, precis som i fas 1: kör `scripts/impact-experiment.py` före och efter, och behåll Overture-höjden bara om den slår nuvarande modell. Prioritetsordning: OSM-taggad höjd → Overture → typmedian → grannskapsmedian → 15 m. |
 | **Ännu en stor fil i repot.** | Skicka bara `{osm_id: höjd}`, inte geometri. Det blir några hundra kB, inte megabyte. |
 
-### 🕓 Fas 5 — Serveringstillstånd från Malmö stad (mejlat, inväntar svar)
+### 🕓 Fas 5 — Serveringstillstånd från Malmö stad
 
-Begäran om utlämnande av allmän handling skickad till
-`tillstandsenheten@malmo.se` 2026-08-07 av Fredrik: förteckning över
-gällande stadigvarande serveringstillstånd, helst som Excel/CSV. Kan
-ersätta merparten av de 877 "okänd alkohol" med myndighetsdata istället
-för handpåläggning. Engångsfil, inget API.
+**Det finns ett publikt restaurangregister.** Malmö stad publicerar
+gällande serveringstillstånd på
+`https://restaurang.malmo.se/AlktWebbforms/Restaurants` — sökbart på namn
+och område, visar serveringstider och vad varje ställe får servera, och
+**uppdateras varje natt**. Detaljsidor ligger på
+`/AlktWebbforms/Restaurants/Show/{id}` med löpande id:n (80, 809 och 1268
+observerade), alltså uppräkningsbara.
 
-När svaret kommer: bygg ett litet script som matchar listan mot
-`data/terraces.geojson` på namn + adress, och skriv resultatet som en
-extra källa vid sidan av OSM-taggarna. Räkna med att matchningen behöver
-handpåläggning för kedjor och namnvarianter.
+Det är bättre än en engångsfil: datan hålls aktuell av kommunen, så en
+schemalagd körning fångar nyöppnade ställen automatiskt. Kan ersätta
+merparten av de 877 "okänd alkohol" med myndighetsdata istället för
+handpåläggning — och till skillnad från OSM-taggningen behöver ingen
+människa beta av en lista.
+
+En begäran om utlämnande av allmän handling skickades ändå till
+`tillstandsenheten@malmo.se` 2026-08-07. **Får vi en CSV därifrån är den
+att föredra** — renare att tolka och skonsammare mot deras server än att
+hämta sida för sida. Registret är planen om svaret dröjer eller uteblir.
+
+**Så här:** ett steg i fas 3-workflowet (samma nätverksskäl som allt
+annat — registret är blockerat härifrån) som:
+
+1. hämtar listsidan och plockar ut alla `Show/{id}`-länkar
+2. hämtar varje detaljsida med **fördröjning mellan anropen** och en
+   identifierande User-Agent — det är en kommuns server, inte ett API
+3. skriver `data/serving-permits.json` med namn, adress och tillstånd
+4. matchar mot `data/terraces.geojson` på namn + adress
+
+**Utmaningar och hur vi tar oss runt dem:**
+
+| Utmaning | Lösning |
+|---|---|
+| **Jag har inte sett HTML:en.** Proxyn blockerar registret, så jag kan inte skriva en parser mot verklig markup utan att gissa selektorer. | Fredrik kör en `curl` lokalt och committar en exempelsida; jag skriver parsern mot den. Se nästa steg nedan. |
+| **Belastning på kommunens server.** Ett par tusen detaljsidor. | Fördröjning mellan anrop, kör **månadsvis** (samma takt som fas 3), respektera `robots.txt`, och cacha så bara nya id:n hämtas. |
+| **Namnmatchning.** Krogar heter sällan exakt samma i OSM som i tillståndsregistret, och kedjor har många filialer. | Matcha på normaliserat namn **plus** adress, och skriv osäkra träffar till en separat granskningslista istället för att gissa. Samma mönster som taggningslistan redan använder. |
+| **Tillstånd ≠ uteservering.** Registret säger att stället får servera alkohol, inte att det har uteservering. | Det löser bara alkoholfrågan. Uteservering förblir OSM-taggning — men det är ändå 877 av 938 okända som blir kända. |
 
 ### Fas 6 — Senare, om vi vill längre
 
@@ -226,7 +252,8 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 3. ✅ **Nätverksbeslut** — GitHub Actions (väg D) vald
 4. ⬜ **Fas 3** — pipelinen som Actions-workflow
 5. ⬜ **Fas 4** — Overture, förutsätter fas 3
-6. 🕓 **Fas 5** — mejlat 2026-08-07, inväntar svar från Malmö stad
+6. 🕓 **Fas 5** — publikt register hittat; mejl skickat 2026-08-07 som
+   renare alternativ, inväntar svar
 
 ### Nästa steg — inväntar OK
 
@@ -236,7 +263,24 @@ Ingenting av dem är byggt. Rekommenderad ordning:
 1. **Fas 3 först**, och som en egen PR. Den rör pipelinen, inte appen — om
    något går fel ska det inte blandas ihop med skuggkoden.
 2. **Fas 4 därefter**, hängd på samma workflow, som en andra PR.
-3. **Fas 5 när Malmö stad svarar** — oberoende av de andra två.
+3. **Fas 5 parallellt** — oberoende av de andra två.
 
 Räkna med att fas 3 behöver 2–3 iterationer innan workflowet blir grönt,
 eftersom det inte går att provköra härifrån.
+
+#### Vad Fredrik behöver göra för fas 5
+
+Registret är blockerat från sessionsmiljön, så jag kan inte se HTML:en och
+skulle behöva gissa selektorer. Kör detta lokalt och committa resultatet,
+så skriver jag parsern mot verklig markup istället:
+
+```
+curl -sS "https://restaurang.malmo.se/AlktWebbforms/Restaurants" \
+  -o data/sample-register-list.html
+curl -sS "https://restaurang.malmo.se/AlktWebbforms/Restaurants/Show/809" \
+  -o data/sample-register-detalj.html
+curl -sS "https://restaurang.malmo.se/robots.txt" -o data/sample-robots.txt
+```
+
+Listsidan kan vara paginerad eller ladda via POST — syns i HTML:en. Är den
+det behöver jag se sida 2 också.
