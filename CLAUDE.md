@@ -58,6 +58,14 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
 (Tidigare förslag — kopiera-taggar, dubblett-badge, framstegsstapel, dölj
 klara, direkt-till-redigeraren — är alla byggda och live.)
 
+## Dokumentation i repot
+
+- `PLAN-datakvalitet.md` — handlingsplanen för datakvalitet (fas 1–6),
+  med uppmätta siffror, utmaningar och motåtgärder per fas.
+- `DATAKALLOR.md` — inventering av datakällor för byggnader, sol, skuggor,
+  alkohol och uteservering: licenser, kostnad, länkar, och vad som valdes
+  bort och varför. Innehåller även mejlmallen för begäran om allmän handling.
+
 ## Kör och deploya
 
 ```
