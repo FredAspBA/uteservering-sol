@@ -22,12 +22,14 @@ riktiga byggnaders läge och höjd — inte bara om solen är uppe.
 
 Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
 
-- [ ] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Uppmätt: 80,5 %
-      av byggnaderna i skuggberäkningen har en **gissad** höjd (platta 15 m),
-      vilket är appens största felkälla. Planen innehåller hold-out-validerad
-      höjdgissning (fas 1), Overture som höjdkälla, Geofabrik+osmium istället
-      för Overpass, och hur vi tar oss runt att sessionsmiljöns proxy
-      blockerar all extern datahämtning. **Inväntar godkännande.**
+- [ ] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Fas 1–2 är
+      **klara**: byggnadshöjder gissas inte längre till platta 15 m, utan via
+      typmedian → grannskapsmedian. Byggnader på 15-metersfallbacken gick
+      18 719 → 1 529, och appen hittar 2,8–8,2 % fler soliga uteserveringar
+      (den var systematiskt pessimistisk förut). Kvar: **fas 3** (Geofabrik +
+      osmium i ett GitHub Actions-workflow istället för Overpass — beslutat),
+      **fas 4** (Overture som höjdkälla), **fas 5** (serveringstillstånd
+      begärda från Malmö stad 2026-08-07, inväntar svar).
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
@@ -168,7 +170,11 @@ en vän. Kryssläget synkas live via Firebase `/tagging`.
   och kör om datapipelinen.
 - En Espresso House-filial fick ingen adress vid geokodning (Nominatim tom
   träff) — OSM-länken skiljer den ändå.
-- Byggnadshöjd gissas till 15 m när OSM saknar `height`/`building:levels`.
+- Byggnadshöjd gissas när OSM saknar `height`/`building:levels` (~80 % av
+  byggnaderna): först uppmätt median för byggnadstypen, annars medianen för
+  omgivande höjdtaggade byggnader, och först i sista hand 15 m (~1 500 st).
+  Gissningarna är ungefärliga — riktiga höjder kommer först med Overture
+  eller LiDAR, se `PLAN-datakvalitet.md`.
 - Skuggor längre än 500 m (mycket låg sol) fångas inte.
 - `npm audit`: `@xmldom/xmldom` (via osmtogeojson) flaggas, men används bara
   lokalt i fetch-scriptet mot JSON — låg risk. Se README.

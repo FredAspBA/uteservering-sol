@@ -1,6 +1,6 @@
 # Plan: bättre datakvalitet för skuggor, platser och sol
 
-Status: **förslag, inväntar godkännande**. Skapad 2026-08-07.
+Status: **godkänd, fas 1–2 byggda**. Skapad och påbörjad 2026-08-07.
 
 Målet är så tillförlitlig data som möjligt — skuggor, platser, sol — med
 enbart avgiftsfria källor. Den här filen är beslutsunderlaget; bocka av
@@ -58,10 +58,32 @@ I **innerstadens kvarter** — där de flesta uteserveringar faktiskt ligger
 — är 15 m redan ungefär rätt för hyreshus (uppmätt median 12 m). Vinsten
 där blir därför liten.
 
-**Åtgärd innan bygget godkänns som klart:** kör om valideringen viktad mot
-byggnader som ligger inom skuggavstånd (500 m) från en faktisk terrass.
-Det är den siffra som faktiskt betyder något för appen. Om vinsten där är
-försumbar ska fas 1 omvärderas, inte skeppas på de här talen.
+Därför mättes effekten om, mot appen istället för mot metrar — se nästa
+avsnitt. Det är den siffran fas 1 vilar på, inte MAE-tabellen ovan.
+
+## Verifierad effekt på appen (detta är siffran som räknas)
+
+`scripts/impact-experiment.py` kör hela raycasten med båda höjdmodellerna
+och räknar hur många uteserveringar som byter status. Resultatet kördes
+sedan om med **den riktiga `computeShading()` från `src/shadow.js`**:
+
+| Tidpunkt | Soliga före | Soliga efter | Skillnad |
+|---|---|---|---|
+| 15 maj 17:00 | 743 | 777 | +34 (+4,6 %) |
+| 21 juni 18:00 | 697 | 745 | +48 (+6,9 %) |
+| 15 juli 19:00 | 601 | 650 | +49 (+8,2 %) |
+| 15 aug 16:00 | 799 | 821 | +22 (+2,8 %) |
+| 15 sep 15:00 | 754 | 793 | +39 (+5,2 %) |
+
+**Riktningen är det viktiga:** 92 % av statusändringarna går från skugga
+till sol. Den platta 15-metersgissningen gjorde appen systematiskt
+pessimistisk — den gömde soliga uteserveringar, vilket är precis motsatsen
+till vad appen finns till för.
+
+En ärlig notering: en tidigare Python-approximation av raycasten gav
++8,5–16,5 %, alltså dubbelt så mycket. Den approximationen exkluderade
+inte terrassens egen byggnad, vilket `computeShading()` gör. **De lägre
+talen i tabellen ovan är de riktiga.**
 
 ## Huvudutmaningen: nätverket
 
@@ -96,7 +118,7 @@ körbara utan att någon av oss sitter och väntar.
 
 ## Faser
 
-### Fas 1 — Bättre höjdgissning (ingen nätverksåtkomst krävs)
+### ✅ Fas 1 — Bättre höjdgissning (KLAR)
 
 Ersätt den platta 15-metersgissningen i `src/shadow.js` med:
 
@@ -107,15 +129,18 @@ Grannskapsmedianen återanvänder rutnätsindexet som redan finns i
 `shadow.js`, och beräknas **en gång vid laddning**, inte per omberäkning —
 prestandabudgeten i CLAUDE.md får inte regressa.
 
-Kan byggas och verifieras helt offline mot befintlig data. **Störst effekt
-per nedlagd timme.**
+**Utfall:** byggnader kvar på 15-metersgissningen gick från 18 719 till
+**1 529** (−92 %). Höjdfördelningen ser nu rimlig ut (p10 = 3 m,
+median = 6 m, p90 = 15 m) istället för att 80 % klumpade ihop sig på
+exakt 15 m. `prepareBuildings()` tar 116 ms — ingen prestandaregression.
 
-### Fas 2 — Behåll fler höjdtaggar vid hämtning (liten, nätverkslös)
+### ✅ Fas 2 — Behåll fler höjdtaggar vid hämtning (KLAR)
 
-`BUILDING_PROPS_TO_KEEP` i `scripts/fetch-data.js` slänger idag allt utom
-fem taggar. Lägg till `roof:levels`, `roof:height`, `roof:shape`,
-`est_height`, `min_height`, `building:min_level`. Gratis extra signal vid
-nästa hämtning, försumbar filstorlek.
+`BUILDING_PROPS_TO_KEEP` i `scripts/fetch-data.js` slängde allt utom fem
+taggar. Nu behålls även `roof:levels`, `roof:height`, `roof:shape`,
+`est_height`, `min_height` och `building:min_level`. Gratis extra signal
+vid nästa hämtning, försumbar filstorlek. Taggarna finns i datan först
+efter nästa `npm run fetch-data`.
 
 ### Fas 3 — Pipeline utan Overpass
 
@@ -131,12 +156,18 @@ myndighetsdata, höjd som förstklassigt attribut, gratis) ovanpå
 OSM-höjderna. Detta är den riktiga fixen på huvudfelkällan — fas 1 är en
 uppskattning, detta är mätdata. Kräver nätverk (väg B eller D).
 
-### Fas 5 — Serveringstillstånd från Malmö stad
+### 🕓 Fas 5 — Serveringstillstånd från Malmö stad (mejlat, inväntar svar)
 
-Begär ut listan över stadigvarande serveringstillstånd (offentlig
-handling) från `tillstandsenheten@malmo.se`. Kan ersätta merparten av de
-877 "okänd alkohol" med myndighetsdata istället för handpåläggning.
-Engångsfil, inget API. Utkast till mejl skickas separat.
+Begäran om utlämnande av allmän handling skickad till
+`tillstandsenheten@malmo.se` 2026-08-07 av Fredrik: förteckning över
+gällande stadigvarande serveringstillstånd, helst som Excel/CSV. Kan
+ersätta merparten av de 877 "okänd alkohol" med myndighetsdata istället
+för handpåläggning. Engångsfil, inget API.
+
+När svaret kommer: bygg ett litet script som matchar listan mot
+`data/terraces.geojson` på namn + adress, och skriv resultatet som en
+extra källa vid sidan av OSM-taggarna. Räkna med att matchningen behöver
+handpåläggning för kedjor och namnvarianter.
 
 ### Fas 6 — Senare, om vi vill längre
 
@@ -151,11 +182,24 @@ Engångsfil, inget API. Utkast till mejl skickas separat.
 Ej aktuellt: Lantmäteriets Ythöjdmodell (avgiftsbelagd via Geotorget) och
 Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 
-## Föreslagen ordning
+## Status och ordning
 
-1. **Fas 1** — störst effekt, kan göras direkt, noll beroenden
-2. **Fas 2** — trivial, åker med på samma gång
-3. **Beslut om väg B eller D** för nätverket
-4. **Fas 3** — pipelinen, förutsätter beslutet ovan
-5. **Fas 4** — Overture, förutsätter pipelinen
-6. **Fas 5** — mejlet kan skickas parallellt när som helst
+1. ✅ **Fas 1** — klar, verifierad mot riktig `computeShading()`
+2. ✅ **Fas 2** — klar, slår igenom vid nästa `fetch-data`
+3. ✅ **Nätverksbeslut** — GitHub Actions (väg D) vald
+4. ⬜ **Fas 3** — pipelinen som Actions-workflow
+5. ⬜ **Fas 4** — Overture, förutsätter fas 3
+6. 🕓 **Fas 5** — mejlat 2026-08-07, inväntar svar från Malmö stad
+
+### Nästa steg
+
+Bygg Actions-workflowet (fas 3). Det ska:
+
+- köra på `workflow_dispatch` + schemalagt (t.ex. veckovis)
+- hämta Geofabrik-extraktet för Sverige, filtrera med `osmium` till
+  Malmö-bbox:en, och producera samma `terraces.geojson` /
+  `buildings.geojson` som idag
+- köra `build-tagging-list` och committa resultatet
+- **inte** använda Overpass alls, vilket tar bort 504-luckorna permanent
+
+Därefter kan fas 4 (Overture) hängas på samma workflow.
