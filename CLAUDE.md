@@ -22,6 +22,12 @@ riktiga byggnaders läge och höjd — inte bara om solen är uppe.
 
 Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
 
+- [ ] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Uppmätt: 80,5 %
+      av byggnaderna i skuggberäkningen har en **gissad** höjd (platta 15 m),
+      vilket är appens största felkälla. Planen innehåller hold-out-validerad
+      höjdgissning (fas 1), Overture som höjdkälla, Geofabrik+osmium istället
+      för Overpass, och hur vi tar oss runt att sessionsmiljöns proxy
+      blockerar all extern datahämtning. **Inväntar godkännande.**
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
