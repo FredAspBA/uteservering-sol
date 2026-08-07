@@ -1,6 +1,7 @@
 # Plan: bättre datakvalitet för skuggor, platser och sol
 
-Status: **godkänd, fas 1–2 byggda**. Skapad och påbörjad 2026-08-07.
+Status: **fas 1–2 byggda och verifierade. Fas 3–4 planerade i detalj,
+inväntar OK innan de byggs.** Skapad och påbörjad 2026-08-07.
 
 Målet är så tillförlitlig data som möjligt — skuggor, platser, sol — med
 enbart avgiftsfria källor. Den här filen är beslutsunderlaget; bocka av
@@ -142,19 +143,55 @@ taggar. Nu behålls även `roof:levels`, `roof:height`, `roof:shape`,
 vid nästa hämtning, försumbar filstorlek. Taggarna finns i datan först
 efter nästa `npm run fetch-data`.
 
-### Fas 3 — Pipeline utan Overpass
+### ⬜ Fas 3 — Pipeline utan Overpass (detaljerad plan, inväntar OK)
 
 Byt tiled Overpass mot **Geofabrik-extrakt + osmium**, kört i GitHub
-Actions (väg D). Tar bort tidsgränser, hastighetsbegränsning och
-byggnadsluckor strukturellt. Löser den befintliga att-göra-punkten "fyll
-byggnadsluckor" permanent.
+Actions. Tar bort tidsgränser, hastighetsbegränsning och byggnadsluckor
+strukturellt, och löser att-göra-punkten "fyll byggnadsluckor" permanent.
 
-### Fas 4 — Overture som höjdkälla
+**Så här:** ett workflow (`.github/workflows/refresh-data.yml`) som körs på
+`workflow_dispatch` + schemalagt, och som:
 
-Konflatera in **Overture Maps buildings** (OSM + Microsoft/Google ML +
-myndighetsdata, höjd som förstklassigt attribut, gratis) ovanpå
-OSM-höjderna. Detta är den riktiga fixen på huvudfelkällan — fas 1 är en
-uppskattning, detta är mätdata. Kräver nätverk (väg B eller D).
+1. `apt-get install osmium-tool` (finns i Ubuntu-runners repo)
+2. hämtar Geofabrik-extraktet för Sverige
+3. `osmium extract` till Malmö-bbox:en, sedan `osmium tags-filter` för
+   dels terrasstaggarna, dels `building`
+4. kör om geometriförenkling/buffring precis som `fetch-data.js` gör idag
+5. kör `build-tagging-list`
+6. committar bara om datan faktiskt ändrats
+
+`scripts/fetch-data.js` behålls som manuellt reservalternativ, men är inte
+längre huvudvägen.
+
+#### Utmaningar och hur vi tar oss runt dem
+
+| Utmaning | Lösning |
+|---|---|
+| **Repo-uppsvällning.** `buildings.geojson` är 8,9 MB och skrivs som *en enda rad* JSON. Git kan inte delta-komprimera det, så varje körning lägger en helt ny blob. Veckovis skulle `.git` (nu 6 MB) växa med hundratals MB per år. | Skriv **en feature per rad** och sortera features deterministiskt på OSM-id. Då blir diffen radbaserad och git delta-komprimerar normalt. Kör dessutom **månadsvis**, inte veckovis, och committa bara vid faktisk ändring. |
+| **Tyst sönderkörning.** Om ett filter blir fel kan workflowet committa en tom eller halv fil och slå sönder den live-appen utan att någon märker det. | **Grindar innan commit:** avbryt om antalet terrasser eller byggnader avviker mer än ±20 % från det som redan ligger i repot. Hellre ett rött workflow än trasig data i produktion. |
+| **Extraktets storlek.** Sverige-extraktet är hundratals MB att ladda ner varje körning. | Acceptabelt i Actions (bra bandbredd, ~1–2 min). Om det blir ett problem: byt till ett mindre regionalt extrakt eller BBBike:s skräddarsydda bbox-extrakt. |
+| **Deploy-loop.** En commit från workflowet triggar Pages-bygget — men skulle den också trigga workflowet självt blir det en oändlig loop. | Sker inte automatiskt: commits gjorda med `GITHUB_TOKEN` triggar inte nya workflow-körningar. Behöver bara `permissions: contents: write`. |
+| **Jag kan inte testa workflowet härifrån.** Proxyn blockerar allt, så jag kan inte köra pipelinen lokalt först. | Jag skriver workflowet, det körs på GitHub, och jag läser körloggarna via GitHub-verktygen och itererar därifrån. Räkna med 2–3 rundor innan första gröna körningen. |
+
+### ⬜ Fas 4 — Overture som höjdkälla (detaljerad plan, inväntar OK)
+
+Hämta **höjder** från Overture Maps buildings (OSM + Microsoft/Google ML +
+myndighetsdata, gratis) och lägg dem ovanpå OSM:s. Fas 1 är kvalificerade
+uppskattningar; detta är mätdata, och angriper huvudfelkällan på riktigt.
+
+**Så här:** utöka fas 3-workflowet med ett DuckDB-steg som läser Overtures
+publika parquet direkt med bbox-filter (deras schema har bbox-kolumner
+gjorda för predicate pushdown, så bara några hundra MB läses trots att
+datamängden är global). Resultatet blir en `data/heights-overture.json`
+som `shadow.js` konsulterar före typ-/grannskapsgissningen.
+
+#### Utmaningar och hur vi tar oss runt dem
+
+| Utmaning | Lösning |
+|---|---|
+| **Konflatering är svårt.** Att matcha Overture-byggnader mot OSM-byggnader geometriskt är en klassisk felkälla — fel matchning ger fel höjd på fel hus. | **Rör inte geometrin.** Behåll OSM:s fotavtryck (redan buffrade och förenklade, och prestandaintrimmade) och hämta *bara höjd*. Matcha i första hand på OSM-id, som Overture bär med sig i sitt `sources`-fält; bara i andra hand på centroid inom några meter. |
+| **Overture-höjder är delvis själva ML-gissningar.** Vi kan råka byta en bra gissning mot en sämre. | Mät det, precis som i fas 1: kör `scripts/impact-experiment.py` före och efter, och behåll Overture-höjden bara om den slår nuvarande modell. Prioritetsordning: OSM-taggad höjd → Overture → typmedian → grannskapsmedian → 15 m. |
+| **Ännu en stor fil i repot.** | Skicka bara `{osm_id: höjd}`, inte geometri. Det blir några hundra kB, inte megabyte. |
 
 ### 🕓 Fas 5 — Serveringstillstånd från Malmö stad (mejlat, inväntar svar)
 
@@ -191,15 +228,15 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 5. ⬜ **Fas 4** — Overture, förutsätter fas 3
 6. 🕓 **Fas 5** — mejlat 2026-08-07, inväntar svar från Malmö stad
 
-### Nästa steg
+### Nästa steg — inväntar OK
 
-Bygg Actions-workflowet (fas 3). Det ska:
+Fas 3 och 4 är planerade i detalj ovan, med utmaningar och motåtgärder.
+Ingenting av dem är byggt. Rekommenderad ordning:
 
-- köra på `workflow_dispatch` + schemalagt (t.ex. veckovis)
-- hämta Geofabrik-extraktet för Sverige, filtrera med `osmium` till
-  Malmö-bbox:en, och producera samma `terraces.geojson` /
-  `buildings.geojson` som idag
-- köra `build-tagging-list` och committa resultatet
-- **inte** använda Overpass alls, vilket tar bort 504-luckorna permanent
+1. **Fas 3 först**, och som en egen PR. Den rör pipelinen, inte appen — om
+   något går fel ska det inte blandas ihop med skuggkoden.
+2. **Fas 4 därefter**, hängd på samma workflow, som en andra PR.
+3. **Fas 5 när Malmö stad svarar** — oberoende av de andra två.
 
-Därefter kan fas 4 (Overture) hängas på samma workflow.
+Räkna med att fas 3 behöver 2–3 iterationer innan workflowet blir grönt,
+eftersom det inte går att provköra härifrån.

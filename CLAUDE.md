@@ -27,9 +27,10 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       typmedian → grannskapsmedian. Byggnader på 15-metersfallbacken gick
       18 719 → 1 529, och appen hittar 2,8–8,2 % fler soliga uteserveringar
       (den var systematiskt pessimistisk förut). Kvar: **fas 3** (Geofabrik +
-      osmium i ett GitHub Actions-workflow istället för Overpass — beslutat),
-      **fas 4** (Overture som höjdkälla), **fas 5** (serveringstillstånd
-      begärda från Malmö stad 2026-08-07, inväntar svar).
+      osmium i ett GitHub Actions-workflow istället för Overpass) och **fas 4**
+      (Overture som höjdkälla) — båda **planerade i detalj med utmaningar och
+      motåtgärder, inväntar OK innan de byggs**. **Fas 5**: serveringstillstånd
+      begärda från Malmö stad 2026-08-07, inväntar svar därifrån.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
