@@ -47,12 +47,13 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       detaljsidor (`Show/{id}`) behövs bara för allmänhet/uteservering/
       inomhus-utomhus-tid-precisionen. Se `PLAN-datakvalitet.md` fas 5 för
       fälten, budgeten och personuppgifts-hänsynen (ägarnamn på
-      detaljsidan). **2026-08-08, del A klar:** `scripts/fetch-serving-
+      detaljsidan). **2026-08-08, del A helt klar:** `scripts/fetch-serving-
       permits.js` (`npm run fetch-serving-permits`) hämtar och matchar
       registret mot `data/terraces.geojson` → `data/serving-
       permits.json`. Kört mot riktig data: 175 tidigare
-      `alcohol=unknown`-ställen löses till "ja". Kvar: koppla in hintet i
-      taggningslistan, plus del B — stads-listans ställen som saknas helt
+      `alcohol=unknown`-ställen löses till "ja", och hintet syns nu i
+      taggningslistan (egen chip, aldrig auto-taggat). Kvar: del B —
+      stads-listans ställen som saknas helt
       i OSM (353 omatchade) ska visas direkt i appen (geokodad adress,
       tydligt märkta OSM-overifierade), inte specad än. Se
       `PLAN-datakvalitet.md` fas 5 för alla siffror.

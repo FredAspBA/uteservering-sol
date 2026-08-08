@@ -365,7 +365,7 @@ dagens data och utan kalibrering.
 | **Overture-höjder är delvis själva ML-gissningar.** Vi kan råka byta en bra gissning mot en sämre. | Mätt (se ovan): på den oberoende testbara delmängden (Microsoft ML Buildings) är Overtures MAE 2,56 m mot nuvarande modells 1,89 m — nuvarande modell vann, så inget byts ut. Ingen `impact-experiment.py`-körning mot riktig `computeShading()` gjordes eller behövdes, eftersom hold-out-valideringen redan gav NO-GO innan det steget. |
 | **Ännu en stor fil i repot.** | Blev aldrig aktuellt — inget byggs. |
 
-### 🚧 Fas 5 — Serveringstillstånd från Malmö stad (del A KLAR 2026-08-08)
+### ✅ Fas 5 del A — Serveringstillstånd från Malmö stad (KLAR 2026-08-08)
 
 **Del A byggd och körd mot riktig data 2026-08-08:**
 `scripts/fetch-serving-permits.js` (`npm run fetch-serving-permits`) hämtar
@@ -391,10 +391,13 @@ Endast listsidan behövs (ett anrop) — ingen detaljsida-skrapning gjordes,
 eftersom Allmänheten/Uteservering/tid-precisionen den ger inte behövs för
 det booleska alkohol-fältet appen faktiskt använder.
 
-**Kvar (del A):** koppla in `resolvesUnknownAlcohol`-fältet i
-`scripts/build-tagging-list.js` (visa som hint i taggning.html bredvid
-Ja/Nej, inte auto-tagga OSM — samma "människan bekräftar"-mönster som
-resten av taggningslistan). Litet, billigt jobb när det blir dags.
+**Del A helt klar** (samma dag): `resolvesUnknownAlcohol`-fältet är inkopplat
+i `scripts/build-tagging-list.js` och visas som en egen hint-chip
+("Malmö stad: har serveringstillstånd", `.hint-register`) bredvid "OSM:
+alkohol okänt" i taggning.html — aldrig auto-taggat, samma
+"människan bekräftar"-mönster som resten av listan. Verifierat live i
+webbläsaren (inte bara i JSON-outputen): 175 chips renderade, rätt text,
+rätt ställe, inga konsolfel. `data/tagging-list.json` regenererad.
 
 **Kvar (del B, beslutad 2026-08-08, ospecad):** de 353 omatchade
 registerställena — de med `Serveringstyp: Uteservering` (kräver
@@ -532,14 +535,14 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
    utan känd höjd) är dessutom bara 51,4 %. Beslut: stängd, ingen
    produktionsspec skrivs (se `scripts/overture-height-experiment.py` och
    avsnittet ovan för alla siffror)
-6. 🚧 **Fas 5** — del A klar och körd 2026-08-08:
-   `scripts/fetch-serving-permits.js` hämtar och matchar registret mot
-   `data/terraces.geojson`, 175 tidigare `alcohol=unknown`-ställen löses
-   till "ja" (se avsnittet ovan för alla siffror). Byggd direkt (inte via
-   subagent-driven-development — medvetet lean given begränsad
-   sessionsbudget) och verifierad mot riktig data, inte bara lokala
-   fixturer. **Kvar:** koppla in hintet i taggningslistan (litet), och
-   del B — visa de 353 omatchade registerställena med
+6. ✅ **Fas 5 del A** — helt klar 2026-08-08: `scripts/fetch-serving-
+   permits.js` hämtar och matchar registret mot `data/terraces.geojson`,
+   175 tidigare `alcohol=unknown`-ställen löses till "ja", hintet syns nu
+   live i taggningslistan (se avsnittet ovan för alla siffror). Byggd
+   direkt (inte via subagent-driven-development — medvetet lean given
+   begränsad sessionsbudget) och verifierad mot riktig data OCH i
+   webbläsaren, inte bara lokala fixturer.
+7. ⬜ **Fas 5 del B** — visa de 353 omatchade registerställena med
    uteserveringstillstånd direkt på kartan (scope beslutad 2026-08-08,
    inte specad än — kör brainstorm → spec → plan när det blir dags).
 
