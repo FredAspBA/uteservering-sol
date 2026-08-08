@@ -113,7 +113,13 @@ export function reduceToRepresentativePoint(feature) {
 function run(cmd, args, { label }) {
   return new Promise((resolve, reject) => {
     console.log(`  $ ${cmd} ${args.join(" ")}`);
-    const proc = spawn(cmd, args, { stdio: ["ignore", "pipe", "pipe"] });
+    // stdout is "inherit" (osmium's own progress/info output, if any, just
+    // flows straight through to the Actions log) rather than "pipe" — a
+    // piped stream that nobody reads fills its OS pipe buffer and can make
+    // the child process block on its own writes. stderr IS piped, but
+    // drained on every "data" event below, so the same risk doesn't apply
+    // there; it's captured (for the error message) *and* forwarded live.
+    const proc = spawn(cmd, args, { stdio: ["ignore", "inherit", "pipe"] });
     let stderr = "";
     proc.stderr.on("data", (chunk) => {
       stderr += chunk;
@@ -127,12 +133,33 @@ function run(cmd, args, { label }) {
   });
 }
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Downloads the Sweden extract with a small retry — this runs unattended
+ * (monthly schedule, no one watching to just click "rerun"), and a ~775 MB
+ * transfer has more surface area for a transient network blip than a quick
+ * API call. Geofabrik's static-file server is far more reliable than the
+ * public Overpass instance fetch-data.js has to work around, so this is
+ * deliberately simpler than that file's backoff — just enough to not fail
+ * the whole month's run over one dropped connection.
+ */
 async function downloadSwedenExtract(destPath) {
-  console.log(`Downloading Sweden extract from ${SWEDEN_PBF_URL} (~775 MB)...`);
-  const res = await fetch(SWEDEN_PBF_URL);
-  if (!res.ok) throw new Error(`Geofabrik download failed: HTTP ${res.status}`);
-  await finished(Readable.fromWeb(res.body).pipe(createWriteStream(destPath)));
-  console.log(`  -> saved to ${destPath}`);
+  const attempts = 3;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      console.log(`Downloading Sweden extract from ${SWEDEN_PBF_URL} (~775 MB, attempt ${attempt}/${attempts})...`);
+      const res = await fetch(SWEDEN_PBF_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      await finished(Readable.fromWeb(res.body).pipe(createWriteStream(destPath)));
+      console.log(`  -> saved to ${destPath}`);
+      return;
+    } catch (err) {
+      if (attempt === attempts) throw new Error(`Geofabrik download failed after ${attempts} attempts: ${err.message}`);
+      console.warn(`  download attempt ${attempt} failed (${err.message}), retrying in 10s...`);
+      await sleep(10000);
+    }
+  }
 }
 
 /** osmium extract: Sweden -> Malmo bbox, complete_ways so no way is cut at
@@ -209,6 +236,14 @@ function terraceFilterExpressions() {
  * why that matters here.
  */
 export function processTerraces(rawFeatureCollection) {
+  if (!Array.isArray(rawFeatureCollection?.features)) {
+    // A missing/non-array `features` means osmium export produced something
+    // other than a real FeatureCollection — a more specific signal than
+    // letting this fall through to an opaque "938 -> 0" from the ±20% gate
+    // downstream, which would look like a legitimate empty result rather
+    // than a malformed one.
+    throw new Error("processTerraces: raw input has no features array — osmium export likely failed or produced unexpected output");
+  }
   const out = [];
   for (const feature of rawFeatureCollection.features) {
     const restored = restoreOsmId(feature.properties);
@@ -228,6 +263,9 @@ export function processTerraces(rawFeatureCollection) {
  * produced the raw data.
  */
 export function processBuildings(rawFeatureCollection) {
+  if (!Array.isArray(rawFeatureCollection?.features)) {
+    throw new Error("processBuildings: raw input has no features array — osmium export likely failed or produced unexpected output");
+  }
   const out = [];
   for (const feature of rawFeatureCollection.features) {
     const restored = restoreOsmId(feature.properties);
@@ -253,7 +291,10 @@ async function main() {
   await osmiumTagsFilter(malmoPbf, terracesRawPbf, terraceFilterExpressions(), "terraces");
   // way["building"] + relation["building"] — mirrors fetch-data.js's
   // buildingsQuery() exactly (no value restriction on the building tag).
-  await osmiumTagsFilter(malmoPbf, buildingsRawPbf, ["nw/building", "r/building"], "buildings");
+  // Node excluded on purpose: a `building` tag on a bare node isn't valid
+  // OSM (buildings are areas), so "w/" + "r/" alone already covers every
+  // real building — no point widening the intermediate pbf with "n/" too.
+  await osmiumTagsFilter(malmoPbf, buildingsRawPbf, ["w/building", "r/building"], "buildings");
 
   // Terraces: node-tagged venues (points) and way-tagged venues (usually
   // polygons, e.g. a cafe mapped as its building outline) both occur in
