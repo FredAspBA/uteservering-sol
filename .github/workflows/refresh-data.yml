@@ -1,0 +1,25 @@
+# Placeholder on `main` so GitHub registers this workflow name and makes
+# workflow_dispatch triggerable at all (a documented GitHub requirement —
+# a workflow must exist on the default branch for that, even though the
+# ACTUAL job definitions used for any given run are whatever version
+# exists on the ref you dispatch against; see github.com/orgs/community/
+# discussions/25219). The real, functional version of this file — with
+# the monthly schedule and the actual Geofabrik+osmium pipeline steps —
+# lives on the `phase3-geofabrik-osmium-pipeline` branch (PR #2) and
+# replaces this stub once that's merged. Deliberately NO schedule trigger
+# here: this stub's own steps reference scripts that don't exist on
+# `main` yet, so it must never fire on its own, only via workflow_dispatch
+# with an explicit --ref pointing at a branch that has the real pipeline.
+name: Refresh OSM data
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Not yet merged to main
+        run: |
+          echo "refresh-data.yml on main is a placeholder — see PR #2."
+          echo "Dispatch with --ref phase3-geofabrik-osmium-pipeline to run the real pipeline."
