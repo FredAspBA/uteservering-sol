@@ -32,7 +32,14 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       med tre riktiga `workflow_dispatch`-körningar (en byggnadslucka hittad
       och fixad i körning 1→2, "inget att committa"-grenen bekräftad i
       körning 3). Se `PLAN-datakvalitet.md` fas 3 för detaljerna. **Fas 4**
-      (Overture som höjdkälla) kan börjas nu. **Fas 5**: Malmö stads
+      (Overture som höjdkälla) är **avslutad NO-GO** (2026-08-08): en
+      slutgranskning visade att den ursprungliga MAE-siffran var cirkulär
+      (57,7 % av matchningarna ekade bara OSM:s eget värde tillbaka). Omkört
+      på den enda oberoende testbara delmängden (Microsoft ML Buildings)
+      slår Overture INTE nuvarande modell (MAE 2,56 m mot 1,89 m), och
+      täcker bara 51,4 % av byggnaderna som saknar känd höjd. Ingen
+      produktionsspec skrivs. Se `PLAN-datakvalitet.md` fas 4 för alla
+      siffror. **Fas 5**: Malmö stads
       **publika restaurangregister** på
       `restaurang.malmo.se/AlktWebbforms/Restaurants` är nu verifierat mot
       verklig HTML (2026-08-07) — listsidan ensam (1 anrop) ger namn,
@@ -108,6 +115,11 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
   lines.js` — en feature per rad, sorterat på OSM-id (håller `.git` litet).
 - `scripts/build-tagging-list.js` — bygger `data/tagging-list.json` (+ geokodar
   dubblettfilialer, cachar i `data/geocode-cache.json`).
+- `scripts/overture-height-experiment.py` — engångs-valideringsskript (Python,
+  se `PLAN-datakvalitet.md` fas 4) som jämförde Overture Maps' byggnadshöjder
+  mot nuvarande gissningsmodell; slutsats NO-GO, byggs inte in i pipelinen.
+  Kräver `pip install -r scripts/requirements.txt` (repots enda Python-
+  beroende, `duckdb`) — körs med `python scripts/overture-height-experiment.py`.
 - `database.rules.json` — Firebase-regler (måste publiceras manuellt, se nedan).
 
 ## Datapipeline (OSM → appen)

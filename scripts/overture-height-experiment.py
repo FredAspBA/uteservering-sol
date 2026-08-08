@@ -4,6 +4,7 @@ in Overture i produktionspipelinen. Engångsexperiment, inga sidoeffekter
 på data/*.geojson. Se docs/superpowers/specs/2026-08-08-overture-height-
 validation-design.md för bakgrunden.
 """
+import hashlib
 import json
 import math
 import os
@@ -16,7 +17,15 @@ import duckdb
 METERS_PER_LEVEL = 3.0
 FLAT_DEFAULT = 15.0
 OVERTURE_RELEASE = "2026-07-22.0"
-CACHE_PATH = ".data-tmp/overture-buildings-malmo.jsonl"
+
+
+def cache_path_for(bbox):
+    """Cachefilnamnet beror på både OVERTURE_RELEASE och bbox, så en gammal
+    cache från en annan release eller ett annat bbox-utsnitt (t.ex. efter att
+    data/buildings.geojson uppdaterats av det månatliga workflowet) inte
+    tyst återanvänds -- den upptäcks som en cache-miss istället."""
+    bbox_hash = hashlib.md5(str(bbox).encode("utf-8")).hexdigest()[:8]
+    return f".data-tmp/overture-buildings-malmo-{OVERTURE_RELEASE}-{bbox_hash}.jsonl"
 
 
 def rings_of(geom):
@@ -86,12 +95,15 @@ def bbox_from_buildings(path="data/buildings.geojson", margin_deg=0.002):
     )
 
 
-def fetch_overture_buildings(bbox, cache_path=CACHE_PATH, refresh=False):
+def fetch_overture_buildings(bbox, cache_path=None, refresh=False):
     """bbox = (west, south, east, north) i grader. Returnerar en lista med
     dicts: {id, height, num_floors, sources, lon, lat}. Cachas till
-    `cache_path` (gitignorad .data-tmp/) så upprepade körningar under
-    utveckling inte träffar S3 varje gång -- sätt refresh=True för att
-    tvinga en ny hämtning."""
+    `cache_path` (gitignorad .data-tmp/, namngiven efter release+bbox --
+    se cache_path_for) så upprepade körningar under utveckling inte
+    träffar S3 varje gång -- sätt refresh=True för att tvinga en ny
+    hämtning."""
+    if cache_path is None:
+        cache_path = cache_path_for(bbox)
     if os.path.exists(cache_path) and not refresh:
         with open(cache_path, encoding="utf-8") as f:
             return [json.loads(line) for line in f if line.strip()]
@@ -195,7 +207,10 @@ def nearest_overture(idx, lon, lat, max_m=5.0):
     """Närmaste Overture-byggnad inom max_m meter, sökt i egen + 8
     grannceller. Enkel plan meter-approximation (samma trick som
     height-experiment.py's footprint_area_m2), gott nog över någon meter
-    vid den här breddgraden."""
+    vid den här breddgraden.
+    OBS: kan matcha samma Overture-rad mot två olika OSM-byggnader (ingen
+    dedupe mellan anrop) -- ofarligt här (bara 4 centroid-matchningar
+    totalt i Task 3), men en framtida produktionsversion bör deduplicera."""
     c0, r0 = cell_of(lon, lat)
     mx = 111320 * math.cos(math.radians(lat))
     my = 110540
@@ -287,15 +302,25 @@ def height_source(sources):
     """Vilket dataset som faktiskt gav höjdvärdet -- inte bara geometrin.
     Overture kan hämta höjd från t.ex. 'Microsoft ML Buildings' (en
     ML-gissning) även när geometrin kommer från OpenStreetMap. Se
-    Global Constraints-anmärkningen om varför det här spåras separat."""
+    Global Constraints-anmärkningen om varför det här spåras separat.
+    Ingen '/properties/height'-post -> vi vet inte vilket dataset som gav
+    höjden (om något), så returnera None istället för att gissa på
+    sources[0], som bara beskriver geometrins ursprung. Det här matas nu in
+    i beslutsunderlaget, så gissningar här är inte ofarliga."""
     for s in sources or []:
         if s.get("property") == "/properties/height":
             return s.get("dataset")
-    return sources[0]["dataset"] if sources else None
+    return None
 
 
 def run_comparison(osm_by_key, matches):
+    # known = hold-out-setet (OSM-byggnader med känd höjd, låtsad okänd, för
+    # att kunna räkna fel). unknown = den PRODUKTIONSRELEVANTA populationen:
+    # OSM-byggnader UTAN känd höjd, dvs. de en riktig pipeline faktiskt
+    # skulle fråga Overture om.
     known = {k: r for k, r in osm_by_key.items() if r["h"] is not None}
+    unknown = {k: r for k, r in osm_by_key.items() if r["h"] is None}
+
     by_type = defaultdict(list)
     for r in known.values():
         by_type[r["type"]].append(r["h"])
@@ -303,17 +328,32 @@ def run_comparison(osm_by_key, matches):
     generic_types = {"yes", "residential", "roof", "service", ""}
     idx_known = build_index(known.values())
 
-    errs_combined, errs_flat, errs_overture = [], [], []
-    overture_keys = []
+    combined_pred = {k: predict_combined(r, idx_known, type_fallback, generic_types) for k, r in known.items()}
+    errs_combined = [abs(combined_pred[k] - r["h"]) for k, r in known.items()]
+    errs_flat = [abs(FLAT_DEFAULT - r["h"]) for r in known.values()]
+
+    # Overture-matchningar inom hold-out-setet, grupperade på VILKET dataset
+    # som faktiskt gav höjdvärdet (inte bara geometrin). Det här är kärnan
+    # i finding #1 från slutgranskningen: en blandad/total MAE är cirkulär
+    # eftersom OSM-sourced höjder i praktiken ekar samma sanning vi mäter
+    # mot (nästan 0 fel per definition), medan bara de Microsoft-ML-sourced
+    # höjderna faktiskt testar något oberoende.
+    overture_by_source = defaultdict(list)
     for key, rec in known.items():
+        row = matches.get(key)
+        if row is None:
+            continue
+        oh = overture_height(row)
+        if oh is None:
+            continue
         truth = rec["h"]
-        errs_combined.append(abs(predict_combined(rec, idx_known, type_fallback, generic_types) - truth))
-        errs_flat.append(abs(FLAT_DEFAULT - truth))
-        if key in matches:
-            oh = overture_height(matches[key])
-            if oh is not None:
-                errs_overture.append(abs(oh - truth))
-                overture_keys.append(key)
+        src = height_source(row.get("sources") or []) or "okänd"
+        overture_by_source[src].append({
+            "overture_err": abs(oh - truth),
+            "combined_err": abs(combined_pred[key] - truth),
+            "signed_err": oh - truth,
+        })
+    all_overture_errs = [e["overture_err"] for entries in overture_by_source.values() for e in entries]
 
     def report(name, errs):
         if not errs:
@@ -325,17 +365,78 @@ def run_comparison(osm_by_key, matches):
         print(f"{name:<28}{mae:7.2f}m  median {med:6.2f}m  inom ±3m: {p3:5.1f}%  (n={len(errs)})")
 
     print()
-    print("--- Hold-out-jämförelse (känd höjd, låtsad okänd) ---")
+    print("--- Hold-out-jämförelse (känd höjd, låtsad okänd) -- blandad/total, kontext, INTE beslutsunderlaget ---")
     report("nuvarande modell (kombinerad)", errs_combined)
     report("platt 15 m", errs_flat)
-    report("Overture (där matchad)", errs_overture)
-    print(f"\nOverture-matchningsgrad inom hold-out-setet: "
-          f"{100 * len(overture_keys) / len(known):.1f}% ({len(overture_keys)}/{len(known)})")
+    report("Overture (där matchad, alla källor blandat)", all_overture_errs)
+    n_matched = sum(len(v) for v in overture_by_source.values())
+    print(f"Overture-matchningsgrad inom hold-out-setet: "
+          f"{100 * n_matched / len(known):.1f}% ({n_matched}/{len(known)})")
 
-    print("\n--- Overture height-source, för de matchade hold-out-byggnaderna ---")
-    src_counts = Counter(height_source((matches[k].get("sources") or [])) for k in overture_keys)
-    for src, n in src_counts.most_common():
+    print("\n--- Overture MAE per height_source, hold-out (DETTA är beslutsunderlaget) ---")
+    print("height_source                  n      Overture MAE   nuvarande modell MAE (samma byggnader)")
+    for src, entries in sorted(overture_by_source.items(), key=lambda kv: -len(kv[1])):
+        n = len(entries)
+        o_mae = statistics.mean(e["overture_err"] for e in entries)
+        c_mae = statistics.mean(e["combined_err"] for e in entries)
+        indep = "  <- det enda oberoende testet" if src == "Microsoft ML Buildings" else ""
+        print(f"{src:<30}{n:5d}      {o_mae:6.2f}         {c_mae:6.2f}{indep}")
+
+    # Bias-koll på den enda oberoende testade delmängden (Microsoft ML
+    # Buildings i hold-out-setet). Ren observation för dokumentationen --
+    # INGEN kalibreringsstrategi är byggd eller testad utifrån den här.
+    ml_entries = overture_by_source.get("Microsoft ML Buildings")
+    if ml_entries:
+        signed = [e["signed_err"] for e in ml_entries]
+        mean_signed = statistics.mean(signed)
+        median_signed = statistics.median(signed)
+        corrected_mae = statistics.mean(abs(e["signed_err"] - median_signed) for e in ml_entries)
+        c_mae_ml = statistics.mean(e["combined_err"] for e in ml_entries)
+        print(f"\nBias-koll (Microsoft ML Buildings, hold-out, n={len(ml_entries)}): "
+              f"medel signed error {mean_signed:+.2f}m, median signed error {median_signed:+.2f}m "
+              f"(Overture överskattar). Om man subtraherar medianoffset: MAE {corrected_mae:.2f}m "
+              f"(mot nuvarande modells {c_mae_ml:.2f}m på samma byggnader) -- endast en observation, "
+              f"inte en byggd/testad kalibreringsstrategi.")
+
+    # Produktionsrelevant täckning: OSM-byggnader UTAN känd höjd -- de en
+    # produktionspipeline faktiskt skulle fråga Overture om. Det är den
+    # täckningssiffran som spelar roll för beslutet, inte hold-out-setets
+    # (som bara mäter hur ofta Overture råkar matcha en byggnad OSM redan
+    # har svaret för).
+    unknown_total = len(unknown)
+    unknown_src_counts = Counter()
+    unknown_with_height = 0
+    for key in unknown:
+        row = matches.get(key)
+        if row is None:
+            continue
+        oh = overture_height(row)
+        if oh is None:
+            continue
+        unknown_with_height += 1
+        src = height_source(row.get("sources") or []) or "okänd"
+        unknown_src_counts[src] += 1
+
+    print("\n--- Produktionsrelevant täckning (OSM-byggnader UTAN känd höjd -- DETTA är matchningsgraden som räknas) ---")
+    print(f"Totalt: {unknown_total}")
+    pct = 100 * unknown_with_height / unknown_total if unknown_total else 0.0
+    print(f"Overture ger NÅGON höjd: {unknown_with_height} ({pct:.1f}%)")
+    for src, n in unknown_src_counts.most_common():
         print(f"  {n:6d}  {src}")
+
+    print("\n=== SLUTSATS ===")
+    ms = overture_by_source.get("Microsoft ML Buildings")
+    if ms:
+        o_mae_ms = statistics.mean(e["overture_err"] for e in ms)
+        c_mae_ms = statistics.mean(e["combined_err"] for e in ms)
+        print(f"Det enda oberoende testet (Overture-höjd som INTE bara ekar OSM): "
+              f"Overture MAE {o_mae_ms:.2f}m mot nuvarande modells {c_mae_ms:.2f}m på samma "
+              f"{len(ms)} byggnader -- Overture slår INTE nuvarande modell här.")
+    print(f"Produktionsrelevant täckning: Overture ger en höjd för {unknown_with_height}/{unknown_total} "
+          f"({pct:.1f}%) av OSM-byggnaderna som saknar känd höjd, varav "
+          f"{unknown_src_counts.get('Microsoft ML Buildings', 0)} Microsoft-ML-sourced och "
+          f"{unknown_src_counts.get('okänd', 0)} utan explicit height_source (inget "
+          f"/properties/height-inslag i sources -- se height_source()).")
 
 
 if __name__ == "__main__":

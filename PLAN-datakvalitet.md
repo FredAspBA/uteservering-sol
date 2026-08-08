@@ -2,9 +2,11 @@
 
 Status: **fas 1–3 byggda och verifierade** (fas 3 mot två riktiga
 `workflow_dispatch`-körningar, se PR #2). **Fas 4:s valideringsexperiment
-kört och klart — Overture slår nuvarande modell, gå vidare med en
-produktionsspec.** Skapad 2026-08-07, fas 3 klar 2026-08-08, fas 4-
-valideringen klar 2026-08-08.
+kört och klart — NO-GO: Overture slår inte nuvarande modell på den
+population som faktiskt räknas (byggnader utan känd höjd), och täcker
+bara drygt hälften av dem.** Skapad 2026-08-07, fas 3 klar 2026-08-08,
+fas 4-valideringen klar 2026-08-08 (första omgången var cirkulär, se
+avsnittet nedan; korrigerad och avslutad NO-GO samma dag).
 
 Målet är så tillförlitlig data som möjligt — skuggor, platser, sol — med
 enbart avgiftsfria källor. Den här filen är beslutsunderlaget; bocka av
@@ -287,49 +289,81 @@ riktigt git-test), `check-data-drift.js` (fem scenarier),
 | **Delad sökruta tappar byggnadsmarginalen.** (Upptäckt i körning 1, fixat till körning 2.) | Två separata `osmium extract` — terrasser opaddat, byggnader +600 m. Se ovan. |
 | **Jag kan inte köra osmium härifrån.** | Ej längre ett hinder — verifierat på riktiga Actions-körningar, se ovan. Kvarstår bara som en anmärkning om varför den ursprungliga risken fanns. |
 
-### ✅ Fas 4 — Overture som höjdkälla (VALIDERINGSEXPERIMENT KLART 2026-08-08 — GO)
+### ⛔ Fas 4 — Overture som höjdkälla (VALIDERINGSEXPERIMENT KLART 2026-08-08 — NO-GO, AVSLUTAD)
 
 Hämta **höjder** från Overture Maps buildings (OSM + Microsoft/Google ML +
 myndighetsdata, gratis) och lägg dem ovanpå OSM:s. Fas 1 är kvalificerade
-uppskattningar; detta är mätdata, och angriper huvudfelkällan på riktigt.
+uppskattningar; tanken var att det här skulle vara mätdata istället —
+valideringen visade att det för vår population inte är det.
 
-**Så här:** utöka fas 3-workflowet med ett DuckDB-steg som läser Overtures
-publika parquet direkt med bbox-filter (deras schema har bbox-kolumner
-gjorda för predicate pushdown, så bara några hundra MB läses trots att
-datamängden är global). Resultatet blir en `data/heights-overture.json`
-som `shadow.js` konsulterar före typ-/grannskapsgissningen.
+**Tänkt upplägg (byggs inte):** utöka fas 3-workflowet med ett DuckDB-steg
+som läser Overtures publika parquet direkt med bbox-filter. Beslutet nedan
+gör att det här inte byggs.
 
 #### Valideringsexperiment (2026-08-08)
 
 Kört: `scripts/overture-height-experiment.py`, hold-out-validering mot
-Malmös byggnader (samma teknik som fas 1). Resultat:
+Malmös byggnader (samma teknik som fas 1).
 
-| Strategi | MAE | Matchningsgrad |
-|---|---|---|
-| Nuvarande modell (kombinerad) | 1.80 m | 100 % (alltid tillgänglig) |
-| Overture (där matchad) | 1.09 m | 99,9 % (5039/5045) |
-| Platt 15 m | 9.91 m | 100 % |
+**Första körningen var cirkulär och missvisande.** Den ursprungliga
+rapporten sammanfattade Overtures träffsäkerhet som ett enda blandat MAE
+(1,09 m mot nuvarande modells 1,80 m) över alla matchade byggnader. En
+slutgranskning avslöjade varför det talet inte går att lita på: 57,7 % av
+de matchade byggnaderna fick sin Overture-höjd hämtad direkt från
+OpenStreetMap självt — samma källa som "facit" i hold-out-testet kommer
+från. Den delmängden får därför ett MAE nära noll nästan per definition
+(Overture ekar bara tillbaka OSM:s eget värde) utan att testa något, och
+drar ner det blandade snittet utan att det säger något om hur bra Overture
+faktiskt är på byggnader vi *inte* redan har en höjd för.
 
-Height-source för de matchade byggnaderna: 57,7 % OpenStreetMap (2907),
-42,3 % Microsoft ML Buildings (2132) — av 5039 matchade hold-out-byggnader.
+**Omkört uppdelat på vilket dataset som faktiskt gav höjden** (inte bara
+geometrin) ger den riktiga bilden:
 
-**Beslut:** Overture slår nuvarande modell tydligt nog och matchningsgraden
-är hög nog -> gå vidare med en produktionsspec. Overtures MAE (1,09 m) är
-~40 % lägre än nuvarande modells (1,80 m), och matchningsgraden mot OSM
-(99,9 % totalt, 25 076/25 099 byggnader; 99,9 % även inom hold-out-setet)
-är i praktiken heltäckande. Enda brasklappen: 42,3 % av de matchade
-höjderna kommer från "Microsoft ML Buildings" (en ML-gissning, inte mätdata)
-snarare än OSM — svagare bevis än om nästan allt varit OSM-sourced, men
-även med den blandningen slår Overture-höjden nuvarande modell med god
-marginal, så det ändrar inte beslutet.
+| height_source | n | Overture MAE | nuvarande modell MAE (samma byggnader) |
+|---|---|---|---|
+| OpenStreetMap (ekar facit — inget oberoende test) | 2907 | 0,01 m | 1,73 m |
+| Microsoft ML Buildings (det enda oberoende testet) | 2132 | **2,56 m** | **1,89 m** |
+
+På den enda delmängden som faktiskt testar något oberoende slår Overture
+alltså INTE nuvarande modell (2,56 m mot 1,89 m) — tvärtom, nuvarande
+modell är bättre där.
+
+**Produktionsrelevant täckning** (OSM-byggnader UTAN känd höjd — de en
+produktionspipeline faktiskt skulle fråga Overture om, inte hold-out-
+setets byggnader som redan har en höjd):
+
+- Totalt: 20 054 byggnader utan känd höjd.
+- Overture ger NÅGON höjd för 10 313 av dem (51,4 %) — varav 10 306
+  Microsoft-ML-sourced och bara 7 OSM-sourced.
+
+Dvs. Overture skulle täcka ungefär hälften av det verkliga behovet, och nästan
+uteslutande med samma ML-höjder som just visade sig sämre än nuvarande
+modell.
+
+**Sidofynd (ej byggt):** en bias-koll på Microsoft-ML-delmängden visar att
+Overture systematiskt överskattar (medel signed error +1,42 m, median
++2,01 m — troligen taknock mot OSM:s takfotskonvention). Subtraherar man
+medianoffset sjunker MAE till 1,74 m, marginellt bättre än nuvarande
+modells 1,89 m på samma byggnader. Det är en observation, inte en
+specad eller byggd strategi — den kräver egen validering (håller offset
+sig stabil över hela Malmö? över tid?) innan den är något att bygga på,
+och ingår inte i det här beslutet.
+
+**Beslut: NO-GO.** Overture slår inte nuvarande modell på den population
+som räknas (byggnader utan känd höjd: Overture MAE 2,56 m mot nuvarande
+modells 1,89 m på samma byggnader), och täcker dessutom bara 51,4 % av
+den populationen. Fas 4 stängs här — ingen produktionsspec skrivs. Det
+här är inte samma sak som "Overture är dåligt": det är att ett korrekt
+test (isolerat från OSM-ekot) inte visade någon fördel just nu, med
+dagens data och utan kalibrering.
 
 #### Utmaningar och hur vi tar oss runt dem
 
 | Utmaning | Lösning |
 |---|---|
 | **Konflatering är svårt.** Att matcha Overture-byggnader mot OSM-byggnader geometriskt är en klassisk felkälla — fel matchning ger fel höjd på fel hus. | **Rör inte geometrin.** Behåll OSM:s fotavtryck (redan buffrade och förenklade, och prestandaintrimmade) och hämta *bara höjd*. Matcha i första hand på OSM-id, som Overture bär med sig i sitt `sources`-fält; bara i andra hand på centroid inom några meter. |
-| **Overture-höjder är delvis själva ML-gissningar.** Vi kan råka byta en bra gissning mot en sämre. | Mät det, precis som i fas 1: kör `scripts/impact-experiment.py` före och efter, och behåll Overture-höjden bara om den slår nuvarande modell. Prioritetsordning: OSM-taggad höjd → Overture → typmedian → grannskapsmedian → 15 m. |
-| **Ännu en stor fil i repot.** | Skicka bara `{osm_id: höjd}`, inte geometri. Det blir några hundra kB, inte megabyte. |
+| **Overture-höjder är delvis själva ML-gissningar.** Vi kan råka byta en bra gissning mot en sämre. | Mätt (se ovan): på den oberoende testbara delmängden (Microsoft ML Buildings) är Overtures MAE 2,56 m mot nuvarande modells 1,89 m — nuvarande modell vann, så inget byts ut. Ingen `impact-experiment.py`-körning mot riktig `computeShading()` gjordes eller behövdes, eftersom hold-out-valideringen redan gav NO-GO innan det steget. |
+| **Ännu en stor fil i repot.** | Blev aldrig aktuellt — inget byggs. |
 
 ### 🕓 Fas 5 — Serveringstillstånd från Malmö stad
 
@@ -433,11 +467,15 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
    fångade; fixad och verifierad grön i körning 2 (byggnader nu 25 099,
    fler än ursprungliga 23 251). Körning 3 (mot `main`) bekräftade även
    "inget att committa"-grenen. Helt klar — inget kvarstår.
-5. ✅ **Fas 4 — valideringsexperimentet klart** (2026-08-08): Overture-
-   höjder slår nuvarande modell (MAE 1,09 m vs 1,80 m) vid 99,9 %
-   matchningsgrad — beslut: gå vidare med en produktionsspec (byggs inte i
-   den här sessionen, se `scripts/overture-height-experiment.py` och
-   avsnittet ovan för siffrorna)
+5. ⛔ **Fas 4 — valideringsexperimentet klart, NO-GO** (2026-08-08): den
+   ursprungliga MAE-siffran (1,09 m) var cirkulär (57,7 % av matchningarna
+   ekade bara OSM:s eget värde). Omkört per height_source: på den enda
+   oberoende testbara delmängden (Microsoft ML Buildings, n=2132) är
+   Overtures MAE 2,56 m mot nuvarande modells 1,89 m — nuvarande modell
+   vinner. Täckningen mot den produktionsrelevanta populationen (byggnader
+   utan känd höjd) är dessutom bara 51,4 %. Beslut: stängd, ingen
+   produktionsspec skrivs (se `scripts/overture-height-experiment.py` och
+   avsnittet ovan för alla siffror)
 6. 🕓 **Fas 5** — publikt register hittat OCH verifierat mot verklig HTML
    2026-08-07; listsidan ensam löser alkoholtyp-frågan i ett anrop,
    detaljsidor behövs bara för allmänhet/uteservering/tider-precisionen;
@@ -447,12 +485,11 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 
 1. **Fas 3**: klar — mergad till `main`, tre gröna `workflow_dispatch`-
    körningar, inget kvarstår.
-2. **Fas 4**: valideringsexperimentet är klart och beslutet är GO
-   (Overture MAE 1,09 m mot nuvarande modells 1,80 m vid 99,9 %
-   matchningsgrad, se avsnittet ovan). Kvarstår: en produktionsspec för
-   själva DuckDB-steget i fas 3-workflowet (hämta, mappa till
-   `data/heights-overture.json`, koppla in i `shadow.js`) — inte skriven
-   än, utanför den här planens omfattning.
+2. **Fas 4**: avslutad, NO-GO (se avsnittet ovan). Overture slår inte
+   nuvarande modell på den population som räknas (byggnader utan känd
+   höjd: Overture MAE 2,56 m mot nuvarande modells 1,89 m på samma
+   byggnader), och täcker bara 51,4 % av den populationen. Ingen
+   produktionsspec skrivs. Inget kvarstår här.
 3. **Fas 5 parallellt** — oberoende av de andra två, och redan avsevärt
    mindre jobb än ursprungligen trott (se fas 5-avsnittet).
 
