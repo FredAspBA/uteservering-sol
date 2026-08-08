@@ -432,6 +432,25 @@ vore en genväg, inte en förutsättning.
    fördröjning mellan anrop, identifierande User-Agent — för
    Allmänheten/Slutet-sällskap-grinden, Uteservering-flaggan och
    inomhus/utomhus-tider
+4. **(Beslutat 2026-08-08, ej byggt än)** för register-ställen med
+   `Serveringstyp: Uteservering` som INTE matchar något i
+   `terraces.geojson` alls: geokoda adressen (Nominatim, samma cache som
+   taggningslistan redan använder för dubblettfilialer) och visa dem
+   **direkt på kartan** som en egen punkt — inte bara i en
+   att-lägga-till-i-OSM-kö. Solberäkningen fungerar utan ändring (den
+   skjuter redan bara en stråle från en punkt + närliggande byggnader ur
+   `buildings.geojson`, oberoende av om terrassen själv har en
+   OSM-geometri). Dessa punkter måste märkas tydligt som
+   **OSM-overifierade** (annan ikon/badge i appen, och en rad i
+   taggningslistan som uppmanar att lägga till dem i OSM på riktigt) —
+   syns i appen omedelbart, men flyttas över till att vara en "riktig"
+   OSM-driven terrass så fort någon lägger till dem där. Det här är
+   fasens svar på att-göra-punkten "Lägg till saknade ställen i OSM" (t.ex.
+   Andy's): de blir synliga i appen direkt istället för att vänta på
+   manuell OSM-redigering, men uppmaningen att lägga till dem i OSM
+   kvarstår ändå (så att de blir en riktig, kvalitetsgranskad
+   community-post i det öppna datasetet, inte bara ett appspecifikt
+   specialfall för alltid).
 
 **Utmaningar och hur vi tar oss runt dem:**
 
@@ -441,6 +460,7 @@ vore en genväg, inte en förutsättning.
 | **Tillstånd ≠ uteservering.** Registret säger att stället får servera alkohol, inte att det har uteservering. | `Serveringstyp: Uteservering`-flaggan på detaljsidan täcker det mesta av luckan, men är fortfarande skild från OSM:s `outdoor_seating`. OSM-taggning behövs ändå för ställen registret inte matchar. |
 | **Personuppgift på detaljsidan.** Ägarnamn för enskilda firmor. | Extrahera bara ställe-nivå-fält (namn/adress/flaggor/tider) till `serving-permits.json` — aldrig ägarnamnet. |
 | **Registret ändras** (nya/upphörda tillstånd). | Månadsvis körning (samma takt som fas 3) håller det i synk utan att någon manuellt beter av en lista. |
+| **Ovanpå OSM-datat: ställen som inte finns i OSM alls, men HAR uteserveringstillstånd** (steg 4 ovan). Appen har hittills bara visat OSM-data, så det här är ett nytt datalager, inte bara en ny källa till befintliga fält. | Geokodning kan träffa fel adress eller fel filial av en kedja — samma osäkerhet som taggningslistans befintliga geokodning, med samma motåtgärd (osäkra träffar till granskning, inte auto-publicerade). Tydlig OSM-overifierad-märkning i UI så det aldrig ser ut som verifierad OSM-data. |
 
 ### Fas 6 — Senare, om vi vill längre
 
@@ -479,7 +499,13 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 6. 🕓 **Fas 5** — publikt register hittat OCH verifierat mot verklig HTML
    2026-08-07; listsidan ensam löser alkoholtyp-frågan i ett anrop,
    detaljsidor behövs bara för allmänhet/uteservering/tider-precisionen;
-   mejl skickat 2026-08-07 som genväg, mindre kritiskt nu
+   mejl skickat 2026-08-07 som genväg, mindre kritiskt nu. **2026-08-08:**
+   scope utökad efter beslut med Fredrik — matchade OCH omatchade
+   register-ställen med uteserveringstillstånd ska med i appen (se steg 4
+   i "Så här" ovan), inte bara de som redan finns i OSM. Inte påbörjad
+   ännu (medvetet, för att spara budget efter fas 4:s cykel samma dag) —
+   nästa session som tar sig an fas 5 kör brainstorm → spec → plan →
+   subagent-driven-development, samma mönster som fas 3/4.
 
 ### Nästa steg
 

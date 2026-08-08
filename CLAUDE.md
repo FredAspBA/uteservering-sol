@@ -47,7 +47,11 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       detaljsidor (`Show/{id}`) behövs bara för allmänhet/uteservering/
       inomhus-utomhus-tid-precisionen. Se `PLAN-datakvalitet.md` fas 5 för
       fälten, budgeten och personuppgifts-hänsynen (ägarnamn på
-      detaljsidan). Inget blockerat längre — redo att byggas.
+      detaljsidan). **2026-08-08:** scope utökad — stads-listans ställen
+      med uteserveringstillstånd som saknas helt i OSM ska visas direkt i
+      appen (geokodad adress, tydligt märkta OSM-overifierade), inte bara
+      matchas mot befintliga OSM-ställen. Inget blockerat — redo att
+      byggas, medvetet inte påbörjad än (se `PLAN-datakvalitet.md` fas 5).
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
