@@ -30,6 +30,38 @@ def rings_of(geom):
     return []
 
 
+def known_height(p):
+    """Kopierad från scripts/height-experiment.py -- samma tolkning av
+    height/building:levels som resten av datapipelinen använder."""
+    h = p.get("height")
+    if h:
+        try:
+            v = float(str(h).strip().replace(",", ".").split(";")[0])
+            if v > 0:
+                return v
+        except ValueError:
+            pass
+    lv = p.get("building:levels")
+    if lv:
+        try:
+            v = float(str(lv).strip().replace(",", ".").split(";")[0])
+            if v > 0:
+                return v * METERS_PER_LEVEL
+        except ValueError:
+            pass
+    return None
+
+
+def centroid(geom):
+    """Grov centroid: medel av yttre ringens koordinater. Samma som i
+    height-experiment.py/impact-experiment.py."""
+    rings = rings_of(geom)
+    if not rings or not rings[0]:
+        return None
+    ring = rings[0]
+    return (sum(c[0] for c in ring) / len(ring), sum(c[1] for c in ring) / len(ring))
+
+
 def bbox_from_buildings(path="data/buildings.geojson", margin_deg=0.002):
     """Räknar ut (west, south, east, north) från den faktiska utbredningen
     av data/buildings.geojson, plus en liten marginal. Görs mot filens
@@ -90,9 +122,69 @@ def fetch_overture_buildings(bbox, cache_path=CACHE_PATH, refresh=False):
     return records
 
 
+OSM_KIND_PREFIX = {"way": "w", "relation": "r", "node": "n"}
+RECORD_ID_RE = re.compile(r"^([wrn])(\d+)@")
+
+
+def osm_key_from_feature_id(feature_id):
+    if not feature_id or "/" not in feature_id:
+        return None
+    kind, num = feature_id.split("/", 1)
+    prefix = OSM_KIND_PREFIX.get(kind)
+    return f"{prefix}{num}" if prefix else None
+
+
+def overture_osm_key(source):
+    if source.get("dataset") != "OpenStreetMap":
+        return None
+    rid = source.get("record_id")
+    if not rid:
+        return None
+    m = RECORD_ID_RE.match(rid)
+    return f"{m.group(1)}{m.group(2)}" if m else None
+
+
+def load_osm_buildings(path="data/buildings.geojson"):
+    d = json.load(open(path, encoding="utf-8"))
+    recs = {}
+    for f in d["features"]:
+        key = osm_key_from_feature_id(f.get("id"))
+        if not key:
+            continue
+        g = f.get("geometry")
+        c = centroid(g) if g else None
+        if not c:
+            continue
+        p = f.get("properties", {})
+        recs[key] = {
+            "key": key,
+            "lon": c[0],
+            "lat": c[1],
+            "type": p.get("building", "yes"),
+            "h": known_height(p),
+        }
+    return recs
+
+
+def match_by_id(osm_by_key, overture_rows):
+    """osm-nyckel -> första Overture-raden vars sources refererar den."""
+    matches = {}
+    for row in overture_rows:
+        for s in row.get("sources") or []:
+            key = overture_osm_key(s)
+            if key and key in osm_by_key and key not in matches:
+                matches[key] = row
+    return matches
+
+
 if __name__ == "__main__":
     bbox = bbox_from_buildings()
     print(f"bbox (west,south,east,north): {bbox}")
     overture = fetch_overture_buildings(bbox)
     with_height = sum(1 for r in overture if r["height"] is not None)
     print(f"Overture-byggnader i bbox: {len(overture)}   med height: {with_height}")
+
+    osm_by_key = load_osm_buildings()
+    id_matches = match_by_id(osm_by_key, overture)
+    print(f"OSM-byggnader totalt: {len(osm_by_key)}   id-matchade mot Overture: {len(id_matches)} "
+          f"({100 * len(id_matches) / len(osm_by_key):.1f}%)")
