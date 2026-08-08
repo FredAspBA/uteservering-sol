@@ -287,7 +287,7 @@ riktigt git-test), `check-data-drift.js` (fem scenarier),
 | **Delad sökruta tappar byggnadsmarginalen.** (Upptäckt i körning 1, fixat till körning 2.) | Två separata `osmium extract` — terrasser opaddat, byggnader +600 m. Se ovan. |
 | **Jag kan inte köra osmium härifrån.** | Ej längre ett hinder — verifierat på riktiga Actions-körningar, se ovan. Kvarstår bara som en anmärkning om varför den ursprungliga risken fanns. |
 
-### ⬜ Fas 4 — Overture som höjdkälla (detaljerad plan, inväntar OK)
+### ✅ Fas 4 — Overture som höjdkälla (VALIDERINGSEXPERIMENT KLART 2026-08-08 — GO)
 
 Hämta **höjder** från Overture Maps buildings (OSM + Microsoft/Google ML +
 myndighetsdata, gratis) och lägg dem ovanpå OSM:s. Fas 1 är kvalificerade
@@ -447,7 +447,12 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 
 1. **Fas 3**: klar — mergad till `main`, tre gröna `workflow_dispatch`-
    körningar, inget kvarstår.
-2. **Fas 4 härnäst**, hängd på samma workflow, som en egen PR.
+2. **Fas 4**: valideringsexperimentet är klart och beslutet är GO
+   (Overture MAE 1,09 m mot nuvarande modells 1,80 m vid 99,9 %
+   matchningsgrad, se avsnittet ovan). Kvarstår: en produktionsspec för
+   själva DuckDB-steget i fas 3-workflowet (hämta, mappa till
+   `data/heights-overture.json`, koppla in i `shadow.js`) — inte skriven
+   än, utanför den här planens omfattning.
 3. **Fas 5 parallellt** — oberoende av de andra två, och redan avsevärt
    mindre jobb än ursprungligen trott (se fas 5-avsnittet).
 
