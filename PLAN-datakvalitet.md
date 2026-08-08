@@ -165,8 +165,8 @@ Byt tiled Overpass mot **Geofabrik-extrakt + osmium**, kört i GitHub
 Actions. Tar bort tidsgränser, hastighetsbegränsning och byggnadsluckor
 strukturellt, och löser att-göra-punkten "fyll byggnadsluckor" permanent.
 
-**Byggt, på en egen branch (`phase3-geofabrik-osmium-pipeline`, ovanpå
-denna), som en egen PR enligt rekommendationen nedan:**
+**Byggt och mergat till `main` via [PR #2](https://github.com/FredAspBA/uteservering-sol/pull/2)
+(2026-08-08, stackad ovanpå [PR #1](https://github.com/FredAspBA/uteservering-sol/pull/1)):**
 
 - `.github/workflows/refresh-data.yml` — `workflow_dispatch` + månadsvis
   schema (03:00 UTC den 1:a), `permissions: contents: write`, kö istället
@@ -193,7 +193,7 @@ denna), som en egen PR enligt rekommendationen nedan:**
 
 Innan detta skeppades var de fyra osmium-CLI-anropen overifierade (ingen
 `apt-get`/WSL-distro/Docker i utvecklingsmiljön — kontrollerat
-2026-08-08). De kördes sedan på riktigt, två gånger, via `workflow_dispatch`
+2026-08-08). De kördes sedan på riktigt, tre gånger, via `workflow_dispatch`
 mot GitHub Actions:
 
 **Körning 1** ([run 31255468098](https://github.com/FredAspBA/uteservering-sol/actions/runs/31255468098),
@@ -231,6 +231,17 @@ pixelidentisk med den **ursprungliga** Overpass-hämtade bboxen `[12,893,
 55,552, 13,047, 55,623]` — bekräftar att fixen återställde likvärdig
 (faktiskt något bredare) täckning, inte bara ett antal som råkar passera
 grinden.
+
+**Körning 3** ([run 31256629412](https://github.com/FredAspBA/uteservering-sol/actions/runs/31256629412),
+~2 min, kördes mot `main` **efter** att PR #1 och PR #2 mergats — första
+körningen på den riktiga slutdestinationen, inte en feature-branch): grön.
+Terrasser 939 → 939, byggnader 25 099 → 25 099 (±0 % båda, som väntat —
+datan var redan färsk sedan körning 2 dagen innan). Detta var samtidigt
+första gången **"inget att committa"-grenen** kördes på riktigt (tidigare
+bara läst i koden): `git diff --cached --quiet` slog till, jobbet loggade
+"No data changes this run — nothing to commit." och avslutades grönt utan
+att pusha en tom commit. De sista overifierade raderna i workflowet är
+därmed också bekräftade.
 
 **Fortsatt lokalt testat** (från innan körningarna, se git-historiken för
 detaljer): alla post-processing-funktioner mot handbyggda fixturer och
@@ -389,12 +400,13 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 1. ✅ **Fas 1** — klar, verifierad mot riktig `computeShading()`
 2. ✅ **Fas 2** — klar, slår igenom vid nästa `fetch-data`
 3. ✅ **Nätverksbeslut** — GitHub Actions (väg D) vald
-4. ✅ **Fas 3** — byggd OCH verifierad 2026-08-08 med två riktiga
-   `workflow_dispatch`-körningar (PR #2, `phase3-geofabrik-osmium-pipeline`
-   → `sol-uteservering-webapp-ke5dtt`). Första körningen grön direkt,
-   avslöjade en verklig −9,4 % byggnadslucka som grinden fångade; fixad
-   och verifierad grön i körning 2 (byggnader nu 25 099, fler än
-   ursprungliga 23 251). Väntar bara på PR-granskning/merge.
+4. ✅ **Fas 3** — byggd, mergad till `main` OCH verifierad 2026-08-08 med
+   tre riktiga `workflow_dispatch`-körningar (PR #1 och PR #2 mergade,
+   plus en tredje körning direkt mot `main` efteråt). Första körningen
+   grön direkt, avslöjade en verklig −9,4 % byggnadslucka som grinden
+   fångade; fixad och verifierad grön i körning 2 (byggnader nu 25 099,
+   fler än ursprungliga 23 251). Körning 3 (mot `main`) bekräftade även
+   "inget att committa"-grenen. Helt klar — inget kvarstår.
 5. ⬜ **Fas 4** — Overture, kan börjas nu när fas 3 är grön
 6. 🕓 **Fas 5** — publikt register hittat OCH verifierat mot verklig HTML
    2026-08-07; listsidan ensam löser alkoholtyp-frågan i ett anrop,
@@ -403,9 +415,9 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 
 ### Nästa steg
 
-1. **Fas 3**: klar för granskning/merge — [PR #2](https://github.com/FredAspBA/uteservering-sol/pull/2).
-   Ingen ytterligare iteration krävs, båda testkörningarna är gröna.
-2. **Fas 4 därefter**, hängd på samma workflow, som en andra PR.
+1. **Fas 3**: klar — mergad till `main`, tre gröna `workflow_dispatch`-
+   körningar, inget kvarstår.
+2. **Fas 4 härnäst**, hängd på samma workflow, som en egen PR.
 3. **Fas 5 parallellt** — oberoende av de andra två, och redan avsevärt
    mindre jobb än ursprungligen trott (se fas 5-avsnittet).
 

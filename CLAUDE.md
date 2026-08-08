@@ -28,12 +28,11 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       18 719 → 1 529, och appen hittar 2,8–8,2 % fler soliga uteserveringar
       (den var systematiskt pessimistisk förut). **Fas 3** (Geofabrik +
       osmium i ett GitHub Actions-workflow istället för Overpass) är
-      **byggd** (2026-08-08, branch `phase3-geofabrik-osmium-pipeline`) —
-      allt utom de fyra osmium-CLI-anropen testat lokalt, väntar på en PR +
-      första `workflow_dispatch`-körning för att verifieras end-to-end. Se
-      `PLAN-datakvalitet.md` fas 3 för exakt vad som är testat vs blint och
-      två gotchas vi hittade under bygget. **Fas 4** (Overture som
-      höjdkälla) väntar på att fas 3 blir grön. **Fas 5**: Malmö stads
+      **klar och mergad till `main`** (2026-08-08, PR #1 + PR #2) — verifierad
+      med tre riktiga `workflow_dispatch`-körningar (en byggnadslucka hittad
+      och fixad i körning 1→2, "inget att committa"-grenen bekräftad i
+      körning 3). Se `PLAN-datakvalitet.md` fas 3 för detaljerna. **Fas 4**
+      (Overture som höjdkälla) kan börjas nu. **Fas 5**: Malmö stads
       **publika restaurangregister** på
       `restaurang.malmo.se/AlktWebbforms/Restaurants` är nu verifierat mot
       verklig HTML (2026-08-07) — listsidan ensam (1 anrop) ger namn,
@@ -47,9 +46,10 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
       `npm run fetch-data` → `npm run build-tagging-list` → commit → push.
       Verifiera efteråt att de nya värdena syns i appen/listan.
-- [ ] **Fyll byggnadsluckor.** Senaste `fetch-data`-körningen hoppade över
-      2–3 rutor pga Overpass-504. Kör om `npm run fetch-data` vid tillfälle
-      för att täppa till (påverkar bara skuggprecision i de områdena).
+- [x] **Fyll byggnadsluckor.** Löst strukturellt av fas 3 (Geofabrik+osmium
+      ersätter tiled Overpass, som var källan till 504-rutorna) —
+      byggnader gick 23 251 → 25 099 i samma veva. Ta bort den här raden
+      helt vid nästa städning av listan.
 - [ ] **Lägg till saknade ställen i OSM.** "Andy's" (och ev. fler) finns inte
       alls i OSM och kan därför inte visas i appen förrän de läggs till där.
       Fredrik lägger till dem i OSM; sedan plockas de upp vid nästa datasynk.
