@@ -365,7 +365,43 @@ dagens data och utan kalibrering.
 | **Overture-höjder är delvis själva ML-gissningar.** Vi kan råka byta en bra gissning mot en sämre. | Mätt (se ovan): på den oberoende testbara delmängden (Microsoft ML Buildings) är Overtures MAE 2,56 m mot nuvarande modells 1,89 m — nuvarande modell vann, så inget byts ut. Ingen `impact-experiment.py`-körning mot riktig `computeShading()` gjordes eller behövdes, eftersom hold-out-valideringen redan gav NO-GO innan det steget. |
 | **Ännu en stor fil i repot.** | Blev aldrig aktuellt — inget byggs. |
 
-### 🕓 Fas 5 — Serveringstillstånd från Malmö stad
+### 🚧 Fas 5 — Serveringstillstånd från Malmö stad (del A KLAR 2026-08-08)
+
+**Del A byggd och körd mot riktig data 2026-08-08:**
+`scripts/fetch-serving-permits.js` (`npm run fetch-serving-permits`) hämtar
+listsidan (verifierad live samma dag — strukturen från 2026-08-07 stämde
+exakt, inklusive AJA/ALP-kolumnerna som ligger i `<abbr>`-taggar och
+missades av ett första, för enkelt `grep`), matchar mot `data/
+terraces.geojson` på normaliserat namn + gata (husnummer ignoreras för att
+tolerera format som "25 - 27" vs "27"), och skriver `data/serving-
+permits.json`. Körning på riktig data:
+
+```
+551 tillståndshavare i registret, 917 namngivna OSM-ställen att matcha mot
+  112 starka matchningar (namn + gata)
+   86 svaga matchningar (bara namn — OSM saknar addr:street)
+  353 omatchade (osäkra eller saknas i vår OSM-data — se fas 5 del B)
+175 löser ett tidigare alcohol=unknown OSM-ställe till alkohol: ja
+```
+
+De fem alkoholtyperna (Sprit/Vin/Starköl/AJA/ALP) kollapsas till en enda
+boolean, eftersom appen själv bara förstår ja/nej/okänt (`venueInfo()` i
+`src/app.js`) — ett tillstånd av vilken typ som helst räknas som "ja".
+Endast listsidan behövs (ett anrop) — ingen detaljsida-skrapning gjordes,
+eftersom Allmänheten/Uteservering/tid-precisionen den ger inte behövs för
+det booleska alkohol-fältet appen faktiskt använder.
+
+**Kvar (del A):** koppla in `resolvesUnknownAlcohol`-fältet i
+`scripts/build-tagging-list.js` (visa som hint i taggning.html bredvid
+Ja/Nej, inte auto-tagga OSM — samma "människan bekräftar"-mönster som
+resten av taggningslistan). Litet, billigt jobb när det blir dags.
+
+**Kvar (del B, beslutad 2026-08-08, ospecad):** de 353 omatchade
+registerställena — de med `Serveringstyp: Uteservering` (kräver
+detaljsida) ska visas direkt på kartan, geokodade och tydligt märkta
+OSM-overifierade. Se avsnittet nedan för hela resonemanget.
+
+---
 
 **Det finns ett publikt restaurangregister**, och det är nu verifierat
 direkt mot verklig HTML (2026-08-07, en session med nätverksåtkomst — se
@@ -496,16 +532,16 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
    utan känd höjd) är dessutom bara 51,4 %. Beslut: stängd, ingen
    produktionsspec skrivs (se `scripts/overture-height-experiment.py` och
    avsnittet ovan för alla siffror)
-6. 🕓 **Fas 5** — publikt register hittat OCH verifierat mot verklig HTML
-   2026-08-07; listsidan ensam löser alkoholtyp-frågan i ett anrop,
-   detaljsidor behövs bara för allmänhet/uteservering/tider-precisionen;
-   mejl skickat 2026-08-07 som genväg, mindre kritiskt nu. **2026-08-08:**
-   scope utökad efter beslut med Fredrik — matchade OCH omatchade
-   register-ställen med uteserveringstillstånd ska med i appen (se steg 4
-   i "Så här" ovan), inte bara de som redan finns i OSM. Inte påbörjad
-   ännu (medvetet, för att spara budget efter fas 4:s cykel samma dag) —
-   nästa session som tar sig an fas 5 kör brainstorm → spec → plan →
-   subagent-driven-development, samma mönster som fas 3/4.
+6. 🚧 **Fas 5** — del A klar och körd 2026-08-08:
+   `scripts/fetch-serving-permits.js` hämtar och matchar registret mot
+   `data/terraces.geojson`, 175 tidigare `alcohol=unknown`-ställen löses
+   till "ja" (se avsnittet ovan för alla siffror). Byggd direkt (inte via
+   subagent-driven-development — medvetet lean given begränsad
+   sessionsbudget) och verifierad mot riktig data, inte bara lokala
+   fixturer. **Kvar:** koppla in hintet i taggningslistan (litet), och
+   del B — visa de 353 omatchade registerställena med
+   uteserveringstillstånd direkt på kartan (scope beslutad 2026-08-08,
+   inte specad än — kör brainstorm → spec → plan när det blir dags).
 
 ### Nästa steg
 

@@ -47,11 +47,15 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       detaljsidor (`Show/{id}`) behövs bara för allmänhet/uteservering/
       inomhus-utomhus-tid-precisionen. Se `PLAN-datakvalitet.md` fas 5 för
       fälten, budgeten och personuppgifts-hänsynen (ägarnamn på
-      detaljsidan). **2026-08-08:** scope utökad — stads-listans ställen
-      med uteserveringstillstånd som saknas helt i OSM ska visas direkt i
-      appen (geokodad adress, tydligt märkta OSM-overifierade), inte bara
-      matchas mot befintliga OSM-ställen. Inget blockerat — redo att
-      byggas, medvetet inte påbörjad än (se `PLAN-datakvalitet.md` fas 5).
+      detaljsidan). **2026-08-08, del A klar:** `scripts/fetch-serving-
+      permits.js` (`npm run fetch-serving-permits`) hämtar och matchar
+      registret mot `data/terraces.geojson` → `data/serving-
+      permits.json`. Kört mot riktig data: 175 tidigare
+      `alcohol=unknown`-ställen löses till "ja". Kvar: koppla in hintet i
+      taggningslistan, plus del B — stads-listans ställen som saknas helt
+      i OSM (353 omatchade) ska visas direkt i appen (geokodad adress,
+      tydligt märkta OSM-overifierade), inte specad än. Se
+      `PLAN-datakvalitet.md` fas 5 för alla siffror.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
@@ -119,6 +123,9 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
   lines.js` — en feature per rad, sorterat på OSM-id (håller `.git` litet).
 - `scripts/build-tagging-list.js` — bygger `data/tagging-list.json` (+ geokodar
   dubblettfilialer, cachar i `data/geocode-cache.json`).
+- `scripts/fetch-serving-permits.js` — fas 5 del A: hämtar Malmö stads
+  serveringstillstånd-register, matchar mot `data/terraces.geojson` →
+  `data/serving-permits.json`. Se `PLAN-datakvalitet.md` fas 5.
 - `scripts/overture-height-experiment.py` — engångs-valideringsskript (Python,
   se `PLAN-datakvalitet.md` fas 4) som jämförde Overture Maps' byggnadshöjder
   mot nuvarande gissningsmodell; slutsats NO-GO, byggs inte in i pipelinen.
