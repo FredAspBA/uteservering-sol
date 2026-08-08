@@ -81,8 +81,26 @@ async function reverseGeocode(lon, lat) {
   }
 }
 
+// Places Malmö stads serveringstillstånd-register has a permit for that
+// weren't already known to have alcohol in OSM (fas 5, del A — see
+// scripts/fetch-serving-permits.js and PLAN-datakvalitet.md fas 5). A
+// *suggestion* shown next to the Ja/Nej toggle, never auto-applied — the
+// human still confirms via the existing tagging flow. Missing file (script
+// hasn't been run yet, or this is a fresh checkout) is not an error: the
+// hint is additive, everything works fine without it.
+async function loadRegisterAlcoholHints() {
+  let rows;
+  try {
+    rows = JSON.parse(await readFile(join(dataDir, "serving-permits.json"), "utf8"));
+  } catch {
+    return new Set();
+  }
+  return new Set(rows.filter((r) => r.resolvesUnknownAlcohol).map((r) => r.matchedOsmId));
+}
+
 async function main() {
   const geo = JSON.parse(await readFile(join(dataDir, "terraces.geojson"), "utf8"));
+  const registerAlcoholHints = await loadRegisterAlcoholHints();
 
   const items = geo.features
     .map((f) => {
@@ -102,6 +120,7 @@ async function main() {
         osmAlcohol: osmAlcohol(p, key),
         osmOutdoor: p.outdoor_seating || "",
         addr: tagAddress(p),
+        registerAlcoholHint: registerAlcoholHints.has(id),
         _point: pointOf(f), // temporary, stripped before writing
       };
     })

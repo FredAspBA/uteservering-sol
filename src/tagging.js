@@ -178,7 +178,15 @@ function osmHintChips(item) {
   };
   if (item.osmAlcohol === "yes") frag.appendChild(chip("OSM: alkohol ✓", "hint-known"));
   else if (item.osmAlcohol === "no") frag.appendChild(chip("OSM: ingen alkohol", "hint-known"));
-  else frag.appendChild(chip("OSM: alkohol okänt", "hint-missing"));
+  else {
+    frag.appendChild(chip("OSM: alkohol okänt", "hint-missing"));
+    // A suggestion from Malmö stads serveringstillstånd-register (fas 5,
+    // del A) — not a confirmed OSM value, just a nudge for which way to
+    // answer the Ja/Nej toggle below.
+    if (item.registerAlcoholHint) {
+      frag.appendChild(chip("Malmö stad: har serveringstillstånd", "hint-register"));
+    }
+  }
 
   if (item.osmOutdoor === "yes" || item.osmOutdoor === "only")
     frag.appendChild(chip("OSM: uteservering ✓", "hint-known"));

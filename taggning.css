@@ -297,6 +297,14 @@
   border: 1px dashed var(--color-sun-strong);
 }
 
+/* A suggestion from Malmö stads serveringstillstånd-register (fas 5, del
+   A) — not yet confirmed in OSM, so visually distinct from .hint-known. */
+.hint-register {
+  background: color-mix(in srgb, var(--color-sun) 16%, var(--color-surface));
+  color: color-mix(in srgb, var(--color-sun) 70%, var(--color-ink));
+  border: 1px solid color-mix(in srgb, var(--color-sun) 40%, var(--color-surface));
+}
+
 /* ---------- Toggles ---------- */
 .row-toggles {
   display: flex;
