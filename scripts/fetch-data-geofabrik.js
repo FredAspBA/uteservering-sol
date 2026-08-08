@@ -47,6 +47,14 @@ const tmpDir = join(__dirname, "..", ".data-tmp"); // gitignored scratch space, 
 // mean the two fetch paths cover slightly different areas, not a crash.
 const SEARCH_BBOX_OVERPASS = "55.558,12.895,55.615,13.035"; // south,west,north,east
 
+// Same value and purpose as fetch-data.js's BUILDING_PADDING_METERS: how
+// far a building might realistically shade a terrace (matches
+// MAX_RAY_METERS in src/shadow.js), plus a margin. fetch-data.js applies
+// this by padding the *terraces' own fetched extent*; this file applies it
+// by padding the same static SEARCH_BBOX instead (see buildingsBbox()'s
+// comment for why that's a deliberate, safe difference, not an oversight).
+const BUILDING_PADDING_METERS = 600;
+
 const SWEDEN_PBF_URL = "https://download.geofabrik.de/europe/sweden-latest.osm.pbf";
 
 /**
@@ -59,6 +67,40 @@ const SWEDEN_PBF_URL = "https://download.geofabrik.de/europe/sweden-latest.osm.p
 export function osmiumBboxFromOverpassBbox(overpassBbox) {
   const [south, west, north, east] = overpassBbox.split(",").map(Number);
   return `${west},${south},${east},${north}`;
+}
+
+/**
+ * Pads an osmium "-b" bbox string (west,south,east,north) by `meters` in
+ * every direction, using the same flat local-degree approximation
+ * src/shadow.js's padBboxMeters() uses (accurate enough over a few hundred
+ * metres at Malmo's latitude; not worth pulling in a full geodesy library
+ * for this). A fresh small implementation here rather than importing that
+ * one — shadow.js is browser-facing code, not something this build-time
+ * script should reach into.
+ *
+ * Why buildings need this and terraces don't: fetch-data.js pads the
+ * *terraces' own fetched extent* by this same margin before fetching
+ * buildings, so a building just outside where the terraces happen to be
+ * clustered — but within shading distance of an edge terrace — still gets
+ * fetched. Padding the static SEARCH_BBOX instead (this function's actual
+ * use here) is a deliberately different, SIMPLER way to get an equivalent
+ * guarantee without a two-pass "fetch terraces first, then compute their
+ * bbox, then fetch buildings" dance: SEARCH_BBOX always contains the
+ * terraces' extent (terraces are themselves filtered to SEARCH_BBOX), so
+ * SEARCH_BBOX padded by this margin always contains terraces'-extent
+ * padded by the same margin too — i.e. this can only fetch buildings
+ * covering an area at least as large as fetch-data.js's approach, never
+ * smaller. A first real run without this padding measured the gap
+ * directly: 3,351 buildings (9.4%) missing, every one of them in the
+ * fringe just outside the unpadded SEARCH_BBOX — see PLAN-datakvalitet.md,
+ * fas 3, for the full writeup.
+ */
+export function padOsmiumBboxMeters(osmiumBbox, meters) {
+  const [west, south, east, north] = osmiumBbox.split(",").map(Number);
+  const midLatRad = (((south + north) / 2) * Math.PI) / 180;
+  const dLon = meters / (111320 * Math.cos(midLatRad));
+  const dLat = meters / 110540;
+  return `${west - dLon},${south - dLat},${east + dLon},${north + dLat}`;
 }
 
 /**
@@ -162,12 +204,13 @@ async function downloadSwedenExtract(destPath) {
   }
 }
 
-/** osmium extract: Sweden -> Malmo bbox, complete_ways so no way is cut at
+/** osmium extract: Sweden -> a bbox, complete_ways so no way is cut at
  * the boundary (matches Overpass's "keep the whole way if any node is in
- * the bbox" behaviour used by fetch-data.js today). */
-async function osmiumExtract(inputPbf, outputPbf) {
-  const bbox = osmiumBboxFromOverpassBbox(SEARCH_BBOX_OVERPASS);
-  console.log(`Extracting Malmo bbox (${bbox}) via osmium extract...`);
+ * the bbox" behaviour used by fetch-data.js today). Takes the bbox as a
+ * parameter — see main() for why terraces and buildings each get their
+ * own extract at a different bbox. */
+async function osmiumExtract(inputPbf, outputPbf, bbox) {
+  console.log(`Extracting bbox (${bbox}) via osmium extract...`);
   await run(
     "osmium",
     ["extract", "-b", bbox, "-s", "complete_ways", inputPbf, "-o", outputPbf, "--overwrite"],
@@ -279,22 +322,37 @@ export function processBuildings(rawFeatureCollection) {
 async function main() {
   await mkdir(tmpDir, { recursive: true });
   const swedenPbf = join(tmpDir, "sweden-latest.osm.pbf");
-  const malmoPbf = join(tmpDir, "malmo.osm.pbf");
+  const terracesAreaPbf = join(tmpDir, "terraces-area.osm.pbf");
+  const buildingsAreaPbf = join(tmpDir, "buildings-area.osm.pbf");
   const terracesRawPbf = join(tmpDir, "terraces-raw.osm.pbf");
   const buildingsRawPbf = join(tmpDir, "buildings-raw.osm.pbf");
   const terracesRawGeojson = join(tmpDir, "terraces-raw.geojson");
   const buildingsRawGeojson = join(tmpDir, "buildings-raw.geojson");
 
   await downloadSwedenExtract(swedenPbf);
-  await osmiumExtract(swedenPbf, malmoPbf);
 
-  await osmiumTagsFilter(malmoPbf, terracesRawPbf, terraceFilterExpressions(), "terraces");
+  // Two separate extracts, at two different bboxes — not one shared
+  // extract — because terraces and buildings need different coverage:
+  //
+  // - Terraces: exactly SEARCH_BBOX, unpadded, so this matches
+  //   fetch-data.js's terracesQuery(SEARCH_BBOX) precisely (confirmed by a
+  //   real run: 938 -> 939 terraces, effectively unchanged).
+  // - Buildings: SEARCH_BBOX padded by BUILDING_PADDING_METERS, so a
+  //   building just outside SEARCH_BBOX but within shading distance of an
+  //   edge terrace still gets fetched — see padOsmiumBboxMeters()'s doc
+  //   comment for the real, measured 9.4%/3,351-building gap this closes.
+  const rawBbox = osmiumBboxFromOverpassBbox(SEARCH_BBOX_OVERPASS);
+  const paddedBbox = padOsmiumBboxMeters(rawBbox, BUILDING_PADDING_METERS);
+  await osmiumExtract(swedenPbf, terracesAreaPbf, rawBbox);
+  await osmiumExtract(swedenPbf, buildingsAreaPbf, paddedBbox);
+
+  await osmiumTagsFilter(terracesAreaPbf, terracesRawPbf, terraceFilterExpressions(), "terraces");
   // way["building"] + relation["building"] — mirrors fetch-data.js's
   // buildingsQuery() exactly (no value restriction on the building tag).
   // Node excluded on purpose: a `building` tag on a bare node isn't valid
   // OSM (buildings are areas), so "w/" + "r/" alone already covers every
   // real building — no point widening the intermediate pbf with "n/" too.
-  await osmiumTagsFilter(malmoPbf, buildingsRawPbf, ["w/building", "r/building"], "buildings");
+  await osmiumTagsFilter(buildingsAreaPbf, buildingsRawPbf, ["w/building", "r/building"], "buildings");
 
   // Terraces: node-tagged venues (points) and way-tagged venues (usually
   // polygons, e.g. a cafe mapped as its building outline) both occur in
