@@ -1,8 +1,10 @@
 # Plan: bättre datakvalitet för skuggor, platser och sol
 
 Status: **fas 1–3 byggda och verifierade** (fas 3 mot två riktiga
-`workflow_dispatch`-körningar, se PR #2). **Fas 4 planerad i detalj,
-redo att börjas.** Skapad 2026-08-07, fas 3 klar 2026-08-08.
+`workflow_dispatch`-körningar, se PR #2). **Fas 4:s valideringsexperiment
+kört och klart — Overture slår nuvarande modell, gå vidare med en
+produktionsspec.** Skapad 2026-08-07, fas 3 klar 2026-08-08, fas 4-
+valideringen klar 2026-08-08.
 
 Målet är så tillförlitlig data som möjligt — skuggor, platser, sol — med
 enbart avgiftsfria källor. Den här filen är beslutsunderlaget; bocka av
@@ -297,6 +299,30 @@ gjorda för predicate pushdown, så bara några hundra MB läses trots att
 datamängden är global). Resultatet blir en `data/heights-overture.json`
 som `shadow.js` konsulterar före typ-/grannskapsgissningen.
 
+#### Valideringsexperiment (2026-08-08)
+
+Kört: `scripts/overture-height-experiment.py`, hold-out-validering mot
+Malmös byggnader (samma teknik som fas 1). Resultat:
+
+| Strategi | MAE | Matchningsgrad |
+|---|---|---|
+| Nuvarande modell (kombinerad) | 1.80 m | 100 % (alltid tillgänglig) |
+| Overture (där matchad) | 1.09 m | 99,9 % (5039/5045) |
+| Platt 15 m | 9.91 m | 100 % |
+
+Height-source för de matchade byggnaderna: 57,7 % OpenStreetMap (2907),
+42,3 % Microsoft ML Buildings (2132) — av 5039 matchade hold-out-byggnader.
+
+**Beslut:** Overture slår nuvarande modell tydligt nog och matchningsgraden
+är hög nog -> gå vidare med en produktionsspec. Overtures MAE (1,09 m) är
+~40 % lägre än nuvarande modells (1,80 m), och matchningsgraden mot OSM
+(99,9 % totalt, 25 076/25 099 byggnader; 99,9 % även inom hold-out-setet)
+är i praktiken heltäckande. Enda brasklappen: 42,3 % av de matchade
+höjderna kommer från "Microsoft ML Buildings" (en ML-gissning, inte mätdata)
+snarare än OSM — svagare bevis än om nästan allt varit OSM-sourced, men
+även med den blandningen slår Overture-höjden nuvarande modell med god
+marginal, så det ändrar inte beslutet.
+
 #### Utmaningar och hur vi tar oss runt dem
 
 | Utmaning | Lösning |
@@ -407,7 +433,11 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
    fångade; fixad och verifierad grön i körning 2 (byggnader nu 25 099,
    fler än ursprungliga 23 251). Körning 3 (mot `main`) bekräftade även
    "inget att committa"-grenen. Helt klar — inget kvarstår.
-5. ⬜ **Fas 4** — Overture, kan börjas nu när fas 3 är grön
+5. ✅ **Fas 4 — valideringsexperimentet klart** (2026-08-08): Overture-
+   höjder slår nuvarande modell (MAE 1,09 m vs 1,80 m) vid 99,9 %
+   matchningsgrad — beslut: gå vidare med en produktionsspec (byggs inte i
+   den här sessionen, se `scripts/overture-height-experiment.py` och
+   avsnittet ovan för siffrorna)
 6. 🕓 **Fas 5** — publikt register hittat OCH verifierat mot verklig HTML
    2026-08-07; listsidan ensam löser alkoholtyp-frågan i ett anrop,
    detaljsidor behövs bara för allmänhet/uteservering/tider-precisionen;

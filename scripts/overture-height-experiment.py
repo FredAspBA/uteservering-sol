@@ -227,6 +227,117 @@ def match_all(osm_by_key, overture_rows):
     return matches, match_kind
 
 
+# CELL_DEG (~50 m, från Task 3) är tajt anpassad för Overture-centroid-
+# matchning och för finmaskig för neighbourhood_median() nedan: en
+# empirisk kontroll visade att 5,9 % av byggnaderna med känd höjd då
+# faller igenom alla tre ringarna (rings=(1,2,3)) utan att hitta min_n=5
+# grannar, mot 0,1 % med en 300 m-cell (samma värde height-experiment.py
+# använder). Därför en egen, grövre cellstorlek bara för det här
+# indexet -- Overture-matchningen i match_all() rör den inte.
+NEIGHBOUR_CELL_DEG = 0.003  # ~300 m vid Malmös breddgrad
+
+
+def neighbour_cell_of(lon, lat):
+    return (int(math.floor(lon / NEIGHBOUR_CELL_DEG)), int(math.floor(lat / NEIGHBOUR_CELL_DEG)))
+
+
+def build_index(sample):
+    idx = defaultdict(list)
+    for r in sample:
+        idx[neighbour_cell_of(r["lon"], r["lat"])].append(r)
+    return idx
+
+
+def neighbourhood_median(idx, r, exclude_self=True, min_n=5, rings=(1, 2, 3)):
+    c0, r0 = neighbour_cell_of(r["lon"], r["lat"])
+    for rad in rings:
+        vals = []
+        for dc in range(-rad, rad + 1):
+            for dr in range(-rad, rad + 1):
+                for o in idx.get((c0 + dc, r0 + dr), ()):
+                    if exclude_self and o is r:
+                        continue
+                    vals.append(o["h"])
+        if len(vals) >= min_n:
+            return statistics.median(vals)
+    return None
+
+
+def predict_combined(r, idx, type_fallback, generic_types):
+    t = r["type"]
+    if t not in generic_types and t in type_fallback:
+        return type_fallback[t]
+    m = neighbourhood_median(idx, r)
+    if m is not None:
+        return m
+    return type_fallback.get(t, FLAT_DEFAULT)
+
+
+def overture_height(row):
+    h = row.get("height")
+    if h and h > 0:
+        return float(h)
+    nf = row.get("num_floors")
+    if nf and nf > 0:
+        return float(nf) * METERS_PER_LEVEL
+    return None
+
+
+def height_source(sources):
+    """Vilket dataset som faktiskt gav höjdvärdet -- inte bara geometrin.
+    Overture kan hämta höjd från t.ex. 'Microsoft ML Buildings' (en
+    ML-gissning) även när geometrin kommer från OpenStreetMap. Se
+    Global Constraints-anmärkningen om varför det här spåras separat."""
+    for s in sources or []:
+        if s.get("property") == "/properties/height":
+            return s.get("dataset")
+    return sources[0]["dataset"] if sources else None
+
+
+def run_comparison(osm_by_key, matches):
+    known = {k: r for k, r in osm_by_key.items() if r["h"] is not None}
+    by_type = defaultdict(list)
+    for r in known.values():
+        by_type[r["type"]].append(r["h"])
+    type_fallback = {t: statistics.median(hs) for t, hs in by_type.items() if len(hs) >= 20}
+    generic_types = {"yes", "residential", "roof", "service", ""}
+    idx_known = build_index(known.values())
+
+    errs_combined, errs_flat, errs_overture = [], [], []
+    overture_keys = []
+    for key, rec in known.items():
+        truth = rec["h"]
+        errs_combined.append(abs(predict_combined(rec, idx_known, type_fallback, generic_types) - truth))
+        errs_flat.append(abs(FLAT_DEFAULT - truth))
+        if key in matches:
+            oh = overture_height(matches[key])
+            if oh is not None:
+                errs_overture.append(abs(oh - truth))
+                overture_keys.append(key)
+
+    def report(name, errs):
+        if not errs:
+            print(f"{name:<28}(inga värden)")
+            return
+        mae = statistics.mean(errs)
+        med = statistics.median(errs)
+        p3 = 100 * sum(1 for e in errs if e <= 3) / len(errs)
+        print(f"{name:<28}{mae:7.2f}m  median {med:6.2f}m  inom ±3m: {p3:5.1f}%  (n={len(errs)})")
+
+    print()
+    print("--- Hold-out-jämförelse (känd höjd, låtsad okänd) ---")
+    report("nuvarande modell (kombinerad)", errs_combined)
+    report("platt 15 m", errs_flat)
+    report("Overture (där matchad)", errs_overture)
+    print(f"\nOverture-matchningsgrad inom hold-out-setet: "
+          f"{100 * len(overture_keys) / len(known):.1f}% ({len(overture_keys)}/{len(known)})")
+
+    print("\n--- Overture height-source, för de matchade hold-out-byggnaderna ---")
+    src_counts = Counter(height_source((matches[k].get("sources") or [])) for k in overture_keys)
+    for src, n in src_counts.most_common():
+        print(f"  {n:6d}  {src}")
+
+
 if __name__ == "__main__":
     bbox = bbox_from_buildings()
     print(f"bbox (west,south,east,north): {bbox}")
@@ -240,3 +351,5 @@ if __name__ == "__main__":
     print(f"OSM-byggnader totalt: {len(osm_by_key)}   matchade mot Overture: {len(matches)} "
           f"({100 * len(matches) / len(osm_by_key):.1f}%)  "
           f"[id: {kind_counts['id']}, centroid: {kind_counts['centroid']}]")
+
+    run_comparison(osm_by_key, matches)
