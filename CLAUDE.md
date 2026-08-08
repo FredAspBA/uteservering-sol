@@ -52,10 +52,14 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       registret mot `data/terraces.geojson` → `data/serving-
       permits.json`. Kört mot riktig data: 175 tidigare
       `alcohol=unknown`-ställen löses till "ja", och hintet syns nu i
-      taggningslistan (egen chip, aldrig auto-taggat). Kvar: del B —
-      stads-listans ställen som saknas helt
-      i OSM (353 omatchade) ska visas direkt i appen (geokodad adress,
-      tydligt märkta OSM-overifierade), inte specad än. Se
+      taggningslistan (egen chip, aldrig auto-taggat). **Tas upp igen
+      v. 34:** del B — stads-listans ställen som saknas helt i OSM ska
+      visas direkt i appen (geokodad adress, tydligt märkta
+      OSM-overifierade). Kandidatlistan är redan hämtad (2026-08-08,
+      `scripts/fetch-serving-permit-details.js`): **257** har
+      uteserveringstillstånd och serverar allmänheten — bl.a. "Andys
+      Burgers", det konkreta "Andy's"-stället. Själva byggandet
+      (geokodning, kartvisning, UI) är inte specat än. Se
       `PLAN-datakvalitet.md` fas 5 för alla siffror.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
@@ -127,6 +131,10 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
 - `scripts/fetch-serving-permits.js` — fas 5 del A: hämtar Malmö stads
   serveringstillstånd-register, matchar mot `data/terraces.geojson` →
   `data/serving-permits.json`. Se `PLAN-datakvalitet.md` fas 5.
+- `scripts/fetch-serving-permit-details.js` — fas 5 del B-underlag: hämtar
+  detaljsidor för de omatchade registerställena → `data/serving-permit-
+  details.json` (uteservering- och allmänhet-flaggorna). Kandidatlistan
+  för del B, inte del B själv.
 - `scripts/overture-height-experiment.py` — engångs-valideringsskript (Python,
   se `PLAN-datakvalitet.md` fas 4) som jämförde Overture Maps' byggnadshöjder
   mot nuvarande gissningsmodell; slutsats NO-GO, byggs inte in i pipelinen.

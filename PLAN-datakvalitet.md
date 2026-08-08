@@ -399,10 +399,19 @@ alkohol okänt" i taggning.html — aldrig auto-taggat, samma
 webbläsaren (inte bara i JSON-outputen): 175 chips renderade, rätt text,
 rätt ställe, inga konsolfel. `data/tagging-list.json` regenererad.
 
-**Kvar (del B, beslutad 2026-08-08, ospecad):** de 353 omatchade
-registerställena — de med `Serveringstyp: Uteservering` (kräver
-detaljsida) ska visas direkt på kartan, geokodade och tydligt märkta
-OSM-overifierade. Se avsnittet nedan för hela resonemanget.
+**Kvar (del B, beslutad 2026-08-08, ospecad — tas upp igen v. 34):** de
+353 omatchade registerställena — de med `Serveringstyp: Uteservering` ska
+visas direkt på kartan, geokodade och tydligt märkta OSM-overifierade.
+**Detaljsidorna redan hämtade** (2026-08-08,
+`scripts/fetch-serving-permit-details.js` →
+`data/serving-permit-details.json`, 353/353, 0 fel) så nästa session
+slipper göra om det: **261** har uteserveringstillstånd, **257** av dem
+serverar till allmänheten (inte bara slutet sällskap — 4 föll bort på den
+grinden). Det är den faktiska kandidatlistan för del B, en ökning på
+~27 % ovanpå dagens 939 terrasser. **"Andys Burgers" (Mariedalsvägen 32)
+finns i listan** — det är den konkreta "Andy's" som nämnts i CLAUDE.md
+sedan projektet startade som saknas i OSM. Se avsnittet nedan för hela
+resonemanget kring hur del B ska visas.
 
 ---
 
@@ -542,9 +551,11 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
    direkt (inte via subagent-driven-development — medvetet lean given
    begränsad sessionsbudget) och verifierad mot riktig data OCH i
    webbläsaren, inte bara lokala fixturer.
-7. ⬜ **Fas 5 del B** — visa de 353 omatchade registerställena med
-   uteserveringstillstånd direkt på kartan (scope beslutad 2026-08-08,
-   inte specad än — kör brainstorm → spec → plan när det blir dags).
+7. ⬜ **Fas 5 del B** — visa registerställen med uteserveringstillstånd
+   som saknas i OSM direkt på kartan (scope beslutad 2026-08-08, tas upp
+   igen v. 34). Kandidatlistan är klar: **257 st** (detaljsidor hämtade,
+   se avsnittet ovan) — inte specad/byggd än, kör brainstorm → spec →
+   plan när det blir dags.
 
 ### Nästa steg
 
