@@ -1,7 +1,9 @@
 # Plan: bättre datakvalitet för skuggor, platser och sol
 
-Status: **fas 1–2 byggda och verifierade. Fas 3–4 planerade i detalj,
-inväntar OK innan de byggs.** Skapad och påbörjad 2026-08-07.
+Status: **fas 1–2 byggda och verifierade. Fas 3 byggd (på egen branch),
+väntar på första Actions-körning innan den kan verifieras end-to-end. Fas
+4 planerad i detalj, inväntar fas 3 grön + OK.** Skapad 2026-08-07,
+fas 3 byggd 2026-08-08.
 
 Målet är så tillförlitlig data som möjligt — skuggor, platser, sol — med
 enbart avgiftsfria källor. Den här filen är beslutsunderlaget; bocka av
@@ -158,35 +160,97 @@ taggar. Nu behålls även `roof:levels`, `roof:height`, `roof:shape`,
 vid nästa hämtning, försumbar filstorlek. Taggarna finns i datan först
 efter nästa `npm run fetch-data`.
 
-### ⬜ Fas 3 — Pipeline utan Overpass (detaljerad plan, inväntar OK)
+### 🟡 Fas 3 — Pipeline utan Overpass (BYGGD 2026-08-08, väntar på första Actions-körning)
 
 Byt tiled Overpass mot **Geofabrik-extrakt + osmium**, kört i GitHub
 Actions. Tar bort tidsgränser, hastighetsbegränsning och byggnadsluckor
 strukturellt, och löser att-göra-punkten "fyll byggnadsluckor" permanent.
 
-**Så här:** ett workflow (`.github/workflows/refresh-data.yml`) som körs på
-`workflow_dispatch` + schemalagt, och som:
+**Byggt, på en egen branch (`phase3-geofabrik-osmium-pipeline`, ovanpå
+denna), som en egen PR enligt rekommendationen nedan:**
 
-1. `apt-get install osmium-tool` (finns i Ubuntu-runners repo)
-2. hämtar Geofabrik-extraktet för Sverige
-3. `osmium extract` till Malmö-bbox:en, sedan `osmium tags-filter` för
-   dels terrasstaggarna, dels `building`
-4. kör om geometriförenkling/buffring precis som `fetch-data.js` gör idag
-5. kör `build-tagging-list`
-6. committar bara om datan faktiskt ändrats
+- `.github/workflows/refresh-data.yml` — `workflow_dispatch` + månadsvis
+  schema (03:00 UTC den 1:a), `permissions: contents: write`, kö istället
+  för avbrott vid överlappande körningar.
+- `scripts/fetch-data-geofabrik.js` — hämtar Sverige-extraktet, `osmium
+  extract` till Malmö-bboxen, `osmium tags-filter` (terrasser resp.
+  byggnader), `osmium export` till GeoJSON, återställer OSM-id, filtrerar
+  terrasser till exakt samma urval som Overpass-frågan, reducerar
+  polygon-terrasser till en representativ punkt, kör byggnader genom
+  samma slimning som idag. Skriver `data/*.geojson.new` — rör **aldrig**
+  de riktiga filerna direkt.
+- `scripts/check-data-drift.js` — ±20 %-grinden. Jämför `.new`-kandidaterna
+  mot det som redan ligger i repot; avbryter jobbet (inget committas) om
+  någon avviker för mycket.
+- `scripts/lib/slim-building.js`, `scripts/lib/terrace-categories.js` —
+  bruten ut ur `fetch-data.js` så Overpass-vägen (kvar som manuellt
+  reservalternativ) och osmium-vägen delar exakt samma regler för vilka
+  taggar som behålls och vilka ställen som räknas som terrass. Kan aldrig
+  divergera i tysthet.
+- `scripts/lib/write-geojson-lines.js` — en feature per rad, sorterat
+  deterministiskt på OSM-id.
 
-`scripts/fetch-data.js` behålls som manuellt reservalternativ, men är inte
-längre huvudvägen.
+#### Testat vs blint — läs det här innan en misslyckad körning felsöks
+
+Osmium-tool går inte att installera i den här utvecklingsmiljön (ingen
+`apt-get`, ingen WSL-distro, ingen Docker — kontrollerat 2026-08-08), så
+de fyra osmium-/nedladdningsanropen kunde **inte** köras end-to-end innan
+det här först skeppades. Deras exakta flaggsyntax kontrollerades mot
+osmium-tools riktiga dokumentation (docs.osmcode.org, en session med
+nätåtkomst — se anmärkningen om nätverket ovan) snarare än gissades, men
+"kontrollerad dokumentation" är inte samma sak som "körd på riktigt".
+
+**Verkligen testat:**
+- Alla rena post-processing-funktioner (id-återställning, terrass-/
+  byggnadsfiltrering, representativ-punkt-reduktion, slimning) mot både
+  handbyggda fixturer formade exakt som osmiums dokumenterade output OCH
+  mot riktig data — matning av alla 938 nuvarande terrasser och 23 251
+  byggnader genom den nya pipelinens efterbearbetning gav **exakt samma
+  antal ut**.
+- `write-geojson-lines.js`: round-trip, determinism oavsett indata-ordning,
+  och ett riktigt git-test (se nedan).
+- `check-data-drift.js`: alla fem scenarier (inom gräns, för stor
+  minskning, tomt resultat, saknad fil, trasig JSON) ger rätt exit-kod.
+- `.github/workflows/refresh-data.yml`: validerad med **actionlint**
+  (riktig binär, laddad från GitHub Releases, inte bara generisk
+  YAML-parsning) — noll fel, inklusive dess inbyggda shellcheck av
+  `run:`-blocken.
+- Sverige-extraktet finns och är 775 MB (bekräftat via ett riktigt
+  nedladdat exemplar, av misstag — se nedan), inom "hundratals MB".
+
+**Inte testat (kräver en riktig Actions-körning):** de fyra osmium-CLI-
+anropen (`extract`, `tags-filter` × 2, `export` × 2) och hela
+nätverksflödet i just Actions-miljön. Om första körningen misslyckas är
+det med stor sannolikhet där — se kommentaren högst upp i
+`fetch-data-geofabrik.js`.
+
+#### Två saker vi lärde oss på vägen (värda att komma ihåg)
+
+- **`osmium export --add-unique-id=type_id` ger INTE originalets id** för
+  polygoner/areor (byggnader) — det ger 2×way-id (eller 2×relation-id+1),
+  och att räkna baklänges är felbenäget. `--attributes=id,type` ger
+  däremot originalets rena `@id`/`@type` som properties, utan omräkning.
+  Det är vad `fetch-data-geofabrik.js` faktiskt använder.
+- **Ett riktigt git-test** (23 251 byggnader, 50 ändrade) visade att gits
+  binära delta-komprimering är bättre än väntat även för enrads-JSON —
+  båda formaten packade till samma storlek när ordningen var stabil.
+  Skillnaden syntes först när feature-ordningen slumpades om mellan
+  körningar (+17 % `.git`-tillväxt utan sortering, 0 % med). **Den
+  verkliga skyddsmekanismen är den deterministiska sorteringen på
+  OSM-id, inte radbrytningarna i sig** — raderna gör diffen läsbar för en
+  människa som granskar en PR, sorteringen är vad som faktiskt skyddar
+  `.git`. `write-geojson-lines.js` gör båda.
 
 #### Utmaningar och hur vi tar oss runt dem
 
 | Utmaning | Lösning |
 |---|---|
-| **Repo-uppsvällning.** `buildings.geojson` är 8,9 MB och skrivs som *en enda rad* JSON. Git kan inte delta-komprimera det, så varje körning lägger en helt ny blob. Veckovis skulle `.git` (nu 6 MB) växa med hundratals MB per år. | Skriv **en feature per rad** och sortera features deterministiskt på OSM-id. Då blir diffen radbaserad och git delta-komprimerar normalt. Kör dessutom **månadsvis**, inte veckovis, och committa bara vid faktisk ändring. |
-| **Tyst sönderkörning.** Om ett filter blir fel kan workflowet committa en tom eller halv fil och slå sönder den live-appen utan att någon märker det. | **Grindar innan commit:** avbryt om antalet terrasser eller byggnader avviker mer än ±20 % från det som redan ligger i repot. Hellre ett rött workflow än trasig data i produktion. |
-| **Extraktets storlek.** Sverige-extraktet är hundratals MB att ladda ner varje körning. | Acceptabelt i Actions (bra bandbredd, ~1–2 min). Om det blir ett problem: byt till ett mindre regionalt extrakt eller BBBike:s skräddarsydda bbox-extrakt. |
-| **Deploy-loop.** En commit från workflowet triggar Pages-bygget — men skulle den också trigga workflowet självt blir det en oändlig loop. | Sker inte automatiskt: commits gjorda med `GITHUB_TOKEN` triggar inte nya workflow-körningar. Behöver bara `permissions: contents: write`. |
-| **Jag kan inte testa workflowet härifrån.** Proxyn blockerar allt, så jag kan inte köra pipelinen lokalt först. | Jag skriver workflowet, det körs på GitHub, och jag läser körloggarna via GitHub-verktygen och itererar därifrån. Räkna med 2–3 rundor innan första gröna körningen. |
+| **Repo-uppsvällning.** `buildings.geojson` är 8,9 MB. | Skriv **en feature per rad, sorterat deterministiskt på OSM-id** (`write-geojson-lines.js`, verifierat med ett riktigt git-test ovan). Kör **månadsvis**, inte veckovis, och committa bara vid faktisk ändring. |
+| **Tyst sönderkörning.** Om ett filter blir fel kan workflowet committa en tom eller halv fil och slå sönder den live-appen utan att någon märker det. | **Grindar innan commit** (`check-data-drift.js`): avbryt om antalet terrasser eller byggnader avviker mer än ±20 % från det som redan ligger i repot. Testat mot fem scenarier, se ovan. |
+| **Extraktets storlek.** | Bekräftat 775 MB. Acceptabelt i Actions (bra bandbredd). Om det blir ett problem: byt till ett mindre regionalt extrakt eller BBBike:s skräddarsydda bbox-extrakt. |
+| **Deploy-loop.** | Löst via standardbeteende: commits gjorda med `GITHUB_TOKEN` (checkout-actionens default) triggar inte nya workflow-körningar. Bara `permissions: contents: write` behövs. |
+| **Osmium-id:n matchar inte det format resten av koden förväntar sig.** (Upptäckt under bygget, inte förutsett i den ursprungliga planen.) | `--attributes=id,type` istället för `--add-unique-id` — se ovan. |
+| **Jag kan inte köra osmium härifrån.** Ingen `apt-get`/WSL-distro/Docker i den här miljön (nätverket i sig är däremot öppet — se anmärkningen ovan). | Allt annat än de fyra osmium-anropen är testat (se "Testat vs blint" ovan). De fyra anropens syntax kontrollerades mot riktig dokumentation. Första riktiga körningen sker på GitHub Actions; jag läser körloggarna därifrån och itererar. Räkna med 2–3 rundor. |
 
 ### ⬜ Fas 4 — Overture som höjdkälla (detaljerad plan, inväntar OK)
 
@@ -303,25 +367,26 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 1. ✅ **Fas 1** — klar, verifierad mot riktig `computeShading()`
 2. ✅ **Fas 2** — klar, slår igenom vid nästa `fetch-data`
 3. ✅ **Nätverksbeslut** — GitHub Actions (väg D) vald
-4. ⬜ **Fas 3** — pipelinen som Actions-workflow
-5. ⬜ **Fas 4** — Overture, förutsätter fas 3
+4. 🟡 **Fas 3** — byggd 2026-08-08 på branchen
+   `phase3-geofabrik-osmium-pipeline`, allt utom de fyra osmium-CLI-
+   anropen testat lokalt (se fas 3-avsnittet för exakt vad). Väntar på: PR
+   öppnad, `workflow_dispatch` triggad, första körloggen läst.
+5. ⬜ **Fas 4** — Overture, förutsätter fas 3 grön
 6. 🕓 **Fas 5** — publikt register hittat OCH verifierat mot verklig HTML
    2026-08-07; listsidan ensam löser alkoholtyp-frågan i ett anrop,
    detaljsidor behövs bara för allmänhet/uteservering/tider-precisionen;
    mejl skickat 2026-08-07 som genväg, mindre kritiskt nu
 
-### Nästa steg — inväntar OK
+### Nästa steg
 
-Fas 3 och 4 är planerade i detalj ovan, med utmaningar och motåtgärder.
-Ingenting av dem är byggt. Rekommenderad ordning:
-
-1. **Fas 3 först**, och som en egen PR. Den rör pipelinen, inte appen — om
-   något går fel ska det inte blandas ihop med skuggkoden.
+1. **Fas 3**: öppna en PR från `phase3-geofabrik-osmium-pipeline` (mot
+   `sol-uteservering-webapp-ke5dtt`, som fas 1–2 redan ligger på), trigga
+   `workflow_dispatch`, läs körloggen. Räkna med 2–3 iterationer — de fyra
+   osmium-anropen är den enda overifierade delen (se ovan), och det är
+   först här de kan verifieras på riktigt.
 2. **Fas 4 därefter**, hängd på samma workflow, som en andra PR.
-3. **Fas 5 parallellt** — oberoende av de andra två.
-
-Räkna med att fas 3 behöver 2–3 iterationer innan workflowet blir grönt,
-eftersom det inte går att provköra härifrån.
+3. **Fas 5 parallellt** — oberoende av de andra två, och redan avsevärt
+   mindre jobb än ursprungligen trott (se fas 5-avsnittet).
 
 #### Vad Fredrik behöver göra för fas 5
 

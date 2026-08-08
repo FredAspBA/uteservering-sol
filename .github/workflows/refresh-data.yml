@@ -1,0 +1,99 @@
+# Refreshes data/terraces.geojson and data/buildings.geojson from OSM via
+# Geofabrik + osmium-tool, replacing the tiled-Overpass approach in
+# scripts/fetch-data.js (kept as a manual fallback). See
+# PLAN-datakvalitet.md, fas 3, for the full reasoning — this file follows
+# that plan's mitigations closely enough that it's worth reading first if
+# something here looks surprising.
+#
+# Runs monthly (not weekly — see the repo-growth mitigation in the plan)
+# plus on-demand via workflow_dispatch. GitHub Actions runners have full,
+# fast internet access, unlike the sandboxed session this pipeline was
+# originally planned in — no more Overpass 504s, tiling, or a 20-40 minute
+# manual run.
+name: Refresh OSM data
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 3 1 * *" # 03:00 UTC on the 1st of each month
+
+# contents: write is required to commit the refreshed data back to main.
+# This is the ONLY elevated permission the job needs.
+permissions:
+  contents: write
+
+# Queues (rather than cancels) an overlapping run instead of letting two
+# osmium pipelines race to push at once — low-probability on a monthly
+# schedule, but workflow_dispatch could overlap a scheduled run.
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        # persist-credentials defaults to true — the checkout's own
+        # GITHUB_TOKEN is what `git push` below uses. Deliberate: a commit
+        # authored with GITHUB_TOKEN does NOT trigger new workflow runs
+        # (GitHub's documented behaviour), so this job pushing to main
+        # can't loop back into itself. It DOES still trigger the classic
+        # branch-based GitHub Pages build (that's not an Actions workflow
+        # at all, just a push to main — see CLAUDE.md), which is the point.
+
+      - name: Install osmium-tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y osmium-tool
+          osmium --version
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch data via Geofabrik + osmium
+        run: npm run fetch-data-geofabrik
+
+      # ±20% sanity gate (PLAN-datakvalitet.md, fas 3, "tyst sönderkörning").
+      # Writes nothing to data/*.geojson itself — only compares the .new
+      # candidates fetch-data-geofabrik.js just wrote against what's
+      # already committed, and fails the job (stopping before any commit)
+      # if either moved too much. See scripts/check-data-drift.js.
+      - name: Check data drift (±20% gate)
+        run: npm run check-data-drift
+
+      - name: Upload fetched data for inspection if the gate failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-data-debug-${{ github.run_number }}
+          path: data/*.geojson.new
+          retention-days: 14
+          if-no-files-found: warn
+
+      # Only reached if the gate above passed.
+      - name: Promote fetched data
+        run: |
+          mv data/terraces.geojson.new data/terraces.geojson
+          mv data/buildings.geojson.new data/buildings.geojson
+
+      - name: Rebuild the tagging list
+        run: npm run build-tagging-list
+
+      - name: Commit and push if anything actually changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No data changes this run — nothing to commit."
+          else
+            git commit -m "Refresh OSM data via Geofabrik+osmium ($(date -u +%Y-%m-%d))"
+            git push
+          fi

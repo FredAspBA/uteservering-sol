@@ -8,6 +8,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import osmtogeojson from "osmtogeojson";
 import * as turf from "@turf/turf";
+import { slimBuilding } from "./lib/slim-building.js";
+import { OUTDOOR_SEATING_AMENITIES, OUTDOOR_SEATING_SHOPS } from "./lib/terrace-categories.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dataDir = join(__dirname, "..", "data");
@@ -23,73 +25,6 @@ const SEARCH_BBOX = "55.558,12.895,55.615,13.035";
 // MAX_RAY_METERS in src/shadow.js), plus a margin.
 const BUILDING_PADDING_METERS = 600;
 
-// Only these OSM tags are ever read by src/shadow.js (height resolution)
-// or the popup UI (blocker name) — everything else (wikidata, source,
-// ref:*, ...) is dead weight once shipped to the browser. Across ~20k
-// buildings, dropping unused tags is most of the payload-size win.
-//
-// The roof:*/est_height/min_height group is kept because ~80% of Malmo's
-// buildings carry no height or building:levels at all, so any additional
-// real signal beats the estimated fallback in shadow.js. They cost very
-// little: only a small minority of buildings have them tagged.
-const BUILDING_PROPS_TO_KEEP = [
-  "height",
-  "building:levels",
-  "building",
-  "name",
-  "addr:street",
-  "roof:levels",
-  "roof:height",
-  "roof:shape",
-  "est_height",
-  "min_height",
-  "building:min_level",
-];
-
-// Douglas-Peucker tolerance in degrees (~0.9m at Malmo's latitude). Building
-// footprints have far more vertices (bay windows, rounded corners) than the
-// coarse shadow raycast needs; simplifying shrinks both file size and the
-// per-building turf.lineIntersect() cost in the browser.
-const SIMPLIFY_TOLERANCE_DEG = 0.000008;
-
-// Must match FOOTPRINT_BUFFER_METERS in src/shadow.js. Buffering here
-// instead of there means the ~500-1000ms-per-building turf.buffer() cost
-// runs once on this machine when the data is (re)generated, not in every
-// visitor's browser on every first page load. With ~900+ terraces now
-// pulling in enough nearby buildings to matter, that runtime cost had
-// grown to a genuine 60-90s freeze on load — moving it here removes it
-// from the hot path entirely, since the shipped geometry is already the
-// buffered footprint shadow.js's raycast needs.
-const FOOTPRINT_BUFFER_METERS = 0.5;
-
-function slimBuilding(feature) {
-  if (!feature.geometry) return null;
-  const properties = {};
-  for (const key of BUILDING_PROPS_TO_KEEP) {
-    if (feature.properties?.[key] != null) properties[key] = feature.properties[key];
-  }
-  let geometry = feature.geometry;
-  try {
-    const simplified = turf.simplify(feature, {
-      tolerance: SIMPLIFY_TOLERANCE_DEG,
-      highQuality: false,
-    });
-    const buffered = turf.buffer(simplified, FOOTPRINT_BUFFER_METERS, { units: "meters" });
-    // Buffering can add vertices back (rounding corners) — simplify once
-    // more to keep the shipped file size/complexity down.
-    geometry = turf.simplify(buffered, {
-      tolerance: SIMPLIFY_TOLERANCE_DEG,
-      highQuality: false,
-    }).geometry;
-  } catch {
-    // Keep the original (unbuffered) geometry if buffer/simplify chokes on
-    // unusual input (e.g. a degenerate ring) rather than dropping the
-    // building. A very small number of buildings shipped unbuffered is a
-    // negligible accuracy loss for the shadow raycast.
-  }
-  return { type: "Feature", id: feature.id, properties, geometry };
-}
-
 // Note: overpass.kumi.systems is unreachable from this machine (TLS
 // connection resets immediately, 0 bytes read — looks like a network/proxy
 // block rather than a server-side issue) so it's not worth listing as a
@@ -97,34 +32,20 @@ function slimBuilding(feature) {
 // working again in your environment, add it back as a second entry.
 const ENDPOINTS = ["https://overpass-api.de/api/interpreter"];
 
-// amenity types that commonly have outdoor seating in Malmo: cafes,
-// restaurants, bars/pubs, ice cream places ("glasstallen"), fast food
-// (food trucks/kiosks with picnic tables), biergartens and food courts.
-const OUTDOOR_SEATING_AMENITIES =
-  "cafe|restaurant|bar|pub|ice_cream|fast_food|biergarten|food_court";
-
-// Bakeries/confectioners often have a couple of outdoor tables too
-// ("Deg Bageri" was one of the specific places this was missing).
-const OUTDOOR_SEATING_SHOPS = "bakery|confectionery";
-
-// Checked against a spot-sample of central Malmo venues (591 total in that
-// area): only 139 are explicitly tagged outdoor_seating=yes/only, 34 are
-// explicitly "no", and the remaining 418 simply have no outdoor_seating
-// tag at all either way — untagged is the OSM norm here, not a signal that
-// the place lacks a terrace. Real, well-known spots (Surf Shack Beach
-// Diner, Hygge Mat & Bar, Deg Bageri) all fell in that untagged bucket and
-// were being silently dropped by requiring an explicit "yes". So: include
-// every venue of these types EXCEPT the ones explicitly marked "no" —
-// respect a clear negative signal, but don't require an explicit positive
-// one that most real terraces in this dataset simply never got tagged with.
+// Builds the Overpass regex alternation ("cafe|restaurant|...") from the
+// shared category list in lib/terrace-categories.js, so this query and
+// fetch-data-geofabrik.js's client-side isEligibleTerrace() filter can
+// never drift apart on which venue types count.
 function terracesQuery(bbox) {
+  const amenities = OUTDOOR_SEATING_AMENITIES.join("|");
+  const shops = OUTDOOR_SEATING_SHOPS.join("|");
   return `
 [out:json][timeout:90];
 (
-  node["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"!="no"](${bbox});
-  way["amenity"~"^(${OUTDOOR_SEATING_AMENITIES})$"]["outdoor_seating"!="no"](${bbox});
-  node["shop"~"^(${OUTDOOR_SEATING_SHOPS})$"]["outdoor_seating"!="no"](${bbox});
-  way["shop"~"^(${OUTDOOR_SEATING_SHOPS})$"]["outdoor_seating"!="no"](${bbox});
+  node["amenity"~"^(${amenities})$"]["outdoor_seating"!="no"](${bbox});
+  way["amenity"~"^(${amenities})$"]["outdoor_seating"!="no"](${bbox});
+  node["shop"~"^(${shops})$"]["outdoor_seating"!="no"](${bbox});
+  way["shop"~"^(${shops})$"]["outdoor_seating"!="no"](${bbox});
   node["leisure"="outdoor_seating"](${bbox});
   way["leisure"="outdoor_seating"](${bbox});
 );
