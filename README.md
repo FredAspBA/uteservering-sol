@@ -70,7 +70,10 @@ skuggad.
 
 Kända förenklingar:
 - Byggnadshöjd hämtas från OSM-taggar (`height`, annars
-  `building:levels * 3m`, annars ett standardvärde på 15 m om inget finns).
+  `building:levels * 3m`). Cirka 80 % av byggnaderna saknar båda, och får då
+  en uppskattning: först den uppmätta medianhöjden för sin byggnadstyp
+  (villa 3 m, flerbostadshus 12 m, kontor 16,5 m …), annars medianen för
+  höjdtaggade byggnader i omgivningen, och först i sista hand 15 m.
 - Max-avståndet på 500 m kan missa mycket långa skuggor vid väldigt låg
   solhöjd (nära soluppgång/solnedgång).
 - En uteservering exkluderar sin egen "hem-byggnad" (den byggnad den ligger

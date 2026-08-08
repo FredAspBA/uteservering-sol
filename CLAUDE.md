@@ -22,6 +22,22 @@ riktiga byggnaders läge och höjd — inte bara om solen är uppe.
 
 Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
 
+- [ ] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Fas 1–2 är
+      **klara**: byggnadshöjder gissas inte längre till platta 15 m, utan via
+      typmedian → grannskapsmedian. Byggnader på 15-metersfallbacken gick
+      18 719 → 1 529, och appen hittar 2,8–8,2 % fler soliga uteserveringar
+      (den var systematiskt pessimistisk förut). Kvar: **fas 3** (Geofabrik +
+      osmium i ett GitHub Actions-workflow istället för Overpass) och **fas 4**
+      (Overture som höjdkälla) — båda **planerade i detalj med utmaningar och
+      motåtgärder, inväntar OK innan de byggs**. **Fas 5**: Malmö stads
+      **publika restaurangregister** på
+      `restaurang.malmo.se/AlktWebbforms/Restaurants` är nu verifierat mot
+      verklig HTML (2026-08-07) — listsidan ensam (1 anrop) ger namn,
+      adress och alla fem alkoholtyper för alla ~551 tillståndshavare;
+      detaljsidor (`Show/{id}`) behövs bara för allmänhet/uteservering/
+      inomhus-utomhus-tid-precisionen. Se `PLAN-datakvalitet.md` fas 5 för
+      fälten, budgeten och personuppgifts-hänsynen (ägarnamn på
+      detaljsidan). Inget blockerat längre — redo att byggas.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
@@ -43,6 +59,14 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
 
 (Tidigare förslag — kopiera-taggar, dubblett-badge, framstegsstapel, dölj
 klara, direkt-till-redigeraren — är alla byggda och live.)
+
+## Dokumentation i repot
+
+- `PLAN-datakvalitet.md` — handlingsplanen för datakvalitet (fas 1–6),
+  med uppmätta siffror, utmaningar och motåtgärder per fas.
+- `DATAKALLOR.md` — inventering av datakällor för byggnader, sol, skuggor,
+  alkohol och uteservering: licenser, kostnad, länkar, och vad som valdes
+  bort och varför. Innehåller även mejlmallen för begäran om allmän handling.
 
 ## Kör och deploya
 
@@ -162,7 +186,11 @@ en vän. Kryssläget synkas live via Firebase `/tagging`.
   och kör om datapipelinen.
 - En Espresso House-filial fick ingen adress vid geokodning (Nominatim tom
   träff) — OSM-länken skiljer den ändå.
-- Byggnadshöjd gissas till 15 m när OSM saknar `height`/`building:levels`.
+- Byggnadshöjd gissas när OSM saknar `height`/`building:levels` (~80 % av
+  byggnaderna): först uppmätt median för byggnadstypen, annars medianen för
+  omgivande höjdtaggade byggnader, och först i sista hand 15 m (~1 500 st).
+  Gissningarna är ungefärliga — riktiga höjder kommer först med Overture
+  eller LiDAR, se `PLAN-datakvalitet.md`.
 - Skuggor längre än 500 m (mycket låg sol) fångas inte.
 - `npm audit`: `@xmldom/xmldom` (via osmtogeojson) flaggas, men används bara
   lokalt i fetch-scriptet mot JSON — låg risk. Se README.

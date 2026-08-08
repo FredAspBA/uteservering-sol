@@ -32,7 +32,49 @@ const METERS_PER_LEVEL = 3.0;
 // ~60s load down to a few seconds.
 const GRID_CELL_DEG = 0.001;
 
-function resolveBuildingHeight(properties) {
+// Uppmätta medianhöjder per OSM building-typ, räknade fram ur Malmö-datan
+// självt (se scripts/height-experiment.py). Bara typer med minst 20
+// höjdtaggade exemplar togs med — under det blir medianen för brusig för
+// att lita på. Detta ersätter den tidigare platta 15-metersgissningen för
+// alla byggnader vars typ faktiskt säger något.
+const TYPE_HEIGHT_METERS = {
+  house: 3,
+  detached: 3,
+  apartments: 12,
+  shed: 3,
+  semidetached_house: 4.5,
+  garage: 3,
+  office: 16.5,
+  terrace: 6,
+  school: 7.5,
+  kindergarten: 3,
+  retail: 3,
+};
+
+// Typer som inte bär någon höjdinformation — "yes" är 62% av de höjdlösa
+// byggnaderna, så de kan inte bara få typmedianen. De går istället på
+// grannskapsmedianen nedan, vilket i praktiken skiljer innerstadskvarter
+// (höga) från villaområden (låga).
+const GENERIC_BUILDING_TYPES = new Set(["yes", "residential", "roof", "service", ""]);
+
+// Cellstorlek för grannskapsmedianen, i grader (~300m). Skild från
+// GRID_CELL_DEG eftersom syftet är ett annat: här vill vi ha nog många
+// höjdtaggade grannar för en stabil median, inte ett snävt strålindex.
+const NEIGHBOURHOOD_CELL_DEG = 0.003;
+const MIN_NEIGHBOURHOOD_SAMPLES = 5;
+
+function median(sorted) {
+  const mid = sorted.length >> 1;
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+/**
+ * Läser en höjd som OSM faktiskt taggat, eller null om den saknas.
+ * Skild från gissningslogiken i resolveBuildingHeights() nedan, så att
+ * gissningarna bara byggs på riktiga mätvärden och aldrig på andra
+ * gissningar.
+ */
+function parseTaggedHeight(properties) {
   if (properties?.height) {
     // parseFloat naturally stops at the first non-numeric character, so it
     // degrades gracefully on odd tag formats (e.g. "12;15" from a disputed
@@ -51,7 +93,78 @@ function resolveBuildingHeight(properties) {
       return parsedLevels * METERS_PER_LEVEL;
     }
   }
-  return DEFAULT_BUILDING_HEIGHT_METERS;
+  return null;
+}
+
+/**
+ * Fyller i höjd för de ~80% av byggnaderna som OSM inte har taggat.
+ *
+ * Ordning: taggad höjd -> typmedian -> grannskapsmedian -> 15 m. Mätt mot
+ * appen (scripts/impact-experiment.py) ger detta 8-17% fler soliga
+ * uteserveringar vid typiska eftermiddags-/kvällstider, nästan uteslutande
+ * genom att sluta skugga med villor och garage som fått 15 m.
+ *
+ * Körs EN gång i prepareBuildings(), aldrig per omberäkning. Grannskaps-
+ * medianen memoiseras per cell (inte per byggnad) — antalet celler är
+ * några hundra medan antalet byggnader är 23000, så det är skillnaden
+ * mellan försumbart och en märkbar paus vid laddning.
+ */
+function resolveBuildingHeights(list) {
+  const knownByCell = new Map();
+  for (const b of list) {
+    if (b.taggedHeight === null) continue;
+    const key = `${Math.floor(b.centerLon / NEIGHBOURHOOD_CELL_DEG)},${Math.floor(
+      b.centerLat / NEIGHBOURHOOD_CELL_DEG
+    )}`;
+    let bucket = knownByCell.get(key);
+    if (!bucket) knownByCell.set(key, (bucket = []));
+    bucket.push(b.taggedHeight);
+  }
+
+  const medianCache = new Map();
+  function neighbourhoodMedian(col, row) {
+    const cacheKey = `${col},${row}`;
+    if (medianCache.has(cacheKey)) return medianCache.get(cacheKey);
+    let result = null;
+    // Växande kvadratiska ringar tills vi har nog med grannar. Ring 1 är
+    // ~900m och räcker nästan alltid i bebyggt område; ringarna finns för
+    // glesa utkanter där annars ingenting skulle hittas.
+    for (const radius of [1, 2, 3]) {
+      const values = [];
+      for (let c = col - radius; c <= col + radius; c++) {
+        for (let r = row - radius; r <= row + radius; r++) {
+          const bucket = knownByCell.get(`${c},${r}`);
+          if (bucket) values.push(...bucket);
+        }
+      }
+      if (values.length >= MIN_NEIGHBOURHOOD_SAMPLES) {
+        values.sort((a, b) => a - b);
+        result = median(values);
+        break;
+      }
+    }
+    medianCache.set(cacheKey, result);
+    return result;
+  }
+
+  for (const b of list) {
+    if (b.taggedHeight !== null) {
+      b.height = b.taggedHeight;
+      continue;
+    }
+    const typeHeight = GENERIC_BUILDING_TYPES.has(b.buildingType)
+      ? undefined
+      : TYPE_HEIGHT_METERS[b.buildingType];
+    if (typeHeight !== undefined) {
+      b.height = typeHeight;
+      continue;
+    }
+    const nearby = neighbourhoodMedian(
+      Math.floor(b.centerLon / NEIGHBOURHOOD_CELL_DEG),
+      Math.floor(b.centerLat / NEIGHBOURHOOD_CELL_DEG)
+    );
+    b.height = nearby ?? DEFAULT_BUILDING_HEIGHT_METERS;
+  }
 }
 
 function bboxesOverlap(a, b) {
@@ -195,13 +308,18 @@ export function prepareBuildings(buildingsGeojson) {
       centerLon,
       centerLat,
       radiusMeters,
-      height: resolveBuildingHeight(feature.properties),
+      // height fylls i av resolveBuildingHeights() nedan — den behöver se
+      // hela listan för att kunna räkna grannskapsmedianer.
+      taggedHeight: parseTaggedHeight(feature.properties),
+      buildingType: feature.properties?.building || "yes",
+      height: 0,
       name:
         feature.properties?.name ||
         feature.properties?.["addr:street"] ||
         "okänd byggnad",
     });
   }
+  resolveBuildingHeights(list);
   return { list, grid: buildGrid(list) };
 }
 

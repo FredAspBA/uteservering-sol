@@ -25,9 +25,26 @@ const BUILDING_PADDING_METERS = 600;
 
 // Only these OSM tags are ever read by src/shadow.js (height resolution)
 // or the popup UI (blocker name) — everything else (wikidata, source,
-// ref:*, roof:*, ...) is dead weight once shipped to the browser. Across
-// ~20k buildings, dropping unused tags is most of the payload-size win.
-const BUILDING_PROPS_TO_KEEP = ["height", "building:levels", "building", "name", "addr:street"];
+// ref:*, ...) is dead weight once shipped to the browser. Across ~20k
+// buildings, dropping unused tags is most of the payload-size win.
+//
+// The roof:*/est_height/min_height group is kept because ~80% of Malmo's
+// buildings carry no height or building:levels at all, so any additional
+// real signal beats the estimated fallback in shadow.js. They cost very
+// little: only a small minority of buildings have them tagged.
+const BUILDING_PROPS_TO_KEEP = [
+  "height",
+  "building:levels",
+  "building",
+  "name",
+  "addr:street",
+  "roof:levels",
+  "roof:height",
+  "roof:shape",
+  "est_height",
+  "min_height",
+  "building:min_level",
+];
 
 // Douglas-Peucker tolerance in degrees (~0.9m at Malmo's latitude). Building
 // footprints have far more vertices (bay windows, rounded corners) than the
