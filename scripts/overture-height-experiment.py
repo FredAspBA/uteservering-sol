@@ -177,6 +177,56 @@ def match_by_id(osm_by_key, overture_rows):
     return matches
 
 
+CELL_DEG = 0.0005  # ~50 m vid Malmös breddgrad
+
+
+def cell_of(lon, lat):
+    return (int(math.floor(lon / CELL_DEG)), int(math.floor(lat / CELL_DEG)))
+
+
+def build_overture_index(rows):
+    idx = defaultdict(list)
+    for r in rows:
+        idx[cell_of(r["lon"], r["lat"])].append(r)
+    return idx
+
+
+def nearest_overture(idx, lon, lat, max_m=5.0):
+    """Närmaste Overture-byggnad inom max_m meter, sökt i egen + 8
+    grannceller. Enkel plan meter-approximation (samma trick som
+    height-experiment.py's footprint_area_m2), gott nog över någon meter
+    vid den här breddgraden."""
+    c0, r0 = cell_of(lon, lat)
+    mx = 111320 * math.cos(math.radians(lat))
+    my = 110540
+    best, best_d = None, max_m
+    for dc in (-1, 0, 1):
+        for dr in (-1, 0, 1):
+            for cand in idx.get((c0 + dc, r0 + dr), ()):
+                dx = (cand["lon"] - lon) * mx
+                dy = (cand["lat"] - lat) * my
+                d = math.hypot(dx, dy)
+                if d < best_d:
+                    best, best_d = cand, d
+    return best
+
+
+def match_all(osm_by_key, overture_rows):
+    id_matches = match_by_id(osm_by_key, overture_rows)
+    idx = build_overture_index(overture_rows)
+    matches, match_kind = {}, {}
+    for key, rec in osm_by_key.items():
+        if key in id_matches:
+            matches[key] = id_matches[key]
+            match_kind[key] = "id"
+        else:
+            cand = nearest_overture(idx, rec["lon"], rec["lat"])
+            if cand:
+                matches[key] = cand
+                match_kind[key] = "centroid"
+    return matches, match_kind
+
+
 if __name__ == "__main__":
     bbox = bbox_from_buildings()
     print(f"bbox (west,south,east,north): {bbox}")
@@ -185,6 +235,8 @@ if __name__ == "__main__":
     print(f"Overture-byggnader i bbox: {len(overture)}   med height: {with_height}")
 
     osm_by_key = load_osm_buildings()
-    id_matches = match_by_id(osm_by_key, overture)
-    print(f"OSM-byggnader totalt: {len(osm_by_key)}   id-matchade mot Overture: {len(id_matches)} "
-          f"({100 * len(id_matches) / len(osm_by_key):.1f}%)")
+    matches, match_kind = match_all(osm_by_key, overture)
+    kind_counts = Counter(match_kind.values())
+    print(f"OSM-byggnader totalt: {len(osm_by_key)}   matchade mot Overture: {len(matches)} "
+          f"({100 * len(matches) / len(osm_by_key):.1f}%)  "
+          f"[id: {kind_counts['id']}, centroid: {kind_counts['centroid']}]")
