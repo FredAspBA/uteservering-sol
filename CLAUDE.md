@@ -26,10 +26,14 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       **klara**: byggnadshöjder gissas inte längre till platta 15 m, utan via
       typmedian → grannskapsmedian. Byggnader på 15-metersfallbacken gick
       18 719 → 1 529, och appen hittar 2,8–8,2 % fler soliga uteserveringar
-      (den var systematiskt pessimistisk förut). Kvar: **fas 3** (Geofabrik +
-      osmium i ett GitHub Actions-workflow istället för Overpass) och **fas 4**
-      (Overture som höjdkälla) — båda **planerade i detalj med utmaningar och
-      motåtgärder, inväntar OK innan de byggs**. **Fas 5**: Malmö stads
+      (den var systematiskt pessimistisk förut). **Fas 3** (Geofabrik +
+      osmium i ett GitHub Actions-workflow istället för Overpass) är
+      **byggd** (2026-08-08, branch `phase3-geofabrik-osmium-pipeline`) —
+      allt utom de fyra osmium-CLI-anropen testat lokalt, väntar på en PR +
+      första `workflow_dispatch`-körning för att verifieras end-to-end. Se
+      `PLAN-datakvalitet.md` fas 3 för exakt vad som är testat vs blint och
+      två gotchas vi hittade under bygget. **Fas 4** (Overture som
+      höjdkälla) väntar på att fas 3 blir grön. **Fas 5**: Malmö stads
       **publika restaurangregister** på
       `restaurang.malmo.se/AlktWebbforms/Restaurants` är nu verifierat mot
       verklig HTML (2026-08-07) — listsidan ensam (1 anrop) ger namn,
@@ -91,7 +95,17 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
 - `taggning.html` + `src/tagging.js` + `taggning.css` — gemensam
   taggningslista (se nedan).
 - `scripts/fetch-data.js` — hämtar terrasser + byggnader från Overpass →
-  `data/terraces.geojson`, `data/buildings.geojson`.
+  `data/terraces.geojson`, `data/buildings.geojson`. Manuellt
+  reservalternativ sedan fas 3 (se nedan); inte längre huvudvägen där.
+- `scripts/fetch-data-geofabrik.js` + `.github/workflows/refresh-data.yml`
+  — fas 3, huvudvägen för datahämtning (Geofabrik + osmium, se
+  `PLAN-datakvalitet.md` fas 3 för status). `scripts/check-data-drift.js`
+  är ±20 %-grinden mellan dem och en commit.
+- `scripts/lib/slim-building.js`, `scripts/lib/terrace-categories.js` —
+  delade regler (taggar att behålla, vilka ställen som räknas som
+  terrass) mellan `fetch-data.js` och `fetch-data-geofabrik.js`, så de
+  två hämtningsvägarna inte kan divergera. `scripts/lib/write-geojson-
+  lines.js` — en feature per rad, sorterat på OSM-id (håller `.git` litet).
 - `scripts/build-tagging-list.js` — bygger `data/tagging-list.json` (+ geokodar
   dubblettfilialer, cachar i `data/geocode-cache.json`).
 - `database.rules.json` — Firebase-regler (måste publiceras manuellt, se nedan).
@@ -99,8 +113,11 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
 ## Datapipeline (OSM → appen)
 
 Data hämtas EN gång och sparas som statiska filer (Overpass är
-hastighetsbegränsat, hämtas inte vid sidladdning). När OSM-taggar ändrats
-och du vill synka in dem:
+hastighetsbegränsat, hämtas inte vid sidladdning). Fas 3
+(`refresh-data.yml`, se `PLAN-datakvalitet.md`) ska ersätta den manuella
+körningen nedan med ett schemalagt GitHub Actions-workflow, men är inte
+verifierad i praktiken än. Tills dess, eller för en engångskörning, när
+OSM-taggar ändrats och du vill synka in dem:
 
 ```
 npm run fetch-data           # ~20–40 min: Overpass i rutor, tål 429/504 med backoff
