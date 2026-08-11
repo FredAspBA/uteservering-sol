@@ -1,14 +1,17 @@
 # Plan: bättre datakvalitet för skuggor, platser och sol
 
-Status: **fas 1–3 byggda och verifierade** (fas 3 mot två riktiga
-`workflow_dispatch`-körningar, se PR #2). **Fas 4:s valideringsexperiment
-kört och klart — NO-GO: Overture slår inte nuvarande modell på den
-population som faktiskt räknas (byggnader utan känd höjd), och täcker
-bara drygt hälften av dem.** **Fas 5 (del A + del B) helt klar.** Skapad
-2026-08-07, fas 3 klar 2026-08-08, fas 4-valideringen klar 2026-08-08
-(första omgången var cirkulär, se avsnittet nedan; korrigerad och
-avslutad NO-GO samma dag), fas 5 del A klar 2026-08-08, del B klar
-2026-08-11.
+Status: **Alla sex faser avslutade.** Fas 1–3 byggda och verifierade
+(fas 3 mot två riktiga `workflow_dispatch`-körningar, se PR #2). Fas 4
+NO-GO (Overture slår inte nuvarande modell på byggnader utan känd höjd,
+täcker bara drygt hälften). Fas 5 (del A + del B) helt klar och sedan
+2026-08-11 helautomatiserad i `refresh-data.yml` (PR #3), med
+"Dölj i appen"-stöd för del B-platser. Fas 6 (träd, terrass-som-yta,
+LiDAR) mätt och avslutad NO-GO 2026-08-11 — se den egna sektionen för
+siffrorna och tre mindre förbättringsförslag som kom ur den
+utvärderingen. Utöver planen byggdes samma dag ett alkoholfilter på
+kartan och en utökad uteservering-hint (PR #4). Skapad 2026-08-07, fas 3
+klar 2026-08-08, fas 4-valideringen klar 2026-08-08, fas 5 del A klar
+2026-08-08, del B klar 2026-08-11, fas 6-utvärderingen klar 2026-08-11.
 
 Målet är så tillförlitlig data som möjligt — skuggor, platser, sol — med
 enbart avgiftsfria källor. Den här filen är beslutsunderlaget; bocka av
@@ -569,18 +572,79 @@ vore en genväg, inte en förutsättning.
 | **Registret ändras** (nya/upphörda tillstånd). | Månadsvis körning (samma takt som fas 3) håller det i synk utan att någon manuellt beter av en lista. |
 | **Ovanpå OSM-datat: ställen som inte finns i OSM alls, men HAR uteserveringstillstånd** (steg 4 ovan). Appen har hittills bara visat OSM-data, så det här är ett nytt datalager, inte bara en ny källa till befintliga fält. | Geokodning kan träffa fel adress eller fel filial av en kedja — samma osäkerhet som taggningslistans befintliga geokodning, med samma motåtgärd (osäkra träffar till granskning, inte auto-publicerade). Tydlig OSM-overifierad-märkning i UI så det aldrig ser ut som verifierad OSM-data. |
 
-### Fas 6 — Senare, om vi vill längre
+### ⛔ Fas 6 — Senare, om vi vill längre (ALLA TRE UTVÄRDERADE 2026-08-11 — NO-GO)
 
-- **Träd.** Halva Malmös terrasser står under en lönn i juli, och appen
-  vet inget om det. LiDAR fångar trädkronor; `natural=tree` i OSM är glest.
-- **Terrass som yta, inte punkt.** Idag skjuts en enda stråle från en
-  koordinat — halva uteserveringen kan ligga i sol.
-- **Lantmäteriet Laserdata NH** (CC0) för verkliga taknockar. Mest
-  exakt, men punkttätheten är 0,5–1 pkt/m² och byggnader är oklassade i
-  punktmolnet, så det är ett helgprojekt.
+Samma metod som fas 4: mät innan man bygger. Alla tre delar av fas 6
+mättes mot riktig data (Overpass-frågor + befintlig appdata) istället för
+att bedömas på känsla — och alla tre landade i NO-GO, av olika men
+konkreta skäl.
+
+- **⛔ Träd.** Hämtade alla `natural=tree` i Malmö-bboxen (3 741 st) och
+  mätte avstånd mot alla 939 terrasser. **Bara 1,2 % har ett taggat träd
+  inom 8 m** (verkligt skuggavstånd), 3,9 % inom 15 m, 8,9 % inom en
+  generös 25 m. OSM-täckningen är för gles för att vara värd att bygga
+  på — skulle bara täcka en handfull terrasser och riskera att se mer
+  komplett ut än det faktiskt är.
+- **⛔ Terrass som yta, inte punkt.** Hämtade rå polygongeometri för alla
+  113 way-taggade terrasser (12 % av 939). Av dem har bara **~12 (1,3 %
+  av alla terrasser)** en polygon liten nog (≤10 m diagonal) att
+  rimligen föreställa en verklig sittyta. **39 % har >20 m diagonal** —
+  nästan säkert hela byggnadsfotavtryck eller torg (t.ex. "Cantin",
+  131 m diagonal / 5 345 m², och en "Luftkastellet" på 120 m/2915 m²),
+  inte en uteserveringsform. Att skjuta flera strålar över en sådan yta
+  skulle sampla fel utrymme (inuti byggnaden), inte förbättra
+  precisionen. Grundproblemet är källdata (OSM saknar oftast en egen
+  sittyte-polygon skild från byggnaden), inte raycast-algoritmen — går
+  inte att koda sig runt.
+
+  **Bifynd värt en egen liten fix:** 12 av 1 172 terrasser (1,0 %) visar
+  redan `anomaly`-status live i appen just nu — troligen exakt samma
+  grundorsak (en stor way-polygons centroid hamnar inuti fel byggnad).
+  Litet, konkret, fristående från "terrass som yta"-frågan — se
+  förbättringsförslagen nedan.
+- **⛔ Lantmäteriet Laserdata NH.** Research (inte bara antagande):
+  1) **Kräver konto/behörighet hos Geotorget** — utanför vad en
+     AI-session kan göra själv (kan inte skapa konton), så Fredrik
+     skulle behöva göra beställningen manuellt, som med
+     Malmö-registret i fas 5, fast tyngre. 2) **Punkttäthet 0,5–1
+     pkt/m²** — en typisk byggnad på 200–300 m² får bara ~100–300
+     punkter totalt, inte tillräckligt för pålitlig taknocksextraktion
+     utan betydande efterbearbetning. 3) **Statisk, föråldrad data**
+     (insamlad 2009–2019, Lantmäteriet har själva inga planerade
+     uppdateringar) — nybyggen sedan dess skulle helt enkelt saknas.
+     4) Kräver en helt ny verktygskedja (punktmolnsbearbetning, t.ex.
+     Python + PDAL/laspy) som inte finns i projektet idag. 5) **Starkast
+     skäl:** fas 4:s Overture-experiment — en modernare, större
+     datakälla — slog **inte ens** den nuvarande gratis OSM-heuristiken.
+     Det sänker sannolikheten rejält att den tyngre LiDAR-vägen skulle
+     löna sig. Skjuts upp; kan tas upp igen om Fredrik själv vill sätta
+     upp Geotorget-kontot.
 
 Ej aktuellt: Lantmäteriets Ythöjdmodell (avgiftsbelagd via Geotorget) och
 Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
+
+### Förbättringsförslag utanför datakvalitetsplanen (2026-08-11)
+
+Inte en del av fas 1–6 (som handlar om skugg-/platsdata), men värda att
+nämna som separata, mindre uppslag som kom upp under fas 6-arbetet:
+
+- **Väder (SMHI:s öppna API).** Appen svarar idag "skulle solen nå hit
+  om himlen var klar" men vet inget om molnighet — en "Sol"-status kan
+  vara vilseledande en mulen dag. SMHI:s API är gratis, kräver ingen
+  nyckel, ger prognos per koordinat inklusive molntäckning. Begränsning:
+  prognoser sträcker sig bara ~10 dagar framåt, så det skulle visas
+  villkorat (bara när valt datum ligger inom fönstret) — vilket
+  matchar appens huvudsakliga användning ("ska jag gå nu/idag/imorgon")
+  väl. Föreslagen UI: en tilläggsbadge ("73 % molnfritt"), inte en
+  ersättning av den exakta skuggberäkningen. **Inväntar Fredriks OK att
+  bygga.**
+- **Fixa de 12 anomaly-fallen** (se ovan) — sannolikt en liten,
+  fristående fix i hur representativ punkt väljs för stora
+  way-taggade polygoner, oberoende av det större "terrass som
+  yta"-NO-GO:t.
+- **Favoriter.** En lätt, localStorage-baserad "spara den här
+  terrassen"-funktion (samma mönster som `votes.js` redan använder) för
+  snabbåtkomst till stamställen.
 
 ## Status och ordning
 

@@ -22,8 +22,8 @@ riktiga byggnaders läge och höjd — inte bara om solen är uppe.
 
 Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
 
-- [x] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Alla fem faser
-      klara. **Fas 1–2:** byggnadshöjder gissas via typmedian →
+- [x] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Alla sex faser
+      avslutade. **Fas 1–2:** byggnadshöjder gissas via typmedian →
       grannskapsmedian istället för platt 15 m; appen hittar 2,8–8,2 %
       fler soliga uteserveringar. **Fas 3:** Geofabrik+osmium-pipeline i
       GitHub Actions ersätter tiled Overpass, mergad och verifierad med
@@ -44,8 +44,26 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       Firebase: kryssat döljer platsen på solkartan, avkryssat visar
       den igen). `fetch-serving-permit-details.js` fick även en cache
       (samma mönster som geocode-cache.json) eftersom scriptet nu körs
-      månadsvis istället för en gång. Se `PLAN-datakvalitet.md` för alla
-      siffror och detaljer.
+      månadsvis istället för en gång. **Fas 6** (träd, terrass-som-yta,
+      Lantmäteriet LiDAR) mätt och avslutad **NO-GO** 2026-08-11 för alla
+      tre — se `PLAN-datakvalitet.md` för siffrorna (bl.a. bara 1,2 % av
+      terrasserna har ett OSM-taggat träd inom skuggavstånd). Samma dag
+      byggdes utanför planen ett **alkoholfilter på kartan** (🍷 Endast
+      alkohol-kryssruta, samverkar med sökningen) och en **utökad
+      uteservering-hint** (samma register-mönster som alkohol-hinten,
+      nu även för OSM-matchade platser — 130 nya hints). Se
+      `PLAN-datakvalitet.md` för alla siffror och detaljer.
+- [ ] **Väder (SMHI:s öppna API), inväntar OK.** Diskuterat 2026-08-11,
+      inte byggt än. Appen vet idag inget om molnighet — "Sol"-status kan
+      vara vilseledande en mulen dag. Gratis, ingen nyckel, per-koordinat-
+      prognos. Begränsning: bara ~10 dagar framåt, så skulle visas
+      villkorat (inom prognosfönstret). Tänkt som tilläggsbadge, inte en
+      ersättning av skuggberäkningen.
+- [ ] **(Liten) Fixa de 12 anomaly-fallen.** Upptäckt under fas
+      6-utvärderingen: 12 av 1 172 terrasser (1,0 %) visar redan
+      `anomaly`-status live, troligen för att en stor way-taggad
+      terrasspolygons centroid hamnar inuti fel byggnad. Fristående,
+      mindre fix — se `PLAN-datakvalitet.md` fas 6.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
