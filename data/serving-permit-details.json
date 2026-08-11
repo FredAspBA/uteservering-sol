@@ -1,5 +1,33 @@
 [
   {
+    "registerId": "232",
+    "name": "400 grader",
+    "address": "Södra Skolgatan 33",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1173",
+    "name": "AB Småland",
+    "address": "Södra Förstadsgatan  25 - 27",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "818",
+    "name": "About Beer",
+    "address": "Kompassgatan  37",
+    "uteservering": false,
+    "allmanheten": false
+  },
+  {
+    "registerId": "1427",
+    "name": "Aiko Sushi",
+    "address": "Fredsgatan  10",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "2706",
     "name": "Aiko Sushi Hyllie",
     "address": "Hyllie Boulevard 4bd",
@@ -49,6 +77,34 @@
     "allmanheten": true
   },
   {
+    "registerId": "2713",
+    "name": "Aro Deli",
+    "address": "Beijerskajen 2A",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2674",
+    "name": "Arsenik Bistro",
+    "address": "Södra Förstadsgatan 38A",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "120",
+    "name": "Art of Spices",
+    "address": "Bergsgatan 10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2630",
+    "name": "Artisan Bar",
+    "address": "Ängelholmsgatan 12",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "918",
     "name": "Asia & Burger Village",
     "address": "Ystadsgatan 39",
@@ -56,9 +112,86 @@
     "allmanheten": true
   },
   {
+    "registerId": "729",
+    "name": "Asian house",
+    "address": "Södra Förstadsgatan  88A",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "135",
+    "name": "Asien Restaurang",
+    "address": "Ystadsgatan 17",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1020",
+    "name": "Asino",
+    "address": "Kristianstadsgatan  23B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1468",
+    "name": "Aster",
+    "address": "Jagaregatan   6",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1584",
     "name": "Ateljén",
     "address": "Idrottsgatan  14",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "735",
+    "name": "Atemlos",
+    "address": "Bergsgatan 29",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "189",
+    "name": "Atmosfär",
+    "address": "Fersens väg 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1601",
+    "name": "Atrium",
+    "address": "Skvadronsgatan  13",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "480",
+    "name": "Autana Green",
+    "address": "Amiralsgatan 12",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "853",
+    "name": "Ava Vinbar",
+    "address": "Karlskronaplan 7",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "123",
+    "name": "Azalee",
+    "address": "Claesgatan 8",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "318",
+    "name": "Babas",
+    "address": "Järnvägsgatan 35",
     "uteservering": true,
     "allmanheten": true
   },
@@ -77,9 +210,44 @@
     "allmanheten": true
   },
   {
+    "registerId": "761",
+    "name": "Bageri Caféet",
+    "address": "Gustav Adolfs Torg 43",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "372",
+    "name": "Bakfickan",
+    "address": "Köpenhamnsvägen   7D",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1234",
+    "name": "BALANS",
+    "address": "Engelbrektsgatan 7",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "243",
+    "name": "Balthazar",
+    "address": "Claesgatan 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "810",
     "name": "Bangkok Thai Restaurang",
     "address": "Bergsgatan 5",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1051",
+    "name": "Bao Bao",
+    "address": "Claesgatan 8",
     "uteservering": false,
     "allmanheten": true
   },
@@ -91,9 +259,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "740",
+    "name": "Bar Kiosko",
+    "address": "Nobelvägen  73B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1063",
     "name": "Bar Tgl italia",
     "address": "Scaniaplatsen   3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2675",
+    "name": "Bar[r]",
+    "address": "Södra Förstadsgatan 59",
     "uteservering": true,
     "allmanheten": true
   },
@@ -133,6 +315,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1039",
+    "name": "Beer Ditch",
+    "address": "Nobelvägen 24",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1033",
     "name": "Beijers Parks Café",
     "address": "Norra Bulltoftavägen  34",
@@ -150,6 +339,13 @@
     "registerId": "2655",
     "name": "Belo´s Grand Deli",
     "address": "Tessins väg   8",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1590",
+    "name": "BENNE PASTABAR",
+    "address": "Öglegången 2",
     "uteservering": true,
     "allmanheten": true
   },
@@ -182,6 +378,41 @@
     "allmanheten": true
   },
   {
+    "registerId": "92",
+    "name": "Big Bowl Restaurang",
+    "address": "Östra Förstadsgatan  32",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "297",
+    "name": "Bise",
+    "address": "Norra Vallgatan 88",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1069",
+    "name": "Bistro Royal",
+    "address": "Centralplan   1",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "734",
+    "name": "Bistro Sante",
+    "address": "Södra Skolgatan 43",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2666",
+    "name": "Bistro Tout",
+    "address": "Ångfärjekajen 14",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "103",
     "name": "Bloom in the Park",
     "address": "Pildammsvägen  17",
@@ -210,10 +441,38 @@
     "allmanheten": true
   },
   {
+    "registerId": "323",
+    "name": "Bouchon, Restaurang",
+    "address": "Andréelundsvägen 5",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "707",
+    "name": "Boulebar Folkets Park",
+    "address": "Folkets Park, Orangeriet",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "990",
     "name": "Boulebar Malmö",
     "address": "Drottningtorget   8",
     "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "635",
+    "name": "Brads Spelcafé",
+    "address": "Brogatan 11",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "286",
+    "name": "Brasserie Sture 1912",
+    "address": "Adelgatan 13",
+    "uteservering": false,
     "allmanheten": true
   },
   {
@@ -248,6 +507,13 @@
     "registerId": "1549",
     "name": "Brödernas Hyllie",
     "address": "Arenagatan 5",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "70",
+    "name": "Bullen",
+    "address": "Storgatan 35",
     "uteservering": true,
     "allmanheten": true
   },
@@ -322,6 +588,20 @@
     "allmanheten": true
   },
   {
+    "registerId": "2684",
+    "name": "Cantin",
+    "address": "Bockkransgatan 8",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "341",
+    "name": "Capri",
+    "address": "Orkestergatan 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1200",
     "name": "Care/of",
     "address": "Fiskehamnspromenaden  11C",
@@ -343,6 +623,20 @@
     "allmanheten": true
   },
   {
+    "registerId": "1007",
+    "name": "Cataleya, Restaurang",
+    "address": "Fersens väg 16",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "255",
+    "name": "Centiliter & Gram",
+    "address": "Stortorget 17",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "2709",
     "name": "Centralen Food Courten (Gem serv.yta)",
     "address": "Centralplan   1",
@@ -357,9 +651,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "2722",
+    "name": "Chef Mama",
+    "address": "Föreningsgatan 85",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "687",
     "name": "Chill Out Sushi Limhamn",
     "address": "Linnégatan 16",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "807",
+    "name": "Ciao",
+    "address": "Friisgatan   6B",
     "uteservering": true,
     "allmanheten": true
   },
@@ -406,6 +714,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "863",
+    "name": "Dal Sud",
+    "address": "Ringgatan   1B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "623",
     "name": "Dame Ginette",
     "address": "Östra Förstadsgatan 18",
@@ -420,6 +735,20 @@
     "allmanheten": true
   },
   {
+    "registerId": "1524",
+    "name": "Dashi",
+    "address": "Holmgatan   4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "702",
+    "name": "Delhi",
+    "address": "Södra Förstadsgatan 66",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "2756",
     "name": "Devoted",
     "address": "Djäknegatan  16",
@@ -430,6 +759,13 @@
     "registerId": "330",
     "name": "Diné Burger",
     "address": "Tärningholmsgatan   3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1327",
+    "name": "Dirty Taco",
+    "address": "Södra Vallgatan   3",
     "uteservering": true,
     "allmanheten": true
   },
@@ -455,9 +791,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "295",
+    "name": "Doori",
+    "address": "Bergsgatan 15",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "2647",
     "name": "Doori Västra hamnen",
     "address": "Masttorget 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "427",
+    "name": "Drumbar",
+    "address": "Lilla Torg 9",
     "uteservering": true,
     "allmanheten": true
   },
@@ -473,6 +823,13 @@
     "name": "Edge Kitchen",
     "address": "Hyllie Vattenparksgata  12",
     "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2733",
+    "name": "EKKE BAR",
+    "address": "Karlskronaplan 6",
+    "uteservering": true,
     "allmanheten": true
   },
   {
@@ -493,6 +850,13 @@
     "registerId": "883",
     "name": "Elite Plaza Hotel/The Bishops Arms",
     "address": "Gustav Adolfs Torg  49C",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "272",
+    "name": "Ellstorps Kvarterskrog",
+    "address": "Sallerupsvägen  28D",
     "uteservering": true,
     "allmanheten": true
   },
@@ -553,6 +917,20 @@
     "allmanheten": true
   },
   {
+    "registerId": "208",
+    "name": "Fagans",
+    "address": "Per Weijersgatan 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1193",
+    "name": "Falafel & Burgers",
+    "address": "Gibraltargatan   6",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "1591",
     "name": "Family Pub",
     "address": "Sallerupsvägen 12",
@@ -560,9 +938,30 @@
     "allmanheten": true
   },
   {
+    "registerId": "200",
+    "name": "Family pub",
+    "address": "Nobelvägen 52",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "502",
+    "name": "Far i Hatten",
+    "address": "Amiralsgatan 35",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1550",
     "name": "Fat Dave`s",
     "address": "Gustav adolfs torg 47",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2620",
+    "name": "FIR",
+    "address": "Karlshamnsgatan 5",
     "uteservering": true,
     "allmanheten": true
   },
@@ -584,6 +983,13 @@
     "registerId": "844",
     "name": "Fisky Business",
     "address": "Dockgatan   1",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1567",
+    "name": "Flax",
+    "address": "Sölvesborgsgatan 10",
     "uteservering": true,
     "allmanheten": true
   },
@@ -616,9 +1022,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "18",
+    "name": "Fregatten",
+    "address": "Föreningsgatan  87C",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1145",
     "name": "Freja",
     "address": "Davidshallstorg 9",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1420",
+    "name": "Friis 14",
+    "address": "Friisgatan  14",
     "uteservering": true,
     "allmanheten": true
   },
@@ -642,6 +1062,13 @@
     "address": "Per Albin Hanssons väg  36 D",
     "uteservering": false,
     "allmanheten": false
+  },
+  {
+    "registerId": "350",
+    "name": "Gallia",
+    "address": "Ahlmansgatan 8",
+    "uteservering": true,
+    "allmanheten": true
   },
   {
     "registerId": "28",
@@ -672,6 +1099,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "16",
+    "name": "Golden Crown",
+    "address": "Föreningsgatan 39",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "324",
     "name": "Good Morning Hotel + Malmö",
     "address": "Stadiongatan 21",
@@ -682,6 +1116,13 @@
     "registerId": "542",
     "name": "Goose Bar och Restaurang",
     "address": "Davidshallstorg   5",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1074",
+    "name": "Graffiti Café WTC",
+    "address": "Propellergatan 2",
     "uteservering": true,
     "allmanheten": true
   },
@@ -703,6 +1144,13 @@
     "registerId": "594",
     "name": "Grappa, Restaurang",
     "address": "Lilla Torg 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "83",
+    "name": "Green Chili",
+    "address": "Lilla Torg 7",
     "uteservering": true,
     "allmanheten": true
   },
@@ -903,9 +1351,30 @@
     "allmanheten": true
   },
   {
+    "registerId": "7",
+    "name": "ICE",
+    "address": "Bergsgatan 27",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1382",
+    "name": "Icha Mochi",
+    "address": "Gustav Adolfs torg  43",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "835",
     "name": "Il Punto",
     "address": "Sergels väg 11",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "596",
+    "name": "Indian Express 2",
+    "address": "Möllevångstorget 4",
     "uteservering": true,
     "allmanheten": true
   },
@@ -927,6 +1396,13 @@
     "registerId": "26",
     "name": "Interpool",
     "address": "Stora Nygatan 19",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "87",
+    "name": "Jiang Nan",
+    "address": "Kronborgsvägen  20",
     "uteservering": true,
     "allmanheten": true
   },
@@ -966,6 +1442,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1470",
+    "name": "Kafé Kungsgatan",
+    "address": "Kungsgatan   2",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "389",
     "name": "Kafé Verket",
     "address": "Ola Billgrens plats 2-4",
@@ -987,6 +1470,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1120",
+    "name": "Karl-Mikael",
+    "address": "Engelbrektsgatan 13",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1185",
     "name": "Kasai",
     "address": "Tyfongatan   1",
@@ -1001,6 +1491,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "146",
+    "name": "Kin Long",
+    "address": "Rådmansgatan   1",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "207",
     "name": "Kina",
     "address": "Drottninggatan   4A",
@@ -1011,6 +1508,20 @@
     "registerId": "108",
     "name": "Kina Floden",
     "address": "Lundavägen 65",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2676",
+    "name": "Kiosko Import",
+    "address": "Friisgatan 21a",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1547",
+    "name": "Kitchen 961",
+    "address": "Pilgatan   1",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1029,9 +1540,37 @@
     "allmanheten": true
   },
   {
+    "registerId": "167",
+    "name": "Kockeriet",
+    "address": "Norra Vallgatan 28",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1213",
     "name": "Kol & Cocktails",
     "address": "Kalendegatan  16",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1517",
+    "name": "Kollektivkrogen",
+    "address": "Rundelsgatan 7",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "752",
+    "name": "Kontrast",
+    "address": "Möllevångstorget   6B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "379",
+    "name": "Kontrast Ghee by the sea",
+    "address": "Sundspromenaden 7",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1078,11 +1617,25 @@
     "allmanheten": true
   },
   {
+    "registerId": "2710",
+    "name": "Kärleksgatan 3",
+    "address": "Kärleksgatan 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1138",
     "name": "Köket Hubhult",
     "address": "Älmhultsgatan 2",
     "uteservering": true,
     "allmanheten": false
+  },
+  {
+    "registerId": "2651",
+    "name": "Kölsch",
+    "address": "Simrishamnsgatan   3",
+    "uteservering": true,
+    "allmanheten": true
   },
   {
     "registerId": "2632",
@@ -1113,6 +1666,34 @@
     "allmanheten": true
   },
   {
+    "registerId": "706",
+    "name": "La Bonne Vie",
+    "address": "Davidshallstorg   7",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "118",
+    "name": "La Caravelle",
+    "address": "Sveagatan 49",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2636",
+    "name": "La Fonderie",
+    "address": "Ångfärjekajen  10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1425",
+    "name": "La Nonnina AB",
+    "address": "Tessins väg   8",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1572",
     "name": "La Pasta Veloce",
     "address": "Hyllie Boulevard 19",
@@ -1127,6 +1708,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "86",
+    "name": "La Trattoria",
+    "address": "Östra Tullgatan 7",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "2653",
     "name": "Laserdome",
     "address": "Drottninggatan   1",
@@ -1137,6 +1725,27 @@
     "registerId": "812",
     "name": "Laziza Dockan",
     "address": "Hallenborgs gata  19",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "237",
+    "name": "Lemongrass",
+    "address": "Grynbodgatan 9",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "76",
+    "name": "Lera Restaurang",
+    "address": "Södra Förstadsgatan 23 B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "768",
+    "name": "Lilla Kafferosteriet",
+    "address": "Baltzarsgatan 24",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1169,6 +1778,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1131",
+    "name": "Limhamns Fiskrökeri",
+    "address": "Strandgatan 17 B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1450",
     "name": "Limhamns kött och vilt",
     "address": "Strandgatan  17 A",
@@ -1183,9 +1799,37 @@
     "allmanheten": true
   },
   {
+    "registerId": "394",
+    "name": "Lindängens Pizzeria",
+    "address": "Munkhättegatan 160",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1453",
     "name": "Linnea & Basilika Svågertorp",
     "address": "Drakagatan  10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "429",
+    "name": "Lion Bar",
+    "address": "Landbygatan 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1366",
+    "name": "Little Italy",
+    "address": "Gjutformsgatan   8B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1477",
+    "name": "LoCali",
+    "address": "Nordenskiöldsgatan  11 A",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1197,9 +1841,44 @@
     "allmanheten": true
   },
   {
+    "registerId": "276",
+    "name": "Los Arcos",
+    "address": "Östra Rönneholmsvägen 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1399",
+    "name": "Lu",
+    "address": "Davidshallstorg   3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "201",
+    "name": "Luftkastellet",
+    "address": "Utsiktsvägen 10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "90",
+    "name": "Lung Foon",
+    "address": "Regementsgatan 11",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "772",
     "name": "Lupo, Pizzeria",
     "address": "Kronborgsvägen 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1087",
+    "name": "Lyran",
+    "address": "Simrishamnsgatan  36A",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1260,6 +1939,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "98",
+    "name": "Malmö Opera Grill",
+    "address": "Östra Rönneholmsvägen 20",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "40",
     "name": "Malmö restaurangskola",
     "address": "Kungsgatan 44",
@@ -1278,6 +1964,62 @@
     "name": "Malmö Sportbar/T-Rex/The Hook",
     "address": "Fredsgatan  12",
     "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "400",
+    "name": "Mamma Mia",
+    "address": "Föreningsgatan 67",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "238",
+    "name": "Mando Steakhouse",
+    "address": "Skomakaregatan 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "316",
+    "name": "Manto",
+    "address": "Nobelvägen 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "640",
+    "name": "Marie Antoinette",
+    "address": "Drottningtorget 6",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1520",
+    "name": "MARVIN",
+    "address": "Storgatan  41 B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "292",
+    "name": "Masala Kitchen & Bar",
+    "address": "Norra Vallgatan 78",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "320",
+    "name": "Mascot",
+    "address": "Möllevångstorget 6",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1259",
+    "name": "Mastio",
+    "address": "Dragörkajen   1A",
+    "uteservering": true,
     "allmanheten": true
   },
   {
@@ -1302,9 +2044,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "1111",
+    "name": "Matbyrån",
+    "address": "Uddeholmsgatan   2",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "1076",
     "name": "Mathildenborgs restaurang",
     "address": "Rudbecksgatan 1",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1188",
+    "name": "Maya Cantina",
+    "address": "Gibraltargatan   6",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1323,9 +2079,51 @@
     "allmanheten": true
   },
   {
+    "registerId": "231",
+    "name": "Metro",
+    "address": "Ängelholmsgatan 14",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "965",
+    "name": "Meyhane",
+    "address": "Regementsgatan  64",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1309",
+    "name": "Miamarias",
+    "address": "Isbergs gata   5",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "928",
     "name": "Mikkeller - Ramen to biiro",
     "address": "Simrishamnsgatan 10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1307",
+    "name": "Miso",
+    "address": "Gustav Adolfs Torg  45",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1012",
+    "name": "Miss Wang",
+    "address": "Einar Hansens esplanad 37",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1541",
+    "name": "Miss Vietnam",
+    "address": "Södra förstadsgatan 91",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1337,9 +2135,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "1458",
+    "name": "Mocca Café",
+    "address": "Friisgatan   4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "809",
     "name": "Modomio, Restaurang",
     "address": "Stora Nygatan 17 C",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "53",
+    "name": "Moosehead Bar",
+    "address": "Lilla Torg 1",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1348,6 +2160,20 @@
     "name": "Moriska Paviljongen",
     "address": "Norra Parkgatan 2",
     "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "712",
+    "name": "Mrs Brown",
+    "address": "Storgatan 26",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "225",
+    "name": "Mrs Saigon",
+    "address": "Engelbrektsgatan  17B",
+    "uteservering": false,
     "allmanheten": true
   },
   {
@@ -1400,6 +2226,20 @@
     "allmanheten": true
   },
   {
+    "registerId": "8",
+    "name": "Möllan",
+    "address": "Bergsgatan  37C",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1064",
+    "name": "Möllan Curry",
+    "address": "Möllevångstorget 12-14",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1286",
     "name": "Möllans Ost på Saluhallen",
     "address": "Gibraltargatan   6",
@@ -1421,9 +2261,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "484",
+    "name": "Namu",
+    "address": "Landbygatan 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "95",
     "name": "Nazar",
     "address": "Vattenverksvägen 20",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "321",
+    "name": "NGON",
+    "address": "Erik Dahlbergsgatan 3",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1432,6 +2286,13 @@
     "name": "Niagara/Malmö Universitet",
     "address": "Neptuniplan 1",
     "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "242",
+    "name": "Nils, Restaurang",
+    "address": "Regementsgatan 58",
+    "uteservering": true,
     "allmanheten": true
   },
   {
@@ -1477,6 +2338,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1328",
+    "name": "Nostra Café",
+    "address": "Rådmansgatan   3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1152",
     "name": "Novell",
     "address": "Kung Oscars Väg 11 (Stadsbiblioteket)",
@@ -1487,6 +2355,13 @@
     "registerId": "1113",
     "name": "Nybergs konditori",
     "address": "Adelgatan 2",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "190",
+    "name": "Nyhavn",
+    "address": "Möllevångstorget 8",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1512,9 +2387,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "214",
+    "name": "Occo",
+    "address": "Kalendegatan  12B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1521",
     "name": "Okidoki & Public",
     "address": "Klagshamnsvägen  40",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "48",
+    "name": "Opopoppa",
+    "address": "Simrishamnsgatan 3",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1540,6 +2429,20 @@
     "allmanheten": true
   },
   {
+    "registerId": "667",
+    "name": "Osteria Qui",
+    "address": "Major Nilssonsgatan 6",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "910",
+    "name": "P2",
+    "address": "Dockplatsen 22",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "47",
     "name": "Paddy s",
     "address": "Kalendegatan 7",
@@ -1551,6 +2454,20 @@
     "name": "Palladium",
     "address": "Södergatan 15",
     "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "298",
+    "name": "Paloma",
+    "address": "Friisgatan 8",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1202",
+    "name": "Papi",
+    "address": "Gibraltargatan   6",
+    "uteservering": false,
     "allmanheten": true
   },
   {
@@ -1575,10 +2492,52 @@
     "allmanheten": true
   },
   {
+    "registerId": "335",
+    "name": "Per Albins Krog",
+    "address": "Per Albin Hanssons väg 82",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2637",
+    "name": "Perfetto",
+    "address": "Regementsgatan  52",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "226",
+    "name": "Perssons Kök & Bar",
+    "address": "Storgatan 1",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "74",
+    "name": "Piccolo Mondo",
+    "address": "Lilla Torg 2",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1299",
+    "name": "Pin Pin Dumpling",
+    "address": "Claesgatan   8",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "78",
     "name": "Pinchos 2",
     "address": "Generalsgatan 1",
     "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1158",
+    "name": "Pink Head Noodle Bar",
+    "address": "Gråbrödersgatan 2",
+    "uteservering": true,
     "allmanheten": true
   },
   {
@@ -1645,6 +2604,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1489",
+    "name": "Porto Gastrobar",
+    "address": "Lilla Varvsgatan  13A",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1294",
     "name": "Portobello Pizzeria Restaurang",
     "address": "Gustaf Rydbergsgatan   9B",
@@ -1673,10 +2639,24 @@
     "allmanheten": true
   },
   {
+    "registerId": "156",
+    "name": "Pub Vagabond",
+    "address": "Jöns Risbergsgatan 10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1326",
     "name": "På RIS",
     "address": "Gibraltargatan   6",
     "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1596",
+    "name": "Qoffee",
+    "address": "Södergatan 22",
+    "uteservering": true,
     "allmanheten": true
   },
   {
@@ -1715,6 +2695,20 @@
     "allmanheten": true
   },
   {
+    "registerId": "1435",
+    "name": "Rau",
+    "address": "Davidshallstorg 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "880",
+    "name": "Restaurang Bright",
+    "address": "Bergsgatan  24",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "2683",
     "name": "Restaurang BYN",
     "address": "Fredsgatan 12",
@@ -1729,9 +2723,37 @@
     "allmanheten": true
   },
   {
+    "registerId": "55",
+    "name": "Restaurang Fokus",
+    "address": "Regementsgatan 64",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1005",
+    "name": "Restaurang Genuin",
+    "address": "Köpenhamnsvägen 40",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "203",
+    "name": "Restaurang Green Mango",
+    "address": "Fersens väg 5",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "931",
     "name": "Restaurang India & Vitlök",
     "address": "Amiralsgatan 14",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "917",
+    "name": "Restaurang Kalk",
+    "address": "Kalkstensvägen 13",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1743,6 +2765,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "857",
+    "name": "Restaurang Quan",
+    "address": "Mäster Johansgatan 15",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "647",
     "name": "Restaurang Quê",
     "address": "Adelgatan 4",
@@ -1750,9 +2779,30 @@
     "allmanheten": true
   },
   {
+    "registerId": "1268",
+    "name": "Restaurang Riket",
+    "address": "Erik Dahlbergsgatan   5",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "367",
+    "name": "Restaurang Sagitto",
+    "address": "Regementsgatan 11",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "88",
     "name": "Restaurang Scania",
     "address": "Bergsgatan 18",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "951",
+    "name": "Restaurang Spill",
+    "address": "Stora varvsgatan 11",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1827,10 +2877,31 @@
     "allmanheten": true
   },
   {
+    "registerId": "473",
+    "name": "Royal Pool Hall",
+    "address": "Ystadsgatan  53A",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "2735",
     "name": "Rummet",
     "address": "Regementsgatan 8",
     "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "302",
+    "name": "Ruths",
+    "address": "Mäster Johansgatan 11",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "27",
+    "name": "Rådhuskällaren",
+    "address": "Kompanigatan 5",
+    "uteservering": true,
     "allmanheten": true
   },
   {
@@ -1869,10 +2940,31 @@
     "allmanheten": true
   },
   {
+    "registerId": "2728",
+    "name": "Sallys",
+    "address": "Norra Parkgatan  10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "939",
     "name": "Saltimporten",
     "address": "Grimsbygatan  24",
     "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "117",
+    "name": "Sanlo",
+    "address": "Bergsgatan 6",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1006",
+    "name": "Sauvage",
+    "address": "Spångatan  32 A",
+    "uteservering": true,
     "allmanheten": true
   },
   {
@@ -1886,6 +2978,27 @@
     "registerId": "110",
     "name": "Scandic Segevång",
     "address": "Segesvängen",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "608",
+    "name": "Scandic Stortorget",
+    "address": "Stortorget 15",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "202",
+    "name": "Scandic Triangeln",
+    "address": "Triangeln 2",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "282",
+    "name": "Scandwich",
+    "address": "Kristianstadsgatan 7",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2002,6 +3115,27 @@
     "allmanheten": false
   },
   {
+    "registerId": "101",
+    "name": "Slottsstadens Restaurang",
+    "address": "Mariedalsvägen 33",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "454",
+    "name": "Slottsträdgårdens Kafé",
+    "address": "Malmöhusvägen   8",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2751",
+    "name": "SLVRBRGS",
+    "address": "Skomakaregatan 9",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "62",
     "name": "Smak på Malmö Konsthall",
     "address": "S:t Johannesgatan 7",
@@ -2023,9 +3157,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "609",
+    "name": "Soho",
+    "address": "Holmgatan 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1056",
     "name": "Soi",
     "address": "S:t Knuts väg 13",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2642",
+    "name": "Solidar",
+    "address": "Sövdeborgsgatan 13",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2072,9 +3220,51 @@
     "allmanheten": true
   },
   {
+    "registerId": "147",
+    "name": "Spot",
+    "address": "Stora Nygatan 33",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "91",
+    "name": "Square Side",
+    "address": "Sofielundsvägen 8",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "102",
+    "name": "Srinin",
+    "address": "Nils Forsbergs plats 2",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "845",
     "name": "Stadion",
     "address": "Eric Perssons väg 19",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2753",
+    "name": "Stadscaféet i Slottsparken",
+    "address": "Kung Oscars väg 10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "80",
+    "name": "Star Restaurang och Bar",
+    "address": "Södra Skolgatan 30",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "94",
+    "name": "Steakhouse Lilla Torg",
+    "address": "Lilla Torg 7",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2096,6 +3286,13 @@
     "registerId": "278",
     "name": "Strandhuset i Sibbarp",
     "address": "Strandgatan 99",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "825",
+    "name": "Surf Shack",
+    "address": "Västergatan   9A",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2128,6 +3325,34 @@
     "allmanheten": true
   },
   {
+    "registerId": "2740",
+    "name": "Sushibaren",
+    "address": "Regementsgatan 25",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "246",
+    "name": "Syltan Kök & Bar",
+    "address": "Östra Förstadsgatan 2",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1410",
+    "name": "Systrar & Bröder",
+    "address": "Östra Rönneholmsvägen  26",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "797",
+    "name": "Såjja",
+    "address": "Mäster Johansgatan 1",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1194",
     "name": "Söderholmens Fisk",
     "address": "Gibraltargatan   6",
@@ -2135,10 +3360,38 @@
     "allmanheten": true
   },
   {
+    "registerId": "645",
+    "name": "Södervärns krog",
+    "address": "Södra Förstadsgatan 100",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "957",
+    "name": "Taco Bar",
+    "address": "Per Albin Hanssons väg 40",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "690",
     "name": "Tacopalatset",
     "address": "Amiralsgatan 47/Karlskronaplan",
     "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1556",
+    "name": "Taste of Thailand",
+    "address": "Dalaplan 5 A",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1103",
+    "name": "Tawana",
+    "address": "Centralplan 1",
+    "uteservering": false,
     "allmanheten": true
   },
   {
@@ -2226,6 +3479,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1332",
+    "name": "The South Indian",
+    "address": "Södra Förstadsgatan  84A",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "943",
     "name": "The Torso",
     "address": "Västra Varvsgatan 42",
@@ -2236,6 +3496,13 @@
     "registerId": "258",
     "name": "Tin Tin Thai",
     "address": "Nobelvägen 82",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1293",
+    "name": "Tipico",
+    "address": "Lilla Nygatan  11",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2303,6 +3570,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1560",
+    "name": "Two Forks Hummus Shop",
+    "address": "Gibraltargatan   3 B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "522",
     "name": "Ubåtshallen Restaurang & Catering",
     "address": "Östra Varvsgatan   9A",
@@ -2313,6 +3587,13 @@
     "registerId": "2660",
     "name": "Ukrainian Beer Bar",
     "address": "Amiralsgatan 6",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1119",
+    "name": "Umami",
+    "address": "Södra Tullgatan 4",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2359,6 +3640,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "1075",
+    "name": "V.E.D",
+    "address": "Kristianstadsgatan  10A",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1598",
     "name": "V.E.S.P.A Davidshall",
     "address": "Holmgatan 11",
@@ -2380,6 +3668,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "963",
+    "name": "Varv",
+    "address": "Stora Varvsgatan   6A",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1184",
     "name": "WASABI orangeri",
     "address": "Krombyvägen  77",
@@ -2394,9 +3689,37 @@
     "allmanheten": true
   },
   {
+    "registerId": "141",
+    "name": "Wega",
+    "address": "Malmöhusvägen 6",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "933",
     "name": "Vegan Bar",
     "address": "Södra Skolgatan 45",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "336",
+    "name": "Vessel",
+    "address": "Strandgatan 50",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "824",
+    "name": "Via Lorenzo",
+    "address": "Lorensborgsgatan 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1168",
+    "name": "Vibliotek",
+    "address": "Södra Vallgatan   3",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2429,6 +3752,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "4",
+    "name": "Volk",
+    "address": "Amiralsgatan 52",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "713",
     "name": "Vollmer, restaurang",
     "address": "Tegelgårdsgatan 5",
@@ -2450,9 +3780,23 @@
     "allmanheten": true
   },
   {
+    "registerId": "521",
+    "name": "Wärldshuset",
+    "address": "John Ericssons väg 76",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "63",
     "name": "Värnhem, Pizzeria",
     "address": "Östervärnsgatan   2B",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "384",
+    "name": "Västergatan, Restaurang",
+    "address": "Västergatan 16",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2464,9 +3808,51 @@
     "allmanheten": true
   },
   {
+    "registerId": "782",
+    "name": "Yukai",
+    "address": "Bergsgatan 35",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "291",
+    "name": "Zula",
+    "address": "Ystadsgatan 10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1115",
+    "name": "ZUSHI",
+    "address": "Drottningtorget 4",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "2739",
+    "name": "Zymologi",
+    "address": "Friisgatan 10",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "178",
+    "name": "Årstiderna i Kockska Huset",
+    "address": "Frans Suellsgatan 3",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "301",
     "name": "Ölkaféet",
     "address": "Södra Skolgatan 43",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1390",
+    "name": "Östergatan No. 25",
+    "address": "Östergatan  25",
     "uteservering": true,
     "allmanheten": true
   }

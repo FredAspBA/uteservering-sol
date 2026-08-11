@@ -98,6 +98,32 @@ async function loadRegisterAlcoholHints() {
   return new Set(rows.filter((r) => r.resolvesUnknownAlcohol).map((r) => r.matchedOsmId));
 }
 
+// Same idea as loadRegisterAlcoholHints() above, but for outdoor seating —
+// only possible once scripts/fetch-serving-permit-details.js started
+// fetching detail pages for matched register rows too (it used to only
+// cover the unmatched fas 5 del B candidates). Needs BOTH files: permits
+// give matchedOsmId (which OSM place a register row is), details give the
+// actual uteservering/allmänhet flags (only the detail page has them, not
+// the list page). Same "suggestion, never auto-applied" rule; missing
+// either file is not an error.
+async function loadRegisterOutdoorHints() {
+  let permits, details;
+  try {
+    permits = JSON.parse(await readFile(join(dataDir, "serving-permits.json"), "utf8"));
+    details = JSON.parse(await readFile(join(dataDir, "serving-permit-details.json"), "utf8"));
+  } catch {
+    return new Set();
+  }
+  const detailsById = new Map(details.map((d) => [d.registerId, d]));
+  const hints = new Set();
+  for (const p of permits) {
+    if (!p.matchedOsmId) continue;
+    const d = detailsById.get(p.registerId);
+    if (d?.uteservering && d?.allmanheten) hints.add(p.matchedOsmId);
+  }
+  return hints;
+}
+
 // Fas 5, del B (see scripts/geocode-unverified-venues.js and PLAN-
 // datakvalitet.md fas 5): places Malmö stads serveringstillstånd-register
 // confirms have an outdoor-seating permit and aren't in OSM at all. Given
@@ -139,6 +165,7 @@ async function loadUnverifiedVenues() {
 async function main() {
   const geo = JSON.parse(await readFile(join(dataDir, "terraces.geojson"), "utf8"));
   const registerAlcoholHints = await loadRegisterAlcoholHints();
+  const registerOutdoorHints = await loadRegisterOutdoorHints();
   const unverifiedVenues = await loadUnverifiedVenues();
 
   const items = geo.features
@@ -148,6 +175,7 @@ async function main() {
       const p = f.properties || {};
       const key = p.amenity || p.shop || p.leisure || "";
       const [osmType, osmNum] = id.split("/");
+      const outdoor = p.outdoor_seating || "";
       return {
         id,
         key: id.replace("/", "_"),
@@ -157,9 +185,14 @@ async function main() {
         cat: VENUE_LABELS[key] || key || "?",
         catKey: key,
         osmAlcohol: osmAlcohol(p, key),
-        osmOutdoor: p.outdoor_seating || "",
+        osmOutdoor: outdoor,
         addr: tagAddress(p),
         registerAlcoholHint: registerAlcoholHints.has(id),
+        // Gated on osmOutdoor being unknown here (not just left to the
+        // renderer), matching how registerAlcoholHint is already gated at
+        // the source in fetch-serving-permits.js's resolvesUnknownAlcohol —
+        // a hint the OSM tag already answers is noise, not a suggestion.
+        registerOutdoorHint: outdoor === "" && registerOutdoorHints.has(id),
         _point: pointOf(f), // temporary, stripped before writing
       };
     })

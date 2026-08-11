@@ -1,18 +1,26 @@
-// Fetches Malmö stad's detail page (`/Show/{id}`) for each serving-permit
-// register entry that did NOT match anything in data/terraces.geojson —
-// the fas 5 del B candidates. The list page alone (fetch-serving-
-// permits.js) can't tell us which of those 353 unmatched places actually
-// have an outdoor-seating permit; only the detail page's "Serveringstyp:
+// Fetches Malmö stad's detail page (`/Show/{id}`) for EVERY serving-permit
+// register entry — matched against data/terraces.geojson or not. The list
+// page alone (fetch-serving-permits.js) can't tell us which places actually
+// hold an outdoor-seating permit; only the detail page's "Serveringstyp:
 // Uteservering" row does. Also grabs "Servering till: Allmänheten" (vs.
-// Slutet sällskap), since a permit that only covers closed events
-// shouldn't count either — see PLAN-datakvalitet.md fas 5 for why both
-// gates matter.
+// Slutet sällskap), since a permit that only covers closed events shouldn't
+// count either — see PLAN-datakvalitet.md fas 5 for why both gates matter.
 //
-// One request per unmatched place *not already cached*, with a delay
-// between them to be polite to a small municipal server. Writes
-// data/serving-permit-details.json; never touches terraces.geojson/
-// buildings.geojson. Data-gathering only — this does NOT build fas 5 del B
-// (geocoding, map display, UI). That's a separate, larger piece of work.
+// Originally scoped to unmatched entries only (the fas 5 del B candidates —
+// geocode-unverified-venues.js still filters back down to just those, see
+// its own comment). Widened to cover matched entries too so build-tagging-
+// list.js can surface a "Malmö stad: har uteservering" hint next to
+// matched-but-outdoor-unknown OSM places, mirroring exactly how fas 5 del A
+// already does this for alcohol. Fetching all ~551 register rows (not just
+// the ~353 unmatched) is still within the budget PLAN-datakvalitet.md fas 5
+// already signed off on ("1 anrop (listan) + upp till 551 anrop").
+//
+// One request per place *not already cached*, with a delay between them to
+// be polite to a small municipal server. Writes data/serving-permit-
+// details.json; never touches terraces.geojson/buildings.geojson.
+// Data-gathering only — this does NOT build fas 5 del B (geocoding, map
+// display, UI) or del A's tagging-list hint wiring. Those consume this
+// file's output.
 //
 // Cached by registerId in data/serving-permit-details-cache.json (same
 // permanent-cache pattern as geocode-cache.json / geocode-forward-cache.json
@@ -75,8 +83,10 @@ async function fetchDetail(registerId) {
 
 async function main() {
   const permits = JSON.parse(await readFile(join(dataDir, "serving-permits.json"), "utf8"));
-  const candidates = permits.filter((r) => !r.matchedOsmId && r.registerId);
-  console.log(`${candidates.length} omatchade registerställen att kontrollera ...`);
+  // Every register row with an id — matched to an OSM place or not (see
+  // top-of-file comment for why this covers both).
+  const candidates = permits.filter((r) => r.registerId);
+  console.log(`${candidates.length} registerställen att kontrollera (matchade + omatchade) ...`);
 
   const cache = await loadCache();
   const results = [];
