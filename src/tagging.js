@@ -196,7 +196,15 @@ function osmHintChips(item) {
     // still means outdoor seating is described in OSM — show the value so
     // it reads as known, matching the dropped Ja/Nej toggle for these.
     frag.appendChild(chip(`OSM: uteservering (${item.osmOutdoor})`, "hint-known"));
-  else frag.appendChild(chip("OSM: uteservering-tagg saknas", "hint-missing"));
+  else {
+    frag.appendChild(chip("OSM: uteservering-tagg saknas", "hint-missing"));
+    // Same idea as the alcohol hint above, from the same register — a
+    // suggestion, not a confirmed OSM value (see build-tagging-list.js's
+    // loadRegisterOutdoorHints()).
+    if (item.registerOutdoorHint) {
+      frag.appendChild(chip("Malmö stad: har uteservering", "hint-register"));
+    }
+  }
   return frag;
 }
 

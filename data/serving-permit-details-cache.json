@@ -3,6 +3,18 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "4": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "7": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "8": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "9": {
     "uteservering": true,
     "allmanheten": true
@@ -19,6 +31,14 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "16": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "18": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "20": {
     "uteservering": true,
     "allmanheten": true
@@ -32,6 +52,10 @@
     "allmanheten": true
   },
   "26": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "27": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -63,12 +87,24 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "48": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "52": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "53": {
     "uteservering": true,
     "allmanheten": true
   },
   "54": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "55": {
+    "uteservering": true,
     "allmanheten": true
   },
   "56": {
@@ -95,6 +131,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "70": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "72": {
     "uteservering": true,
     "allmanheten": true
@@ -103,8 +143,32 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "74": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "76": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "78": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "80": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "83": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "86": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "87": {
+    "uteservering": true,
     "allmanheten": true
   },
   "88": {
@@ -112,6 +176,22 @@
     "allmanheten": true
   },
   "89": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "90": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "91": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "92": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "94": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -125,6 +205,18 @@
   },
   "97": {
     "uteservering": true,
+    "allmanheten": true
+  },
+  "98": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "101": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "102": {
+    "uteservering": false,
     "allmanheten": true
   },
   "103": {
@@ -147,7 +239,23 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "117": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "118": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "120": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "121": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "123": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -159,6 +267,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "135": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "136": {
     "uteservering": true,
     "allmanheten": true
@@ -167,7 +279,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "141": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "144": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "146": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "147": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -179,12 +303,20 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "156": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "165": {
     "uteservering": true,
     "allmanheten": true
   },
   "166": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "167": {
+    "uteservering": true,
     "allmanheten": true
   },
   "172": {
@@ -195,12 +327,24 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "178": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "182": {
     "uteservering": true,
     "allmanheten": true
   },
   "188": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "189": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "190": {
+    "uteservering": true,
     "allmanheten": true
   },
   "191": {
@@ -211,7 +355,27 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "200": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "201": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "202": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "203": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "207": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "208": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -227,6 +391,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "214": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "217": {
     "uteservering": false,
     "allmanheten": false
@@ -239,7 +407,23 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "225": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "226": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "230": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "231": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "232": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -247,7 +431,27 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "237": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "238": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "242": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "243": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "244": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "246": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -260,6 +464,10 @@
     "allmanheten": true
   },
   "254": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "255": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -279,7 +487,15 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "272": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "273": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "276": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -299,6 +515,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "282": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "283": {
     "uteservering": true,
     "allmanheten": true
@@ -307,7 +527,31 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "286": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "290": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "291": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "292": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "295": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "297": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "298": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -316,6 +560,10 @@
     "allmanheten": true
   },
   "301": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "302": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -339,7 +587,27 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "316": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "318": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "319": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "320": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "321": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "323": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -359,6 +627,14 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "335": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "336": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "337": {
     "uteservering": false,
     "allmanheten": true
@@ -375,11 +651,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "341": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "344": {
     "uteservering": true,
     "allmanheten": true
   },
   "346": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "350": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -395,7 +679,23 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "367": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "368": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "372": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "379": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "384": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -411,6 +711,14 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "394": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "400": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "406": {
     "uteservering": true,
     "allmanheten": true
@@ -423,7 +731,27 @@
     "uteservering": true,
     "allmanheten": false
   },
+  "427": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "429": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "451": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "454": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "473": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "480": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -431,7 +759,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "484": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "502": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "515": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "521": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -455,7 +795,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "596": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "601": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "608": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "609": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -463,7 +815,19 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "635": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "638": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "640": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "645": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -476,6 +840,10 @@
     "allmanheten": true
   },
   "657": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "667": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -507,7 +875,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "702": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "703": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "706": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "707": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -515,7 +895,15 @@
     "uteservering": true,
     "allmanheten": false
   },
+  "712": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "713": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "729": {
     "uteservering": false,
     "allmanheten": true
   },
@@ -523,8 +911,24 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "734": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "735": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "740": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "745": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "752": {
+    "uteservering": true,
     "allmanheten": true
   },
   "753": {
@@ -535,7 +939,15 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "761": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "766": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "768": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -548,6 +960,10 @@
     "allmanheten": true
   },
   "781": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "782": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -575,6 +991,14 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "797": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "807": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "809": {
     "uteservering": true,
     "allmanheten": true
@@ -584,6 +1008,18 @@
     "allmanheten": true
   },
   "812": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "818": {
+    "uteservering": false,
+    "allmanheten": false
+  },
+  "824": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "825": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -619,6 +1055,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "853": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "854": {
     "uteservering": true,
     "allmanheten": true
@@ -627,7 +1067,19 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "857": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "858": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "863": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "880": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -643,11 +1095,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "910": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "913": {
     "uteservering": true,
     "allmanheten": true
   },
   "916": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "917": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -691,12 +1151,28 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "951": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "957": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "960": {
     "uteservering": true,
     "allmanheten": true
   },
   "961": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "963": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "965": {
+    "uteservering": true,
     "allmanheten": true
   },
   "967": {
@@ -719,6 +1195,22 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1005": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1006": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1007": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1012": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1015": {
     "uteservering": true,
     "allmanheten": true
@@ -728,6 +1220,10 @@
     "allmanheten": true
   },
   "1017": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1020": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -755,6 +1251,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1039": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1045": {
     "uteservering": true,
     "allmanheten": true
@@ -763,11 +1263,31 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1051": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "1056": {
     "uteservering": true,
     "allmanheten": true
   },
   "1063": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1064": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1069": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1074": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1075": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -783,6 +1303,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1087": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1090": {
     "uteservering": false,
     "allmanheten": true
@@ -795,6 +1319,14 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1103": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "1111": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "1112": {
     "uteservering": false,
     "allmanheten": true
@@ -803,7 +1335,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1115": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1118": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1119": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1120": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -820,6 +1364,10 @@
     "allmanheten": true
   },
   "1129": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1131": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -847,11 +1395,23 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "1158": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1162": {
     "uteservering": true,
     "allmanheten": true
   },
   "1165": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1168": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1173": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -867,6 +1427,14 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1188": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1193": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "1194": {
     "uteservering": false,
     "allmanheten": true
@@ -880,6 +1448,10 @@
     "allmanheten": true
   },
   "1201": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "1202": {
     "uteservering": false,
     "allmanheten": true
   },
@@ -903,6 +1475,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1234": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1235": {
     "uteservering": true,
     "allmanheten": true
@@ -915,6 +1491,10 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "1259": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1265": {
     "uteservering": true,
     "allmanheten": true
@@ -924,6 +1504,10 @@
     "allmanheten": false
   },
   "1267": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1268": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -951,12 +1535,20 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1293": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1294": {
     "uteservering": true,
     "allmanheten": true
   },
   "1296": {
     "uteservering": true,
+    "allmanheten": true
+  },
+  "1299": {
+    "uteservering": false,
     "allmanheten": true
   },
   "1300": {
@@ -967,7 +1559,15 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1307": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1308": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1309": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -979,12 +1579,24 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "1327": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1328": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1329": {
     "uteservering": false,
     "allmanheten": false
   },
   "1330": {
     "uteservering": true,
+    "allmanheten": true
+  },
+  "1332": {
+    "uteservering": false,
     "allmanheten": true
   },
   "1343": {
@@ -1015,11 +1627,27 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1366": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1371": {
     "uteservering": true,
     "allmanheten": true
   },
+  "1382": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1383": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1390": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1399": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1031,11 +1659,27 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1410": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1416": {
     "uteservering": true,
     "allmanheten": true
   },
+  "1420": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1422": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "1425": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1427": {
     "uteservering": false,
     "allmanheten": true
   },
@@ -1044,6 +1688,10 @@
     "allmanheten": true
   },
   "1430": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1435": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1079,11 +1727,23 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1458": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1459": {
     "uteservering": false,
     "allmanheten": true
   },
   "1461": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1468": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1470": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1095,11 +1755,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1477": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1480": {
     "uteservering": true,
     "allmanheten": true
   },
   "1481": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1489": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1111,7 +1779,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1517": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1520": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1521": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1524": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1139,12 +1819,20 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1541": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1542": {
     "uteservering": true,
     "allmanheten": true
   },
   "1544": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "1547": {
+    "uteservering": true,
     "allmanheten": true
   },
   "1549": {
@@ -1167,8 +1855,20 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1556": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "1557": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "1560": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1567": {
+    "uteservering": true,
     "allmanheten": true
   },
   "1572": {
@@ -1203,11 +1903,19 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1590": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1591": {
     "uteservering": true,
     "allmanheten": true
   },
   "1595": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1596": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1222,6 +1930,10 @@
   "1600": {
     "uteservering": false,
     "allmanheten": false
+  },
+  "1601": {
+    "uteservering": true,
+    "allmanheten": true
   },
   "2602": {
     "uteservering": false,
@@ -1271,6 +1983,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "2620": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2623": {
     "uteservering": false,
     "allmanheten": false
@@ -1287,11 +2003,23 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "2630": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2632": {
     "uteservering": false,
     "allmanheten": true
   },
   "2633": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2636": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2637": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1303,7 +2031,15 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "2642": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2647": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2651": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1323,6 +2059,10 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "2666": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2667": {
     "uteservering": true,
     "allmanheten": true
@@ -1339,8 +2079,24 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "2674": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2675": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2676": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2683": {
     "uteservering": true,
+    "allmanheten": true
+  },
+  "2684": {
+    "uteservering": false,
     "allmanheten": true
   },
   "2685": {
@@ -1375,19 +2131,39 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "2710": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2711": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "2713": {
+    "uteservering": true,
     "allmanheten": true
   },
   "2717": {
     "uteservering": false,
     "allmanheten": true
   },
+  "2722": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2726": {
     "uteservering": true,
     "allmanheten": true
   },
+  "2728": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2732": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2733": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -1399,11 +2175,27 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "2739": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2740": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2741": {
     "uteservering": true,
     "allmanheten": true
   },
   "2748": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2751": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2753": {
     "uteservering": true,
     "allmanheten": true
   },

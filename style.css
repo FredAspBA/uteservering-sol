@@ -261,6 +261,32 @@ input {
   font-size: 0.9rem;
 }
 
+.alcohol-filter-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.alcohol-filter-field:has(#alcohol-filter:checked) {
+  border-color: var(--color-sun-strong);
+  background: color-mix(in srgb, var(--color-sun) 14%, var(--color-bg));
+}
+
+.alcohol-filter-field input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--color-sun-strong);
+  cursor: pointer;
+}
+
 #near-me-button,
 #near-me-alcohol-button {
   padding: 0.4rem 0.75rem;
@@ -619,10 +645,12 @@ path.terrace-marker:hover {
     max-width: none;
   }
 
+  .alcohol-filter-field,
   #near-me-button,
   #near-me-alcohol-button {
     width: 100%;
     padding: 0.6rem 0.75rem;
+    justify-content: center;
   }
 
   #map {

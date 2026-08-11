@@ -52,6 +52,7 @@ const timeDisplay = document.getElementById("time-display");
 const nowButton = document.getElementById("now-button");
 const statusLine = document.getElementById("status-line");
 const searchInput = document.getElementById("search-input");
+const alcoholFilterCheckbox = document.getElementById("alcohol-filter");
 const searchStatus = document.getElementById("search-status");
 const terraceNamesList = document.getElementById("terrace-names");
 const voteCount = document.getElementById("vote-count");
@@ -471,30 +472,39 @@ async function recompute() {
   document.documentElement.style.setProperty("--day-progress", `${(Number(timeSlider.value) / 1439) * 100}%`);
 }
 
-function applySearchFilter() {
+// Combines the text search with the "Endast alkohol" checkbox — both
+// conditions must pass (AND), not two separate/competing filters. Runs on
+// input in either control (see the event listeners below).
+function applyFilters() {
   const query = searchInput.value.trim().toLowerCase();
+  const alcoholOnly = alcoholFilterCheckbox.checked;
   const matches = [];
+  let visibleCount = 0;
 
   for (const entry of markers) {
-    const isMatch = !query || entry.terrace.name.toLowerCase().includes(query);
+    const nameMatches = !query || entry.terrace.name.toLowerCase().includes(query);
+    const alcoholMatches = !alcoholOnly || servesAlcohol(entry);
+    const isMatch = nameMatches && alcoholMatches;
     if (isMatch) {
       if (!markersLayer.hasLayer(entry.marker)) markersLayer.addLayer(entry.marker);
+      visibleCount++;
       if (query) matches.push(entry);
     } else if (markersLayer.hasLayer(entry.marker)) {
       markersLayer.removeLayer(entry.marker);
     }
   }
 
-  if (!query) {
+  if (query) {
+    searchStatus.textContent = `${matches.length} träff${matches.length === 1 ? "" : "ar"}`;
+    if (matches.length === 1) {
+      const [lon, lat] = matches[0].terrace.point.geometry.coordinates;
+      map.flyTo([lat, lon], Math.max(map.getZoom(), 17));
+      matches[0].marker.openPopup();
+    }
+  } else if (alcoholOnly) {
+    searchStatus.textContent = `${visibleCount} ställe${visibleCount === 1 ? "" : "n"} med alkohol`;
+  } else {
     searchStatus.textContent = "";
-    return;
-  }
-
-  searchStatus.textContent = `${matches.length} träff${matches.length === 1 ? "" : "ar"}`;
-  if (matches.length === 1) {
-    const [lon, lat] = matches[0].terrace.point.geometry.coordinates;
-    map.flyTo([lat, lon], Math.max(map.getZoom(), 17));
-    matches[0].marker.openPopup();
   }
 }
 
@@ -611,7 +621,8 @@ nowButton.addEventListener("click", () => {
   setInputsToNow();
   recompute();
 });
-searchInput.addEventListener("input", debounce(applySearchFilter, 120));
+searchInput.addEventListener("input", debounce(applyFilters, 120));
+alcoholFilterCheckbox.addEventListener("change", applyFilters);
 exportVotesButton.addEventListener("click", downloadVotesJson);
 clearVotesButton.addEventListener("click", () => {
   if (getAllVotes().length && !confirm("Rensa alla dina loggade bedömningar på den här enheten?")) return;

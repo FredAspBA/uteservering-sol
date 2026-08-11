@@ -58,12 +58,22 @@ async function loadCandidates() {
   const details = JSON.parse(await readFile(join(dataDir, "serving-permit-details.json"), "utf8"));
   const permitsById = new Map(permits.map((p) => [p.registerId, p]));
 
-  // The three independent gates, all required: has an outdoor-seating
-  // permit, serves the general public (not just closed events), AND
-  // actually holds an alcohol permit of some type (true for all of them
-  // in practice — this register is specifically an alcohol-serving
-  // register — but checked explicitly rather than assumed).
+  // scripts/fetch-serving-permit-details.js now fetches detail pages for
+  // EVERY register row (matched to an OSM place or not — see its own
+  // comment, that widening feeds a different feature, the "Malmö stad: har
+  // uteservering" tagging-list hint). This script must still only geocode
+  // the UNMATCHED ones — a matched place already has a real OSM position,
+  // geocoding it too would draw a second, approximate marker right on top
+  // of the real one. Hence the explicit matchedOsmId check below, which
+  // used to be implicit (details.json only ever contained unmatched rows).
+  //
+  // The three independent gates, all required: not already an OSM place,
+  // has an outdoor-seating permit, serves the general public (not just
+  // closed events), AND actually holds an alcohol permit of some type
+  // (true for all of them in practice — this register is specifically an
+  // alcohol-serving register — but checked explicitly rather than assumed).
   return details
+    .filter((d) => !permitsById.get(d.registerId)?.matchedOsmId)
     .filter((d) => d.uteservering && d.allmanheten)
     .map((d) => ({ ...d, hasAlcoholPermit: permitsById.get(d.registerId)?.hasAlcoholPermit }))
     .filter((d) => d.hasAlcoholPermit);
