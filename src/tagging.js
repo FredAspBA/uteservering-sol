@@ -200,7 +200,102 @@ function osmHintChips(item) {
   return frag;
 }
 
+// Shared "Dölj i appen" checkbox — identical for every row regardless of
+// source, since it always writes the same Firebase field via the same key
+// derivation (id.replace("/", "_")), which app.js's exclusion filter reads
+// generically for ALL terraces, OSM-derived or not. Factored out (rather
+// than duplicated like the smaller normalizers elsewhere in this project)
+// because the two callers below need genuinely identical behaviour, not
+// just similar — a real divergence here would silently break hiding for
+// one of the two row kinds.
+function excludeCheckbox(item) {
+  const excludeLabel = document.createElement("label");
+  excludeLabel.className = "row-exclude";
+  const excludeBox = document.createElement("input");
+  excludeBox.type = "checkbox";
+  excludeBox.addEventListener("change", () => {
+    const next = excludeBox.checked ? true : null;
+    sharedState[item.key] = { ...(sharedState[item.key] || {}), exclude: next ?? undefined };
+    applyRowState(item.key);
+    writeField(item.key, "exclude", next);
+  });
+  excludeLabel.append(excludeBox, document.createTextNode("Dölj i appen"));
+  return { excludeLabel, excludeBox };
+}
+
+// Fas 5, del B: a place Malmö stads serveringstillstånd-register confirms
+// has an outdoor-seating permit, but that doesn't exist in OSM at all (see
+// scripts/geocode-unverified-venues.js and build-tagging-list.js's
+// loadUnverifiedVenues()). Deliberately a separate, simpler row rather than
+// routed through buildRow()'s per-OSM-tag toggle machinery below — there's
+// no OSM object to tag yet, so alcohol/outdoor Ja/Nej toggles, "OSM
+// uppdaterat" tracking, and "Kopiera taggar" all make no sense here. What
+// IS offered: a link to the register's own page (context, not editable), a
+// direct "add this in OSM" link centered on the geocoded point, and the
+// same "Dölj i appen" every other row has.
+function buildUnverifiedRow(item) {
+  const row = document.createElement("div");
+  row.className = "row row-unverified";
+
+  const main = document.createElement("div");
+  main.className = "row-main";
+
+  const head = document.createElement("div");
+  head.className = "row-head";
+
+  const nameLink = document.createElement("a");
+  nameLink.className = "row-name";
+  nameLink.href = `https://restaurang.malmo.se/AlktWebbforms/Restaurants/Show/${item.registerId}`;
+  nameLink.target = "_blank";
+  nameLink.rel = "noopener noreferrer";
+  nameLink.textContent = item.name;
+  nameLink.title = "Öppna Malmö stads registerpost (ny flik) — det här stället finns inte i OSM ännu";
+  head.appendChild(nameLink);
+
+  const badge = document.createElement("span");
+  badge.className = "hint hint-unverified";
+  badge.textContent = "Ej i OSM — Malmö stads register";
+  head.appendChild(badge);
+
+  main.appendChild(head);
+
+  if (item.addr) {
+    const addr = document.createElement("span");
+    addr.className = "row-addr";
+    // "(ungefärlig)" because these coordinates come from forward-geocoding
+    // a street address, not an OSM node — Sweden's sparse OSM address-point
+    // coverage means most land "somewhere on the right street", not the
+    // exact building. See PLAN-datakvalitet.md fas 5 del B.
+    addr.textContent = `${item.addr} (ungefärlig plats)`;
+    main.appendChild(addr);
+  }
+
+  const toggles = document.createElement("div");
+  toggles.className = "row-toggles";
+
+  if (item.point) {
+    const [lon, lat] = item.point;
+    const addLink = document.createElement("a");
+    addLink.className = "add-to-osm";
+    addLink.href = `https://www.openstreetmap.org/edit?editor=id#map=19/${lat}/${lon}`;
+    addLink.target = "_blank";
+    addLink.rel = "noopener noreferrer";
+    addLink.textContent = "➕ Lägg till i OSM";
+    addLink.title = "Öppna OSM-redigeraren centrerad på platsen — lägg till stället manuellt";
+    toggles.appendChild(addLink);
+  }
+
+  const { excludeLabel, excludeBox } = excludeCheckbox(item);
+  toggles.appendChild(excludeLabel);
+
+  row.append(main, toggles);
+  rowsByKey.set(item.key, { item, rowEl: row, buttons: {}, excludeBox });
+  return row;
+}
+
 function buildRow(item) {
+  if (item.unverified) return buildUnverifiedRow(item);
+
   const row = document.createElement("div");
   row.className = "row";
 
@@ -281,17 +376,7 @@ function buildRow(item) {
   // "Hide from the sun app" — a shared exclude flag, separate from the
   // Ja/Nej data. Checking it removes the place from index.html on its next
   // load. (Uteservering=Nej also auto-hides, handled in applyRowState.)
-  const excludeLabel = document.createElement("label");
-  excludeLabel.className = "row-exclude";
-  const excludeBox = document.createElement("input");
-  excludeBox.type = "checkbox";
-  excludeBox.addEventListener("change", () => {
-    const next = excludeBox.checked ? true : null;
-    sharedState[item.key] = { ...(sharedState[item.key] || {}), exclude: next ?? undefined };
-    applyRowState(item.key);
-    writeField(item.key, "exclude", next);
-  });
-  excludeLabel.append(excludeBox, document.createTextNode("Dölj i appen"));
+  const { excludeLabel, excludeBox } = excludeCheckbox(item);
   toggles.appendChild(excludeLabel);
 
   row.append(main, toggles);
@@ -343,15 +428,22 @@ function matches(item) {
       return Boolean(state.alcohol || state.outdoor || state.osm);
     case "hidden-app":
       return state.exclude === true || state.outdoor === "no";
+    case "unverified":
+      return Boolean(item.unverified);
     default:
       return true;
   }
 }
 
 /** A place needs OSM work only if at least one field is still untagged
- * there — fully-tagged places have nothing to do. */
+ * there — fully-tagged places have nothing to do. Unverified (fas 5, del B)
+ * places are excluded explicitly: they don't have an OSM object to tag at
+ * all yet, so they'd never belong in this count even though their
+ * osmAlcohol/osmOutdoor placeholders happen to read "yes" already (see
+ * build-tagging-list.js's loadUnverifiedVenues()) — the explicit check
+ * here is insurance against that placeholder choice ever changing. */
 function needsWork(item) {
-  return item.osmAlcohol === "unknown" || item.osmOutdoor === "";
+  return !item.unverified && (item.osmAlcohol === "unknown" || item.osmOutdoor === "");
 }
 
 function applyFilters() {

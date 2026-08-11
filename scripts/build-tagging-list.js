@@ -98,9 +98,48 @@ async function loadRegisterAlcoholHints() {
   return new Set(rows.filter((r) => r.resolvesUnknownAlcohol).map((r) => r.matchedOsmId));
 }
 
+// Fas 5, del B (see scripts/geocode-unverified-venues.js and PLAN-
+// datakvalitet.md fas 5): places Malmö stads serveringstillstånd-register
+// confirms have an outdoor-seating permit and aren't in OSM at all. Given
+// tagging-list rows here, distinct from normal OSM-derived rows in every
+// field that matters — see src/tagging.js's buildRow(), which branches on
+// `unverified` early rather than trying to route these through the
+// per-OSM-tag Ja/Nej toggle machinery built for a different kind of place.
+// Missing file (script hasn't run yet) is not an error, same pattern as
+// loadRegisterAlcoholHints() above — the whole feature is additive.
+async function loadUnverifiedVenues() {
+  let geo;
+  try {
+    geo = JSON.parse(await readFile(join(dataDir, "unverified-venues.geojson"), "utf8"));
+  } catch {
+    return [];
+  }
+  return geo.features
+    .map((f) => {
+      const p = f.properties || {};
+      if (!f.id || !p.name || !f.geometry) return null;
+      return {
+        id: f.id,
+        key: String(f.id).replace("/", "_"), // matches app.js's exclusion-key derivation exactly — "Dölj i appen" works via the same Firebase mechanism as any other place, no app.js changes needed
+        name: p.name,
+        named: true,
+        cat: "Ej i OSM",
+        catKey: null, // deliberately absent from the "Typ" dropdown — that filter is for real OSM venue categories; these are reachable via search and the dedicated quick-filter instead
+        osmAlcohol: "yes", // confirmed by the register, not a guess — chosen specifically so the normal Ja/Nej-toggle logic (which only fires on "unknown"/"") never engages for these
+        osmOutdoor: "yes", // same reasoning
+        addr: p.registerAddress || "",
+        unverified: true,
+        registerId: p.registerId,
+        point: f.geometry.coordinates, // [lon, lat] — kept (not stripped like _point) so tagging.js can link straight to "add this in OSM here"
+      };
+    })
+    .filter(Boolean);
+}
+
 async function main() {
   const geo = JSON.parse(await readFile(join(dataDir, "terraces.geojson"), "utf8"));
   const registerAlcoholHints = await loadRegisterAlcoholHints();
+  const unverifiedVenues = await loadUnverifiedVenues();
 
   const items = geo.features
     .map((f) => {
@@ -125,6 +164,9 @@ async function main() {
       };
     })
     .filter(Boolean);
+
+  items.push(...unverifiedVenues);
+  console.log(`${unverifiedVenues.length} platser från Malmö stads register (ej i OSM) tillagda i listan.`);
 
   // Which names occur more than once → their branches need disambiguating.
   const nameCounts = new Map();
@@ -162,7 +204,13 @@ async function main() {
 
   await writeFile(
     join(dataDir, "tagging-list.json"),
-    JSON.stringify({ generatedFrom: "terraces.geojson", count: items.length, items })
+    JSON.stringify({
+      generatedFrom: unverifiedVenues.length
+        ? "terraces.geojson + unverified-venues.geojson"
+        : "terraces.geojson",
+      count: items.length,
+      items,
+    })
   );
   console.log(`Wrote data/tagging-list.json (${items.length} places)`);
 }

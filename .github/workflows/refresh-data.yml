@@ -83,6 +83,27 @@ jobs:
           mv data/terraces.geojson.new data/terraces.geojson
           mv data/buildings.geojson.new data/buildings.geojson
 
+      # Fas 5, del A+B (PLAN-datakvalitet.md) — Malmö stads serveringstillstånd-
+      # register, matched against the just-refreshed terraces.geojson, then
+      # geocoded for the subset with an outdoor-seating permit that isn't in
+      # OSM at all. continue-on-error on all three: this pulls from a small
+      # municipal server and Nominatim, both outside our control — a hiccup
+      # here should degrade to "this month's alcohol hints/unverified venues
+      # are a bit stale" (all three write to files kept in git, so a failed
+      # run just leaves last month's data in place), not block the core
+      # terraces/buildings refresh and its commit below.
+      - name: Fas 5 del A — fetch serving-permits register
+        run: npm run fetch-serving-permits
+        continue-on-error: true
+
+      - name: Fas 5 del B — fetch detail pages for unmatched entries
+        run: npm run fetch-serving-permit-details
+        continue-on-error: true
+
+      - name: Fas 5 del B — geocode venues missing from OSM
+        run: npm run geocode-unverified-venues
+        continue-on-error: true
+
       - name: Rebuild the tagging list
         run: npm run build-tagging-list
 

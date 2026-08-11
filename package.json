@@ -9,6 +9,7 @@
     "fetch-data-geofabrik": "node scripts/fetch-data-geofabrik.js",
     "check-data-drift": "node scripts/check-data-drift.js",
     "fetch-serving-permits": "node scripts/fetch-serving-permits.js",
+    "fetch-serving-permit-details": "node scripts/fetch-serving-permit-details.js",
     "geocode-unverified-venues": "node scripts/geocode-unverified-venues.js",
     "build-tagging-list": "node scripts/build-tagging-list.js",
     "start": "node scripts/static-server.js"
