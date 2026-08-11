@@ -36,9 +36,16 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       visar 246 registerställen som saknas i OSM direkt på kartan
       (streckad markör, tydligt OSM-overifierade, länk till att lägga
       till i OSM) — bl.a. "Andys Burgers", det konkreta "Andy's"-stället.
-      Se `PLAN-datakvalitet.md` för alla siffror och detaljer. Kvar,
-      mindre: koppla del B in i `refresh-data.yml`, och "Dölj i
-      appen"-stöd för del B-platser i taggningslistan.
+      **Klart 2026-08-11:** del A+B inkopplade i `refresh-data.yml`
+      (`continue-on-error` på alla tre steg, så en tillfällig Malmö-
+      server/Nominatim-störning aldrig blockerar kärn-pipelinen), och
+      "Dölj i appen"-stöd för del B-platser i taggningslistan (egen
+      radtyp, ingen Ja/Nej-toggling — verifierat end-to-end mot riktig
+      Firebase: kryssat döljer platsen på solkartan, avkryssat visar
+      den igen). `fetch-serving-permit-details.js` fick även en cache
+      (samma mönster som geocode-cache.json) eftersom scriptet nu körs
+      månadsvis istället för en gång. Se `PLAN-datakvalitet.md` för alla
+      siffror och detaljer.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
@@ -48,9 +55,15 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       ersätter tiled Overpass, som var källan till 504-rutorna) —
       byggnader gick 23 251 → 25 099 i samma veva. Ta bort den här raden
       helt vid nästa städning av listan.
-- [ ] **Lägg till saknade ställen i OSM.** "Andy's" (och ev. fler) finns inte
-      alls i OSM och kan därför inte visas i appen förrän de läggs till där.
-      Fredrik lägger till dem i OSM; sedan plockas de upp vid nästa datasynk.
+- [ ] **Lägg till saknade ställen i OSM (numera "trevligt att ha", inte
+      blockerande).** Fas 5 del B visar redan 246 sådana ställen (bl.a.
+      "Andys Burgers") direkt på kartan, tydligt OSM-overifierade — men de
+      blir en riktig, kvalitetsgranskad OSM-post (och en exakt position
+      istället för en ungefärlig geokodning) först när någon faktiskt
+      lägger till dem i OSM. Fredrik lägger till i OSM (konto
+      `FredAspBark`); stället flyttas då automatiskt över till att vara en
+      vanlig terrass vid nästa datasynk (försvinner ur unverified-venues,
+      dyker upp i terraces.geojson).
 - [ ] **(Ev.) Web Worker för skuggberäkningen.** Backades ut eftersom
       testbrowsern inte kunde leverera worker-postMessage. Kan tas upp igen
       om det testas i en vanlig browser — skulle ta bort den lilla frysningen
@@ -111,7 +124,9 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
   `data/serving-permits.json`. Se `PLAN-datakvalitet.md` fas 5.
 - `scripts/fetch-serving-permit-details.js` — fas 5 del B-underlag: hämtar
   detaljsidor för de omatchade registerställena → `data/serving-permit-
-  details.json` (uteservering- och allmänhet-flaggorna).
+  details.json` (uteservering- och allmänhet-flaggorna), cachad per
+  registerId i `data/serving-permit-details-cache.json` (radera filen för
+  att tvinga en fullständig omhämtning).
 - `scripts/geocode-unverified-venues.js` — fas 5 del B: geokodar
   registerställen utan OSM-motsvarighet (Nominatim, cachad i `data/
   geocode-forward-cache.json`) → `data/unverified-venues.geojson`, som
@@ -127,12 +142,19 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
 
 ## Datapipeline (OSM → appen)
 
-Data hämtas EN gång och sparas som statiska filer (Overpass är
-hastighetsbegränsat, hämtas inte vid sidladdning). Fas 3
-(`refresh-data.yml`, se `PLAN-datakvalitet.md`) ska ersätta den manuella
-körningen nedan med ett schemalagt GitHub Actions-workflow, men är inte
-verifierad i praktiken än. Tills dess, eller för en engångskörning, när
-OSM-taggar ändrats och du vill synka in dem:
+Data hämtas inte vid sidladdning, utan sparas som statiska filer. Sedan
+fas 3 sköts det automatiskt: `refresh-data.yml` körs månadsvis (och kan
+triggas manuellt via `workflow_dispatch`) och kör i tur och ordning
+Geofabrik+osmium (terrasser/byggnader) → ±20 %-grinden → fas 5 del A
+(serveringstillstånd) → fas 5 del B (detaljsidor + geokodning av
+OSM-saknade ställen) → `build-tagging-list` → committar bara vid faktisk
+ändring. De tre fas 5-stegen har `continue-on-error`, så en tillfällig
+Malmö-server/Nominatim-störning aldrig blockerar terrass-/
+byggnadsuppdateringen.
+
+`scripts/fetch-data.js` (Overpass) finns kvar som manuellt
+reservalternativ — för en engångskörning, eller om Geofabrik/osmium av
+någon anledning inte går att använda:
 
 ```
 npm run fetch-data           # ~20–40 min: Overpass i rutor, tål 429/504 med backoff
@@ -212,10 +234,15 @@ en vän. Kryssläget synkas live via Firebase `/tagging`.
 
 ## Kända begränsningar / att göra
 
-- **"Andy's" (och andra ställen som saknas helt i OSM)** kan inte dyka upp i
-  appen förrän de läggs till i OSM av någon. Fredrik taggar i OSM (konto
-  `FredAspBark`); när nya taggar gjorts, vänta ~1 h (Overpass-uppdatering)
-  och kör om datapipelinen.
+- **Ställen som saknas helt i OSM** (t.ex. "Andys Burgers") visas sedan
+  fas 5 del B ändå, om de har ett serveringstillstånd hos Malmö stad —
+  men bara med en **ungefärlig** geokodad position (streckad markör,
+  tydlig ⚠️-notis, se `PLAN-datakvalitet.md` fas 5). Ställen som varken
+  finns i OSM eller i det registret syns fortfarande inte alls. Fredrik
+  taggar i OSM (konto `FredAspBark`) för att ge dem en exakt position;
+  när nya taggar gjorts, vänta ~1 h (Overpass-uppdatering, om
+  `fetch-data.js` används) eller till nästa månatliga `refresh-data.yml`-
+  körning (Geofabrik-vägen).
 - En Espresso House-filial fick ingen adress vid geokodning (Nominatim tom
   träff) — OSM-länken skiljer den ändå.
 - Byggnadshöjd gissas när OSM saknar `height`/`building:levels` (~80 % av

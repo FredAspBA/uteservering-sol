@@ -430,9 +430,47 @@ streckade markörer renderade, popup-notisen och OSM-länken stämmer,
 skuggberäkning fungerar identiskt med en vanlig terrass, inga
 konsolfel.
 
-**Kvar (mindre, ospecat):** koppla in i `refresh-data.yml` (månadsvis
-ny-geokodning), och stöd för "Dölj i appen" i taggningslistan för de här
-platserna.
+**De två kvarvarande punkterna klara 2026-08-11:**
+
+- **Inkopplat i `refresh-data.yml`:** `fetch-serving-permits` (del A) →
+  `fetch-serving-permit-details` (del B-underlag) →
+  `geocode-unverified-venues` (del B) körs nu som tre steg efter att
+  terrasser/byggnader promoverats, alla tre med `continue-on-error: true`
+  — en tillfällig Malmö-server- eller Nominatim-störning degraderar till
+  "den här månadens data är lite gammal", blockerar aldrig kärn-
+  pipelinens commit. `fetch-serving-permit-details.js` fick samtidigt en
+  cache (`data/serving-permit-details-cache.json`, samma mönster som de
+  andra cachefilerna i projektet) — annars skulle en månatlig körning
+  hamra Malmö stads server med upp till ~350 detaljsidor varje gång, för
+  data som sällan ändras. Bootstrappad från redan hämtad data (0
+  nätverksanrop), sedan verifierad med en riktig körning: 353 från cache,
+  0 nya, byte-identisk output mot innan.
+- **"Dölj i appen"-stöd i taggningslistan:** `build-tagging-list.js`
+  läser nu även `data/unverified-venues.geojson` (valfritt — saknad fil
+  ger bara inga rader) och lägger till dem med `key =
+  id.replace("/","_")` — exakt samma nyckelform `src/app.js`s
+  exkluderingsfilter redan läser generiskt för alla terrasser, så själva
+  döljmekanismen krävde noll ändringar i app.js. `src/tagging.js` renderar
+  dem som en egen, enklare radtyp (`buildUnverifiedRow`) istället för att
+  tvinga in dem i den per-OSM-tagg-toggle-maskineri som är byggt för en
+  annan sorts plats: namn länkar till registrets egen sida, tydlig
+  "Ej i OSM"-badge, adress märkt "(ungefärlig plats)", en "➕ Lägg till i
+  OSM"-länk som öppnar iD-redigeraren centrerad på den geokodade
+  koordinaten, och samma "Dölj i appen"-kryssruta som alla andra rader
+  (utbruten till en delad `excludeCheckbox()`-funktion så de två
+  radtyperna aldrig kan divergera i hur döljning fungerar). Uteslutna ur
+  framstegsräkningen (`needsWork()`) — de har inget OSM-objekt att tagga
+  ännu, så de hör inte hemma i den nämnaren. Ny snabbfilterknapp ("Ej i
+  OSM (Malmö-register)") i taggning.html.
+
+  **Verifierat live, inte bara i koden:** 1185 rader renderade (939 OSM +
+  246 register), 246 med rätt badge/länkar, framstegsnämnaren korrekt
+  924 (inte 1185). Hela döljkedjan testad mot **riktig Firebase**: kryssa
+  i "Dölj i appen" för "Almtorgets Pizzeria" → försvinner ur solkartans
+  sökdata (1171 av 1185 synliga, resten redan dolda av tidigare
+  taggningar) → avkryssat → tillbaka igen (1172). Bekräftat rent
+  produktionstillstånd efteråt via Firebase REST direkt (inget
+  kvarglömt `exclude`-fält).
 
 ---
 

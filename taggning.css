@@ -212,6 +212,14 @@
   box-shadow: inset 3px 0 0 var(--color-confirm);
 }
 
+/* Fas 5, del B: a place from Malmö stads register with no OSM object yet.
+   Dashed left edge echoes the dashed marker outline these places get on
+   the sun map itself (src/app.js) — same visual language, same meaning:
+   "uncertain / not OSM-verified", wherever it shows up in the app. */
+.row-unverified {
+  box-shadow: inset 3px 0 0 var(--color-anomaly);
+}
+
 .row-main {
   display: flex;
   flex-direction: column;
@@ -305,6 +313,16 @@
   border: 1px solid color-mix(in srgb, var(--color-sun) 40%, var(--color-surface));
 }
 
+/* Fas 5, del B — the place itself doesn't exist in OSM at all (see
+   .row-unverified above), stronger signal than .hint-register's "one field
+   is a suggestion" so it gets --color-anomaly + a dashed border, matching
+   the map popup's own unverified notice (style.css, .popup-unverified). */
+.hint-unverified {
+  color: var(--color-anomaly);
+  border: 1px dashed var(--color-anomaly);
+  background: color-mix(in srgb, var(--color-anomaly) 8%, var(--color-surface));
+}
+
 /* ---------- Toggles ---------- */
 .row-toggles {
   display: flex;
@@ -338,6 +356,26 @@
   background: color-mix(in srgb, var(--color-confirm) 18%, var(--color-surface));
   border-color: var(--color-confirm);
   color: var(--color-confirm);
+}
+
+/* Fas 5, del B — the call to action on an unverified row: go add this
+   place in OSM for real. Anomaly-tinted (not the neutral .copy-tags look)
+   since, unlike copying tags for an existing OSM object, this is the one
+   thing that actually resolves the row out of "unverified" for good. */
+.add-to-osm {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-anomaly);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-anomaly) 10%, var(--color-surface));
+  color: var(--color-anomaly);
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.add-to-osm:hover {
+  background: color-mix(in srgb, var(--color-anomaly) 18%, var(--color-surface));
 }
 
 .row-exclude {
