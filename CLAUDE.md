@@ -22,45 +22,23 @@ riktiga byggnaders läge och höjd — inte bara om solen är uppe.
 
 Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
 
-- [ ] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Fas 1–2 är
-      **klara**: byggnadshöjder gissas inte längre till platta 15 m, utan via
-      typmedian → grannskapsmedian. Byggnader på 15-metersfallbacken gick
-      18 719 → 1 529, och appen hittar 2,8–8,2 % fler soliga uteserveringar
-      (den var systematiskt pessimistisk förut). **Fas 3** (Geofabrik +
-      osmium i ett GitHub Actions-workflow istället för Overpass) är
-      **klar och mergad till `main`** (2026-08-08, PR #1 + PR #2) — verifierad
-      med tre riktiga `workflow_dispatch`-körningar (en byggnadslucka hittad
-      och fixad i körning 1→2, "inget att committa"-grenen bekräftad i
-      körning 3). Se `PLAN-datakvalitet.md` fas 3 för detaljerna. **Fas 4**
-      (Overture som höjdkälla) är **avslutad NO-GO** (2026-08-08): en
-      slutgranskning visade att den ursprungliga MAE-siffran var cirkulär
-      (57,7 % av matchningarna ekade bara OSM:s eget värde tillbaka). Omkört
-      på den enda oberoende testbara delmängden (Microsoft ML Buildings)
-      slår Overture INTE nuvarande modell (MAE 2,56 m mot 1,89 m), och
-      täcker bara 51,4 % av byggnaderna som saknar känd höjd. Ingen
-      produktionsspec skrivs. Se `PLAN-datakvalitet.md` fas 4 för alla
-      siffror. **Fas 5**: Malmö stads
-      **publika restaurangregister** på
-      `restaurang.malmo.se/AlktWebbforms/Restaurants` är nu verifierat mot
-      verklig HTML (2026-08-07) — listsidan ensam (1 anrop) ger namn,
-      adress och alla fem alkoholtyper för alla ~551 tillståndshavare;
-      detaljsidor (`Show/{id}`) behövs bara för allmänhet/uteservering/
-      inomhus-utomhus-tid-precisionen. Se `PLAN-datakvalitet.md` fas 5 för
-      fälten, budgeten och personuppgifts-hänsynen (ägarnamn på
-      detaljsidan). **2026-08-08, del A helt klar:** `scripts/fetch-serving-
-      permits.js` (`npm run fetch-serving-permits`) hämtar och matchar
-      registret mot `data/terraces.geojson` → `data/serving-
-      permits.json`. Kört mot riktig data: 175 tidigare
-      `alcohol=unknown`-ställen löses till "ja", och hintet syns nu i
-      taggningslistan (egen chip, aldrig auto-taggat). **Tas upp igen
-      v. 34:** del B — stads-listans ställen som saknas helt i OSM ska
-      visas direkt i appen (geokodad adress, tydligt märkta
-      OSM-overifierade). Kandidatlistan är redan hämtad (2026-08-08,
-      `scripts/fetch-serving-permit-details.js`): **257** har
-      uteserveringstillstånd och serverar allmänheten — bl.a. "Andys
-      Burgers", det konkreta "Andy's"-stället. Själva byggandet
-      (geokodning, kartvisning, UI) är inte specat än. Se
-      `PLAN-datakvalitet.md` fas 5 för alla siffror.
+- [x] **Datakvalitetsarbete — se `PLAN-datakvalitet.md`.** Alla fem faser
+      klara. **Fas 1–2:** byggnadshöjder gissas via typmedian →
+      grannskapsmedian istället för platt 15 m; appen hittar 2,8–8,2 %
+      fler soliga uteserveringar. **Fas 3:** Geofabrik+osmium-pipeline i
+      GitHub Actions ersätter tiled Overpass, mergad och verifierad med
+      tre riktiga körningar. **Fas 4:** Overture som höjdkälla utvärderad
+      och avslutad **NO-GO** (2026-08-08) — slår inte nuvarande modell på
+      byggnader utan känd höjd (MAE 2,56 m mot 1,89 m), täcker bara
+      51,4 %. **Fas 5:** Malmö stads serveringstillstånd-register —
+      **del A** (2026-08-08) löser 175 `alcohol=unknown`-ställen till
+      "ja", hint i taggningslistan. **Del B** (2026-08-11) geokodar och
+      visar 246 registerställen som saknas i OSM direkt på kartan
+      (streckad markör, tydligt OSM-overifierade, länk till att lägga
+      till i OSM) — bl.a. "Andys Burgers", det konkreta "Andy's"-stället.
+      Se `PLAN-datakvalitet.md` för alla siffror och detaljer. Kvar,
+      mindre: koppla del B in i `refresh-data.yml`, och "Dölj i
+      appen"-stöd för del B-platser i taggningslistan.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
@@ -133,8 +111,13 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
   `data/serving-permits.json`. Se `PLAN-datakvalitet.md` fas 5.
 - `scripts/fetch-serving-permit-details.js` — fas 5 del B-underlag: hämtar
   detaljsidor för de omatchade registerställena → `data/serving-permit-
-  details.json` (uteservering- och allmänhet-flaggorna). Kandidatlistan
-  för del B, inte del B själv.
+  details.json` (uteservering- och allmänhet-flaggorna).
+- `scripts/geocode-unverified-venues.js` — fas 5 del B: geokodar
+  registerställen utan OSM-motsvarighet (Nominatim, cachad i `data/
+  geocode-forward-cache.json`) → `data/unverified-venues.geojson`, som
+  `src/dataLoad.js` slår ihop med `terraces.geojson` i minnet. Rör aldrig
+  `terraces.geojson` själv. Se `PLAN-datakvalitet.md` fas 5 för
+  precisions-förbehållet (Sveriges glesa OSM-adresstäckning).
 - `scripts/overture-height-experiment.py` — engångs-valideringsskript (Python,
   se `PLAN-datakvalitet.md` fas 4) som jämförde Overture Maps' byggnadshöjder
   mot nuvarande gissningsmodell; slutsats NO-GO, byggs inte in i pipelinen.

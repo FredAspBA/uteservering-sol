@@ -4,9 +4,11 @@ Status: **fas 1–3 byggda och verifierade** (fas 3 mot två riktiga
 `workflow_dispatch`-körningar, se PR #2). **Fas 4:s valideringsexperiment
 kört och klart — NO-GO: Overture slår inte nuvarande modell på den
 population som faktiskt räknas (byggnader utan känd höjd), och täcker
-bara drygt hälften av dem.** Skapad 2026-08-07, fas 3 klar 2026-08-08,
-fas 4-valideringen klar 2026-08-08 (första omgången var cirkulär, se
-avsnittet nedan; korrigerad och avslutad NO-GO samma dag).
+bara drygt hälften av dem.** **Fas 5 (del A + del B) helt klar.** Skapad
+2026-08-07, fas 3 klar 2026-08-08, fas 4-valideringen klar 2026-08-08
+(första omgången var cirkulär, se avsnittet nedan; korrigerad och
+avslutad NO-GO samma dag), fas 5 del A klar 2026-08-08, del B klar
+2026-08-11.
 
 Målet är så tillförlitlig data som möjligt — skuggor, platser, sol — med
 enbart avgiftsfria källor. Den här filen är beslutsunderlaget; bocka av
@@ -399,19 +401,38 @@ alkohol okänt" i taggning.html — aldrig auto-taggat, samma
 webbläsaren (inte bara i JSON-outputen): 175 chips renderade, rätt text,
 rätt ställe, inga konsolfel. `data/tagging-list.json` regenererad.
 
-**Kvar (del B, beslutad 2026-08-08, ospecad — tas upp igen v. 34):** de
-353 omatchade registerställena — de med `Serveringstyp: Uteservering` ska
-visas direkt på kartan, geokodade och tydligt märkta OSM-overifierade.
-**Detaljsidorna redan hämtade** (2026-08-08,
-`scripts/fetch-serving-permit-details.js` →
-`data/serving-permit-details.json`, 353/353, 0 fel) så nästa session
-slipper göra om det: **261** har uteserveringstillstånd, **257** av dem
-serverar till allmänheten (inte bara slutet sällskap — 4 föll bort på den
-grinden). Det är den faktiska kandidatlistan för del B, en ökning på
-~27 % ovanpå dagens 939 terrasser. **"Andys Burgers" (Mariedalsvägen 32)
-finns i listan** — det är den konkreta "Andy's" som nämnts i CLAUDE.md
-sedan projektet startade som saknas i OSM. Se avsnittet nedan för hela
-resonemanget kring hur del B ska visas.
+**Del B klar 2026-08-11:** `scripts/geocode-unverified-venues.js`
+geokodar de 257 kandidaterna via Nominatim (cachad per registerId i
+`data/geocode-forward-cache.json`) och skriver `data/unverified-
+venues.geojson` i exakt samma Feature-form som `terraces.geojson` — rör
+aldrig den filen själv. Riktig körning: **246/257 geokodade** (11
+misslyckades på format som Nominatim inte tolkar — "Olof Palmes Plats 1",
+adresser med snedstreck mellan två gator — hoppades över, ingen gissning).
+**"Andys Burgers" (Mariedalsvägen 32) kom med** — den konkreta "Andy's"
+som nämnts i CLAUDE.md sedan projektet startade.
+
+**Viktig upptäckt under bygget:** svensk OSM-adresstäckning är gles —
+Nominatim kan nästan aldrig slå upp exakt husnummer i Malmö (verifierat
+live mot flera adresser: bara vägsegment, inga `addr:interpolation`-vägar
+för dessa gator). De flesta geokodade punkterna hamnar alltså "någonstans
+på rätt gata", inte vid exakt byggnad — mindre exakt än OSM-data. Appen
+visar därför dessa platser med streckad markörkontur (inte bekräftad
+data) och en tydlig ⚠️-notis i popupen ("läget är en ungefärlig
+geokodning ... inte en exakt position") plus en direktlänk till att lägga
+till platsen i OSM på riktigt — samma "människan bekräftar/åtgärdar"-
+princip som resten av projektet.
+
+`src/dataLoad.js` läser filen (valfri — trasig/saknad fil kraschar inte
+laddningen) och slår ihop den med `terraces.geojson` i minnet.
+Sol/skugga-beräkningen, röstning, sök och "nära mig" fungerar oförändrat
+eftersom det är samma featureform. Verifierat live i webbläsaren: 246
+streckade markörer renderade, popup-notisen och OSM-länken stämmer,
+skuggberäkning fungerar identiskt med en vanlig terrass, inga
+konsolfel.
+
+**Kvar (mindre, ospecat):** koppla in i `refresh-data.yml` (månadsvis
+ny-geokodning), och stöd för "Dölj i appen" i taggningslistan för de här
+platserna.
 
 ---
 
@@ -551,11 +572,11 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
    direkt (inte via subagent-driven-development — medvetet lean given
    begränsad sessionsbudget) och verifierad mot riktig data OCH i
    webbläsaren, inte bara lokala fixturer.
-7. ⬜ **Fas 5 del B** — visa registerställen med uteserveringstillstånd
-   som saknas i OSM direkt på kartan (scope beslutad 2026-08-08, tas upp
-   igen v. 34). Kandidatlistan är klar: **257 st** (detaljsidor hämtade,
-   se avsnittet ovan) — inte specad/byggd än, kör brainstorm → spec →
-   plan när det blir dags.
+7. ✅ **Fas 5 del B** — klar 2026-08-11: 246/257 registerställen utan
+   OSM-motsvarighet geokodade och visas på kartan, streckade och tydligt
+   märkta OSM-overifierade, med direktlänk till att lägga till dem i OSM.
+   Verifierad live i webbläsaren. Se avsnittet ovan för detaljer och
+   kvarstående småsaker (Actions-koppling, "Dölj i appen"-stöd).
 
 ### Nästa steg
 
