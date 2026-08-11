@@ -10,7 +10,7 @@ import { prepareBuildings, findHomeBuilding } from "./shadow.js";
  *   buildings: output of prepareBuildings() (a spatial-grid-indexed building list)
  */
 export async function loadData() {
-  const [terracesGeojson, buildingsGeojson] = await Promise.all([
+  const [terracesGeojson, buildingsGeojson, unverifiedGeojson] = await Promise.all([
     fetch("data/terraces.geojson").then((r) => {
       if (!r.ok) throw new Error(`Kunde inte hämta terraces.geojson: ${r.status}`);
       return r.json();
@@ -19,11 +19,19 @@ export async function loadData() {
       if (!r.ok) throw new Error(`Kunde inte hämta buildings.geojson: ${r.status}`);
       return r.json();
     }),
+    // Fas 5, del B: places from Malmö stads serveringstillstånd-register
+    // with a confirmed outdoor-seating permit that aren't in OSM at all.
+    // Optional on purpose — an older deploy or a fresh checkout before
+    // `npm run geocode-unverified-venues` has run should still work with
+    // zero of these, not fail to load.
+    fetch("data/unverified-venues.geojson")
+      .then((r) => (r.ok ? r.json() : { features: [] }))
+      .catch(() => ({ features: [] })),
   ]);
 
   const buildings = prepareBuildings(buildingsGeojson);
 
-  const terraces = terracesGeojson.features
+  const terraces = [...terracesGeojson.features, ...unverifiedGeojson.features]
     .map((feature) => {
       const point = toRepresentativePoint(feature);
       if (!point) return null;

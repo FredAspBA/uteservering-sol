@@ -225,7 +225,7 @@ function venueInfo(properties = {}) {
   return { typeLabel, alcohol };
 }
 
-function venueLineHtml(properties) {
+function venueLineHtml(properties = {}) {
   const { typeLabel, alcohol } = venueInfo(properties);
   const parts = [];
   if (typeLabel) parts.push(`<span class="venue-type">${escapeHtml(typeLabel)}</span>`);
@@ -233,6 +233,23 @@ function venueLineHtml(properties) {
   else if (alcohol === "no") parts.push(`<span class="venue-alcohol no">Ingen alkohol</span>`);
   else parts.push(`<span class="venue-alcohol unknown" title="OpenStreetMap saknar uppgift om alkohol för det här stället">Alkohol: okänt</span>`);
   return parts.length ? `<div class="popup-venue">${parts.join("")}</div>` : "";
+}
+
+// Fas 5, del B: a place from Malmö stads serveringstillstånd-register with
+// no OSM entry at all. Geokodad adress (ofta gatan snarare än exakt hus —
+// se scripts/geocode-unverified-venues.js), inte en OSM-position. Måste
+// aldrig se ut som verifierad data.
+function unverifiedNoticeHtml(properties, lat, lon) {
+  if (properties?.verified !== false) return "";
+  const editUrl = `https://www.openstreetmap.org/edit#map=19/${lat}/${lon}`;
+  return `
+    <div class="popup-unverified">
+      ⚠️ Inte i OpenStreetMap ännu — läget är en ungefärlig geokodning
+      av adressen, inte en exakt position. Finns i Malmö stads
+      serveringstillståndsregister.
+      <a href="${editUrl}" target="_blank" rel="noopener noreferrer">➕ Lägg till i OSM</a>
+    </div>
+  `;
 }
 
 function popupHtml(entry) {
@@ -253,9 +270,11 @@ function popupHtml(entry) {
   }
 
   const vote = getVoteForView(terrace.id, lastViewedAt);
+  const [lon, lat] = terrace.point.geometry.coordinates;
   return `
     <div class="popup-title">${escapeHtml(terrace.name)}</div>
     ${venueLineHtml(terrace.feature?.properties)}
+    ${unverifiedNoticeHtml(terrace.feature?.properties, lat, lon)}
     <div class="popup-status ${status}">${label}</div>
     <div class="popup-detail">${detail}</div>
     <div class="popup-timeline">${timelineSectionHtml(entry)}</div>
@@ -325,12 +344,17 @@ function renderMarkers() {
 
   for (const terrace of terraces) {
     const [lon, lat] = terrace.point.geometry.coordinates;
+    // Fas 5, del B: a dashed stroke marks places not yet in OSM (see
+    // unverifiedNoticeHtml) — must never be visually identical to a
+    // confirmed OSM terrace on the map itself, not just in the popup.
+    const unverified = terrace.feature?.properties?.verified === false;
     const marker = L.circleMarker([lat, lon], {
       radius: 8,
       weight: 1.5,
       color: VOTE_STROKE_COLORS.none,
-      fillOpacity: 0.92,
-      className: "terrace-marker",
+      fillOpacity: unverified ? 0.7 : 0.92,
+      className: unverified ? "terrace-marker terrace-marker-unverified" : "terrace-marker",
+      dashArray: unverified ? "3,3" : null,
     }).addTo(markersLayer);
     marker.bindPopup("");
 

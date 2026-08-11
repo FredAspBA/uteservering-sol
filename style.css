@@ -455,6 +455,26 @@ path.terrace-marker:hover {
   border-style: dashed;
 }
 
+/* Fas 5, del B: notisen på platser som bara finns i Malmö stads register,
+   inte i OSM — samma varningsfärg som .status-icon.icon-alert, så det
+   läses som "kolla det här", inte som bekräftad OSM-data. */
+.popup-unverified {
+  font-size: 0.78rem;
+  margin: 0.15rem 0 0.35rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px dashed var(--color-anomaly);
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--color-anomaly) 10%, var(--color-surface));
+  color: var(--color-ink);
+}
+
+.popup-unverified a {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-weight: 600;
+  color: var(--color-anomaly);
+}
+
 .popup-status {
   font-weight: 600;
   font-size: 0.9rem;

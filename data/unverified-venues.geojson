@@ -1,0 +1,4433 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "malmo-register/273",
+      "properties": {
+        "name": "Almtorgets Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "273",
+        "registerAddress": "Almtorget 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0232791,
+          55.5767365
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/65",
+      "properties": {
+        "name": "Amiralen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "65",
+        "registerAddress": "Amiralsgatan 35"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0143372,
+          55.5948585
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2702",
+      "properties": {
+        "name": "Andys Burgers",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2702",
+        "registerAddress": "Mariedalsvägen  32"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9799188,
+          55.6049475
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1537",
+      "properties": {
+        "name": "Annelundsgården",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1537",
+        "registerAddress": "Annelundsgatan 62"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0272441,
+          55.588099
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/930",
+      "properties": {
+        "name": "Annestads Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "930",
+        "registerAddress": "Skomakarebyn   8C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9329116,
+          55.5590346
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/13",
+      "properties": {
+        "name": "Ark kök & Bar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "13",
+        "registerAddress": "Davidshallsgatan 23"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0000045,
+          55.5976077
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/918",
+      "properties": {
+        "name": "Asia & Burger Village",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "918",
+        "registerAddress": "Ystadsgatan 39"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0168175,
+          55.5893358
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1584",
+      "properties": {
+        "name": "Ateljén",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1584",
+        "registerAddress": "Idrottsgatan  14"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9354003,
+          55.5852942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/339",
+      "properties": {
+        "name": "Babel",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "339",
+        "registerAddress": "Spångatan 38"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0075843,
+          55.5962496
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1480",
+      "properties": {
+        "name": "Bar Hugo",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1480",
+        "registerAddress": "Kungsgatan  60 B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0114944,
+          55.601788
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1063",
+      "properties": {
+        "name": "Bar Tgl italia",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1063",
+        "registerAddress": "Scaniaplatsen   3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.972603,
+          55.61248
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/839",
+      "properties": {
+        "name": "Basta och Lola Maria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "839",
+        "registerAddress": "Lilla Torg  17"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9991119,
+          55.6052045
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1084",
+      "properties": {
+        "name": "Bastard Burgers Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1084",
+        "registerAddress": "Kalendegatan  28"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0033574,
+          55.6037656
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1508",
+      "properties": {
+        "name": "Bastard Burgers Mobilia",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1508",
+        "registerAddress": "Per Albin Hanssons väg 40"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0054576,
+          55.5820983
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1033",
+      "properties": {
+        "name": "Beijers Parks Café",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1033",
+        "registerAddress": "Norra Bulltoftavägen  34"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0496943,
+          55.6095006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/281",
+      "properties": {
+        "name": "Bellevue Park",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "281",
+        "registerAddress": "Eddagatan 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.971695,
+          55.5850903
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2655",
+      "properties": {
+        "name": "Belo´s Grand Deli",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2655",
+        "registerAddress": "Tessins väg   8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.977797,
+          55.6014309
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/210",
+      "properties": {
+        "name": "BENNE Pastabar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "210",
+        "registerAddress": "Malmborgsgatan 6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0045576,
+          55.6029851
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/21",
+      "properties": {
+        "name": "Best Western Hotel Noble House",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "21",
+        "registerAddress": "Per Weijersgatan 6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9997441,
+          55.6036203
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/182",
+      "properties": {
+        "name": "Best Western Hotel Royal",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "182",
+        "registerAddress": "Norra Vallgatan 94"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9953914,
+          55.6065624
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/903",
+      "properties": {
+        "name": "Best Western Plus Park City Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "903",
+        "registerAddress": "Sjömansgatan 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9803106,
+          55.6097672
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/103",
+      "properties": {
+        "name": "Bloom in the Park",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "103",
+        "registerAddress": "Pildammsvägen  17"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.997007,
+          55.5906707
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1296",
+      "properties": {
+        "name": "Blå Hoddans Fisk",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1296",
+        "registerAddress": "Banérskajen   1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9835043,
+          55.6053297
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/230",
+      "properties": {
+        "name": "Bodega Brogatan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "230",
+        "registerAddress": "Brogatan 12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0025729,
+          55.5974043
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1383",
+      "properties": {
+        "name": "Botildenborg",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1383",
+        "registerAddress": "Västra Skrävlinge Kyrkoväg  12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0514832,
+          55.5768583
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/990",
+      "properties": {
+        "name": "Boulebar Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "990",
+        "registerAddress": "Drottningtorget   8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0098376,
+          55.6085205
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/213",
+      "properties": {
+        "name": "Broderstugan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "213",
+        "registerAddress": "Östra Förstadsgatan 33"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0213635,
+          55.6062664
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1554",
+      "properties": {
+        "name": "Brunchoteket Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1554",
+        "registerAddress": "Stortorget  21"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9994987,
+          55.6054837
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1493",
+      "properties": {
+        "name": "Brödernas Hansa",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1493",
+        "registerAddress": "Stadt Hamburgsgatan 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.002477,
+          55.6029065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1549",
+      "properties": {
+        "name": "Brödernas Hyllie",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1549",
+        "registerAddress": "Arenagatan 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9765265,
+          55.5634006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1269",
+      "properties": {
+        "name": "Bärstronomi -Taproom by Hyllie Bryggeri",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1269",
+        "registerAddress": "Södra Vallgatan   5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9999951,
+          55.6013421
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1290",
+      "properties": {
+        "name": "Böru",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1290",
+        "registerAddress": "Kärleksgatan   1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0008786,
+          55.5993843
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1536",
+      "properties": {
+        "name": "C´mon",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1536",
+        "registerAddress": "Drottninggatan  36"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0020722,
+          55.6010085
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/960",
+      "properties": {
+        "name": "Café & Pizzeria Lagunen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "960",
+        "registerAddress": "Gads väg 27"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9321879,
+          55.5224901
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/280",
+      "properties": {
+        "name": "Café & Rest S:t Gertrud",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "280",
+        "registerAddress": "Östergatan   7B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0074286,
+          55.6081289
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1132",
+      "properties": {
+        "name": "Café Altona",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1132",
+        "registerAddress": "Stora Nygatan 36"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0061351,
+          55.6036237
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1101",
+      "properties": {
+        "name": "Cafe Element",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1101",
+        "registerAddress": "Löjtnantsgatan   4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0099084,
+          55.600987
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/583",
+      "properties": {
+        "name": "Camping Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "583",
+        "registerAddress": "Stortorget 6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9991274,
+          55.6055725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1200",
+      "properties": {
+        "name": "Care/of",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1200",
+        "registerAddress": "Fiskehamnspromenaden  11C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9924092,
+          55.6068331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1405",
+      "properties": {
+        "name": "Casual Streetfood",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1405",
+        "registerAddress": "Bergsgatan 8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0094606,
+          55.5962455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/687",
+      "properties": {
+        "name": "Chill Out Sushi Limhamn",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "687",
+        "registerAddress": "Linnégatan 16"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9287005,
+          55.5823885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1583",
+      "properties": {
+        "name": "Cicchetti",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1583",
+        "registerAddress": "Arenagatan 8A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9773981,
+          55.5628955
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1100",
+      "properties": {
+        "name": "Clarion Hotel & Congress Malmö Live",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1100",
+        "registerAddress": "Dag Hammarskjölds torg 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9943943,
+          55.6072965
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/9",
+      "properties": {
+        "name": "Comfort Hotel Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "9",
+        "registerAddress": "Carlsgatan 10 C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0012562,
+          55.6110284
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/638",
+      "properties": {
+        "name": "Creperie Bretagne",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "638",
+        "registerAddress": "Södra Förstadsgatan 41"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0023363,
+          55.5956064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1004",
+      "properties": {
+        "name": "Da Zio Italiensk Restauang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1004",
+        "registerAddress": "Stora Nygatan 44"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0052212,
+          55.6036762
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/330",
+      "properties": {
+        "name": "Diné Burger",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "330",
+        "registerAddress": "Tärningholmsgatan   3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.980443,
+          55.5978885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/848",
+      "properties": {
+        "name": "DOC Piazza",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "848",
+        "registerAddress": "Dockplatsen 12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9886176,
+          55.6144852
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/788",
+      "properties": {
+        "name": "Dockside Burgers and Bar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "788",
+        "registerAddress": "Dockplatsen  10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9897371,
+          55.6144597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1267",
+      "properties": {
+        "name": "Dojo Sushi",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1267",
+        "registerAddress": "Krankajen   2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9902665,
+          55.6154864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2647",
+      "properties": {
+        "name": "Doori Västra hamnen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2647",
+        "registerAddress": "Masttorget 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9808638,
+          55.6116583
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1400",
+      "properties": {
+        "name": "Dungs Thai Viet Restauang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1400",
+        "registerAddress": "Bangatan   2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0106074,
+          55.589842
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/313",
+      "properties": {
+        "name": "El Sotano",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "313",
+        "registerAddress": "Långgårdsgatan 8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9952101,
+          55.6052875
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/64",
+      "properties": {
+        "name": "Elite Hotel Savoy/Bishops Arms",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "64",
+        "registerAddress": "Norra Vallgatan 62"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0002187,
+          55.6076532
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/883",
+      "properties": {
+        "name": "Elite Plaza Hotel/The Bishops Arms",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "883",
+        "registerAddress": "Gustav Adolfs Torg  49C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0011666,
+          55.6022578
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1475",
+      "properties": {
+        "name": "Elsas",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1475",
+        "registerAddress": "Citadellsvägen 11b"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9847082,
+          55.6062355
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/675",
+      "properties": {
+        "name": "Ennsar Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "675",
+        "registerAddress": "Lundavägen  42B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.039074,
+          55.6127313
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/681",
+      "properties": {
+        "name": "Enoclub",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "681",
+        "registerAddress": "Skomakaregatan 10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9997804,
+          55.6047203
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/781",
+      "properties": {
+        "name": "Epicure Re Gustavo",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "781",
+        "registerAddress": "Gustav Adolfs Torg 45"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9998582,
+          55.6021037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/657",
+      "properties": {
+        "name": "Erikslusts Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "657",
+        "registerAddress": "Köpenhamnsvägen 48"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9681954,
+          55.5934878
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1127",
+      "properties": {
+        "name": "Escama",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1127",
+        "registerAddress": "Fersens väg 4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9961298,
+          55.5999048
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/72",
+      "properties": {
+        "name": "Etage",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "72",
+        "registerAddress": "Stortorget 6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9991274,
+          55.6055725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/138",
+      "properties": {
+        "name": "Étre",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "138",
+        "registerAddress": "Lilla Torg 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9991119,
+          55.6052045
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1591",
+      "properties": {
+        "name": "Family Pub",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1591",
+        "registerAddress": "Sallerupsvägen 12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0265361,
+          55.604531
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1550",
+      "properties": {
+        "name": "Fat Dave`s",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1550",
+        "registerAddress": "Gustav adolfs torg 47"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9995995,
+          55.6032217
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/73",
+      "properties": {
+        "name": "First Camp Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "73",
+        "registerAddress": "Strandgatan 101"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.908718,
+          55.5718171
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/844",
+      "properties": {
+        "name": "Fisky Business",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "844",
+        "registerAddress": "Dockgatan   1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9871596,
+          55.6169654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/913",
+      "properties": {
+        "name": "Folk å Rock",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "913",
+        "registerAddress": "Skomakaregatan 11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9994636,
+          55.6049703
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/698",
+      "properties": {
+        "name": "FreDa på Kockum",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "698",
+        "registerAddress": "Västra Varvsgatan 8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9790126,
+          55.6058905
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1308",
+      "properties": {
+        "name": "Fredo´s pizzagastronomia",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1308",
+        "registerAddress": "Drottninggatan   2C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0130011,
+          55.6043252
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1145",
+      "properties": {
+        "name": "Freja",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1145",
+        "registerAddress": "Davidshallstorg 9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9979541,
+          55.5988589
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2638",
+      "properties": {
+        "name": "Fruktstereo HQ",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2638",
+        "registerAddress": "Nubbgatan 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0218804,
+          55.6148959
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/28",
+      "properties": {
+        "name": "Gamle Nobe´s Bodega",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "28",
+        "registerAddress": "Kristianstadsgatan  36"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0168617,
+          55.5912024
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1241",
+      "properties": {
+        "name": "Gastronomi på Lokstallarna",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1241",
+        "registerAddress": "Södra Bulltoftavägen 51"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.042488,
+          55.6064667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/392",
+      "properties": {
+        "name": "Glasklart Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "392",
+        "registerAddress": "Dockplatsen 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9890085,
+          55.6152208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/324",
+      "properties": {
+        "name": "Good Morning Hotel + Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "324",
+        "registerAddress": "Stadiongatan 21"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9934388,
+          55.5809888
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/542",
+      "properties": {
+        "name": "Goose Bar och Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "542",
+        "registerAddress": "Davidshallstorg   5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9987711,
+          55.5991921
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/340",
+      "properties": {
+        "name": "Grand Hotel Garden",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "340",
+        "registerAddress": "Baltzarsgatan 20"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0054358,
+          55.6047082
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/30",
+      "properties": {
+        "name": "Grand Öl och Mat",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "30",
+        "registerAddress": "Monbijougatan  17"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0097965,
+          55.594895
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/594",
+      "properties": {
+        "name": "Grappa, Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "594",
+        "registerAddress": "Lilla Torg 4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9987251,
+          55.6051155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1539",
+      "properties": {
+        "name": "Grekiska grill & bar Citadellen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1539",
+        "registerAddress": "Citadellsvägen  15"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9873142,
+          55.6067915
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/121",
+      "properties": {
+        "name": "Grill Alegro",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "121",
+        "registerAddress": "Bergsgatan 14"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0081055,
+          55.5939952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/20",
+      "properties": {
+        "name": "Gustav Adolf",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "20",
+        "registerAddress": "Gustav Adolfs Torg 43"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0006631,
+          55.6033419
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1214",
+      "properties": {
+        "name": "Gustavino, Italian Winebar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1214",
+        "registerAddress": "Kyrkogatan   3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.076888,
+          55.6343029
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/766",
+      "properties": {
+        "name": "HaChiKò",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "766",
+        "registerAddress": "Sundspromenaden 9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9736671,
+          55.6101936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/109",
+      "properties": {
+        "name": "Hang Zhou",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "109",
+        "registerAddress": "Sallerupsvägen 147A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0462051,
+          55.5986087
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/271",
+      "properties": {
+        "name": "Hawaii Poké",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "271",
+        "registerAddress": "Södra Vallgatan 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0012344,
+          55.6015232
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2748",
+      "properties": {
+        "name": "HC Börshuset (gemensam serveringsyta)",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2748",
+        "registerAddress": "Skeppsbron   2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9986475,
+          55.6085681
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1589",
+      "properties": {
+        "name": "Heat Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1589",
+        "registerAddress": "Topplocksgatan 12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0980807,
+          55.5960311
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1029",
+      "properties": {
+        "name": "Highcourt",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1029",
+        "registerAddress": "Malmöhusvägen 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9908762,
+          55.6058183
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1438",
+      "properties": {
+        "name": "Hipp",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1438",
+        "registerAddress": "Kalendegatan  12 B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0030086,
+          55.6055035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1437",
+      "properties": {
+        "name": "Hollandia",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1437",
+        "registerAddress": "Södra Förstadsgatan   8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0012804,
+          55.6002109
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/172",
+      "properties": {
+        "name": "Home Hotel Baltzar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "172",
+        "registerAddress": "Baltzarsgatan 45"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0018012,
+          55.6047144
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/338",
+      "properties": {
+        "name": "Home hotel Temperance",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "338",
+        "registerAddress": "Engelbrektsgatan 16"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9984342,
+          55.6039214
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/150",
+      "properties": {
+        "name": "Hongkong",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "150",
+        "registerAddress": "Idrottsgatan  14B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9353262,
+          55.585219
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/283",
+      "properties": {
+        "name": "Hotel Bishops Arms Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "283",
+        "registerAddress": "Adelgatan 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0011169,
+          55.6073254
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/144",
+      "properties": {
+        "name": "Hotel Mäster Johan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "144",
+        "registerAddress": "Mäster Johansgatan 13"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9972204,
+          55.6057527
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/413",
+      "properties": {
+        "name": "House of Soul",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "413",
+        "registerAddress": "Bergsgatan 28"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0086981,
+          55.5949191
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/114",
+      "properties": {
+        "name": "Hygge",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "114",
+        "registerAddress": "Roslins väg 19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9785704,
+          55.6018374
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1461",
+      "properties": {
+        "name": "Hyllie Bryggeri",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1461",
+        "registerAddress": "Stormgatan 15"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9987032,
+          55.6123385
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/835",
+      "properties": {
+        "name": "Il Punto",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "835",
+        "registerAddress": "Sergels väg 11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.974728,
+          55.6017654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/290",
+      "properties": {
+        "name": "Indian Kashmir",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "290",
+        "registerAddress": "Baltzarsgatan 18"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0050966,
+          55.6045872
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/26",
+      "properties": {
+        "name": "Interpool",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "26",
+        "registerAddress": "Stora Nygatan 19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0065314,
+          55.6040299
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1048",
+      "properties": {
+        "name": "Johan P Hjulhamnsgatan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1048",
+        "registerAddress": "Hjulhamnsgatan   5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9988198,
+          55.6042416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/244",
+      "properties": {
+        "name": "JP´s Bar o Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "244",
+        "registerAddress": "Köpenhamnsvägen   7A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9845428,
+          55.5937255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1289",
+      "properties": {
+        "name": "JULIE",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1289",
+        "registerAddress": "Tegelgårdsgatan   9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9963655,
+          55.6045561
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/368",
+      "properties": {
+        "name": "Jägersro",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "368",
+        "registerAddress": "Jägersrovägen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0608878,
+          55.5693941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/165",
+      "properties": {
+        "name": "Kajuteriet",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "165",
+        "registerAddress": "Bryggövägen   1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9163434,
+          55.5820894
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1363",
+      "properties": {
+        "name": "Kappa Bar Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1363",
+        "registerAddress": "Baltzarsgatan 31"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0037758,
+          55.6047432
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1185",
+      "properties": {
+        "name": "Kasai",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1185",
+        "registerAddress": "Tyfongatan   1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9951264,
+          55.6122841
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/695",
+      "properties": {
+        "name": "Katrinetorps Gård",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "695",
+        "registerAddress": "Katrinetorps Allé   1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.003924,
+          55.5509315
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/207",
+      "properties": {
+        "name": "Kina",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "207",
+        "registerAddress": "Drottninggatan   4A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0130011,
+          55.6043252
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/108",
+      "properties": {
+        "name": "Kina Floden",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "108",
+        "registerAddress": "Lundavägen 65"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0805105,
+          55.6362564
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1265",
+      "properties": {
+        "name": "Klättercentret",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1265",
+        "registerAddress": "Kopparbergsgatan   8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0250921,
+          55.5873804
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1030",
+      "properties": {
+        "name": "Koba Lounge & Bar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1030",
+        "registerAddress": "Adelgatan 4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0014293,
+          55.6071461
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1213",
+      "properties": {
+        "name": "Kol & Cocktails",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1213",
+        "registerAddress": "Kalendegatan  16"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0030086,
+          55.6055035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/386",
+      "properties": {
+        "name": "Kramer Gastronomi",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "386",
+        "registerAddress": "Stortorget 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9998133,
+          55.6067977
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2610",
+      "properties": {
+        "name": "Kronprinsen (gemensam serveringsyta)",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2610",
+        "registerAddress": "Regementsgatan  52"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9846951,
+          55.5983971
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/136",
+      "properties": {
+        "name": "Krøl",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "136",
+        "registerAddress": "Ängelholmsgatan 11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0086488,
+          55.5920753
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1532",
+      "properties": {
+        "name": "l´Acquafarina",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1532",
+        "registerAddress": "Rudbecksgatan 95"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9606581,
+          55.5786035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1118",
+      "properties": {
+        "name": "L´Enoteca",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1118",
+        "registerAddress": "Västergatan   6C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9979201,
+          55.6064296
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2671",
+      "properties": {
+        "name": "La Bella Krog",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2671",
+        "registerAddress": "Tygelsjövägen 146 A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9975942,
+          55.5207416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/451",
+      "properties": {
+        "name": "La Roche Vin & Tapas",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "451",
+        "registerAddress": "Larochegatan 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9982393,
+          55.6048984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/812",
+      "properties": {
+        "name": "Laziza Dockan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "812",
+        "registerAddress": "Hallenborgs gata  19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9889514,
+          55.6141339
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/828",
+      "properties": {
+        "name": "Lilla Sicilien Bar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "828",
+        "registerAddress": "Övägen 10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9211088,
+          55.5893701
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1371",
+      "properties": {
+        "name": "Lilla Sjötorp",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1371",
+        "registerAddress": "Gessievägen 74"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9382005,
+          55.5099404
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2624",
+      "properties": {
+        "name": "Lilla Tabberaset",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2624",
+        "registerAddress": "Packhusgatan 31B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.932561,
+          55.5888509
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1534",
+      "properties": {
+        "name": "Lilla Vinbaren",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1534",
+        "registerAddress": "Skomakaregatan  12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9993827,
+          55.6048224
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1450",
+      "properties": {
+        "name": "Limhamns kött och vilt",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1450",
+        "registerAddress": "Strandgatan  17 A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.921342,
+          55.5825938
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/96",
+      "properties": {
+        "name": "Limhamns Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "96",
+        "registerAddress": "Västanväg 63"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9421821,
+          55.5809961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1453",
+      "properties": {
+        "name": "Linnea & Basilika Svågertorp",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1453",
+        "registerAddress": "Drakagatan  10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.98745,
+          55.5507587
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1179",
+      "properties": {
+        "name": "Lokal 17",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1179",
+        "registerAddress": "Hjälmarekajen  17"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9959736,
+          55.6107596
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/772",
+      "properties": {
+        "name": "Lupo, Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "772",
+        "registerAddress": "Kronborgsvägen 4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9908678,
+          55.5951725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/60",
+      "properties": {
+        "name": "Malmborgen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "60",
+        "registerAddress": "Malmborgsgatan 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.003331,
+          55.6026093
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/829",
+      "properties": {
+        "name": "Malmö Arena",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "829",
+        "registerAddress": "Arenagatan 15"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9763831,
+          55.5628562
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/601",
+      "properties": {
+        "name": "Malmö Brygghus/Chokladfabriken",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "601",
+        "registerAddress": "Bergsgatan 33"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0074615,
+          55.5934844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/254",
+      "properties": {
+        "name": "Malmö Golfrestaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "254",
+        "registerAddress": "Segesvängen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0642129,
+          55.6173997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2609",
+      "properties": {
+        "name": "Malmö Live (gemensam serveringsyta)",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2609",
+        "registerAddress": "Dag Hammarskjölds torg   2+4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9946172,
+          55.6077961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2608",
+      "properties": {
+        "name": "Malmö Live Konserthus",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2608",
+        "registerAddress": "Dag Hammarskjölds torg   4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.993626,
+          55.6073032
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1209",
+      "properties": {
+        "name": "Malmö saluhall (Gemensam serveringsyta)",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1209",
+        "registerAddress": "Gibraltargatan   6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.990966,
+          55.6078597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/703",
+      "properties": {
+        "name": "Mat & Dryck på Hörnet",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "703",
+        "registerAddress": "Skvadronsgatan 10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9790648,
+          55.5975117
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/52",
+      "properties": {
+        "name": "Mat och Vin, Slottsparken",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "52",
+        "registerAddress": "Kung Oscars väg 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9878997,
+          55.600026
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1076",
+      "properties": {
+        "name": "Mathildenborgs restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1076",
+        "registerAddress": "Rudbecksgatan 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9442222,
+          55.5801064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1481",
+      "properties": {
+        "name": "Medley",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1481",
+        "registerAddress": "Södra Promenaden 51"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0066488,
+          55.6034105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/89",
+      "properties": {
+        "name": "Mello Yello",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "89",
+        "registerAddress": "Lilla Torg 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9983861,
+          55.6053922
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/928",
+      "properties": {
+        "name": "Mikkeller - Ramen to biiro",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "928",
+        "registerAddress": "Simrishamnsgatan 10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0091106,
+          55.5917904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/809",
+      "properties": {
+        "name": "Modomio, Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "809",
+        "registerAddress": "Stora Nygatan 17 C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0087309,
+          55.6042279
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/128",
+      "properties": {
+        "name": "Moriska Paviljongen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "128",
+        "registerAddress": "Norra Parkgatan 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0136162,
+          55.5937352
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/97",
+      "properties": {
+        "name": "Mulligans Kitchen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "97",
+        "registerAddress": "Rönnebäcksvägen 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0997075,
+          55.5302826
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/312",
+      "properties": {
+        "name": "Musikhögskolan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "312",
+        "registerAddress": "Ystadvägen  25"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0158428,
+          55.580834
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/785",
+      "properties": {
+        "name": "Mutantur",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "785",
+        "registerAddress": "Erik Dahlbergsgatan  12-14"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9904387,
+          55.5973064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1471",
+      "properties": {
+        "name": "Mygel",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1471",
+        "registerAddress": "Lodgatan   3 B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0205545,
+          55.6163958
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/360",
+      "properties": {
+        "name": "Mässingshornet Restaurang & Musikpub",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "360",
+        "registerAddress": "Kirsebergsgatan 32"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.037332,
+          55.6091093
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/249",
+      "properties": {
+        "name": "NamDo",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "249",
+        "registerAddress": "Engelbrektsgatan 11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9976025,
+          55.6044941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/95",
+      "properties": {
+        "name": "Nazar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "95",
+        "registerAddress": "Vattenverksvägen 20"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0369235,
+          55.6093835
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1457",
+      "properties": {
+        "name": "Noir kaffe och vinkultur",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1457",
+        "registerAddress": "Engelbrektsgatan   6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.997788,
+          55.6048524
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1542",
+      "properties": {
+        "name": "Nollfyranoll",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1542",
+        "registerAddress": "Per Albin Hanssons väg  34 F"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0029136,
+          55.5817617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/783",
+      "properties": {
+        "name": "Norra Vallgatan 66",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "783",
+        "registerAddress": "Norra Vallgatan 66"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9990092,
+          55.6074345
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1113",
+      "properties": {
+        "name": "Nybergs konditori",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1113",
+        "registerAddress": "Adelgatan 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0021075,
+          55.6072815
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/362",
+      "properties": {
+        "name": "O´Learys Malmö Central",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "362",
+        "registerAddress": "Skeppsbron   1B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9978515,
+          55.6109055
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1521",
+      "properties": {
+        "name": "Okidoki & Public",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1521",
+        "registerAddress": "Klagshamnsvägen  40"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9195677,
+          55.5552926
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1416",
+      "properties": {
+        "name": "Osteria Amore",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1416",
+        "registerAddress": "Södra vallgatan 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9999951,
+          55.6013421
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1430",
+      "properties": {
+        "name": "Osteria Di´La",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1430",
+        "registerAddress": "Davidshallstorg   7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9978479,
+          55.5989703
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/300",
+      "properties": {
+        "name": "Palladium",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "300",
+        "registerAddress": "Södergatan 15"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0010242,
+          55.6040729
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1528",
+      "properties": {
+        "name": "Patisserie David",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1528",
+        "registerAddress": "Östergatan   7 B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0073149,
+          55.6078766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/515",
+      "properties": {
+        "name": "Paulibron, Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "515",
+        "registerAddress": "Stora Nygatan 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0095678,
+          55.6046321
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1365",
+      "properties": {
+        "name": "Pivo",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1365",
+        "registerAddress": "Västergatan   6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9970113,
+          55.6065666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/992",
+      "properties": {
+        "name": "Pivo - Friisgatan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "992",
+        "registerAddress": "Friisgatan 8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0047302,
+          55.5950151
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1023",
+      "properties": {
+        "name": "Pizza Hut",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1023",
+        "registerAddress": "Bronsåldersgatan 18"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0342782,
+          55.5506785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/329",
+      "properties": {
+        "name": "Pizza Special, Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "329",
+        "registerAddress": "Spånehusvägen 81"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0233275,
+          55.5940458
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/319",
+      "properties": {
+        "name": "Pizzeria Rex",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "319",
+        "registerAddress": "Nobelvägen 107"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0209283,
+          55.593653
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1330",
+      "properties": {
+        "name": "Plan B",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1330",
+        "registerAddress": "Norra Grängesbergsgatan 26"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0272499,
+          55.5839411
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/265",
+      "properties": {
+        "name": "Poke Poke, Djäkneg.",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "265",
+        "registerAddress": "Djäknegatan 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0046207,
+          55.6055023
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1294",
+      "properties": {
+        "name": "Portobello Pizzeria Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1294",
+        "registerAddress": "Gustaf Rydbergsgatan   9B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9803141,
+          55.6003942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/885",
+      "properties": {
+        "name": "Prince Thai",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "885",
+        "registerAddress": "Dockplatsen 14 B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9897371,
+          55.6144597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/406",
+      "properties": {
+        "name": "Pub Oxen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "406",
+        "registerAddress": "Stengodsvägen 155"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0933523,
+          55.5397256
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1129",
+      "properties": {
+        "name": "Quality Hotel View",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1129",
+        "registerAddress": "Hyllie stationstorg 29"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9762326,
+          55.5619302
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/56",
+      "properties": {
+        "name": "Radisson Blu Hotell",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "56",
+        "registerAddress": "Östergatan 10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0077105,
+          55.6076558
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2683",
+      "properties": {
+        "name": "Restaurang BYN",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2683",
+        "registerAddress": "Fredsgatan 12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0243258,
+          55.6075255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1083",
+      "properties": {
+        "name": "Restaurang Dragörkajen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1083",
+        "registerAddress": "Övägen   8C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9246699,
+          55.5876583
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/931",
+      "properties": {
+        "name": "Restaurang India & Vitlök",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "931",
+        "registerAddress": "Amiralsgatan 14"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0086694,
+          55.5993042
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2726",
+      "properties": {
+        "name": "Restaurang Laziza Hyllie",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2726",
+        "registerAddress": "Pulpetgatan 24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9694107,
+          55.5600257
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/88",
+      "properties": {
+        "name": "Restaurang Scania",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "88",
+        "registerAddress": "Bergsgatan 18"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0081055,
+          55.5939952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1287",
+      "properties": {
+        "name": "Restaurant Como & Margaux",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1287",
+        "registerAddress": "Skeppsbron 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9986475,
+          55.6085681
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/858",
+      "properties": {
+        "name": "Ribban Green Golf",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "858",
+        "registerAddress": "Ribersborgsstigen   6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9600919,
+          55.6002139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/223",
+      "properties": {
+        "name": "Ribersborgs Kallbadhus",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "223",
+        "registerAddress": "Limhamnsvägen  29"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9301391,
+          55.5859006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/198",
+      "properties": {
+        "name": "Ristorante & Pizzeria Pappagallo",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "198",
+        "registerAddress": "Fågelbacksgatan   6E"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9879623,
+          55.5968915
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1026",
+      "properties": {
+        "name": "Rosegarden Neo Asian",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1026",
+        "registerAddress": "S:t Johannesgatan 1 E"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0015849,
+          55.5949547
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/303",
+      "properties": {
+        "name": "Rosegarden Supreme",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "303",
+        "registerAddress": "Stora Nygatan 59"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.997351,
+          55.6029663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2629",
+      "properties": {
+        "name": "Sabaidee Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2629",
+        "registerAddress": "Östra Kristinelundsvägen   9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9812985,
+          55.5971159
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2611",
+      "properties": {
+        "name": "Sabaidee restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2611",
+        "registerAddress": "Södra förstadsgatan 42"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0057253,
+          55.5888455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2606",
+      "properties": {
+        "name": "Sabaidee Thairestaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2606",
+        "registerAddress": "Stora Varvsgatan  24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9807761,
+          55.6099417
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/346",
+      "properties": {
+        "name": "Saigon Street",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "346",
+        "registerAddress": "Gustav Adolfs Torg   1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9998582,
+          55.6021037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1017",
+      "properties": {
+        "name": "Sájvva",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1017",
+        "registerAddress": "Östra Förstadsgatan 29"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0203448,
+          55.6064976
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2732",
+      "properties": {
+        "name": "Savetha Kök & Bar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2732",
+        "registerAddress": "Mariedalsvägen  32"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9799188,
+          55.6049475
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/110",
+      "properties": {
+        "name": "Scandic Segevång",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "110",
+        "registerAddress": "Segesvängen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0642129,
+          55.6173997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/686",
+      "properties": {
+        "name": "Sea Side restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "686",
+        "registerAddress": "Scaniaplatsen   2A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9730399,
+          55.6127037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1147",
+      "properties": {
+        "name": "Segevångs Restaurang & Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1147",
+        "registerAddress": "Kronetorpsgatan  64D"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0536848,
+          55.6152803
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1303",
+      "properties": {
+        "name": "Shotluckan Malmö AB",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1303",
+        "registerAddress": "Kalendegatan  26"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0030086,
+          55.6055035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2668",
+      "properties": {
+        "name": "Sibbarps kallbadhus",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2668",
+        "registerAddress": "Strandgatan  85"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.066104,
+          55.6337291
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/24",
+      "properties": {
+        "name": "Siesta Bar & Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "24",
+        "registerAddress": "Hjorttackegatan 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9943639,
+          55.6046747
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1595",
+      "properties": {
+        "name": "Sinlapa Thai Fusion Bowls & Gallery",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1595",
+        "registerAddress": "Amiralsgatan 8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0080286,
+          55.5999344
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/733",
+      "properties": {
+        "name": "Skånes dansteater",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "733",
+        "registerAddress": "Östra Varvsgatan  13A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9853208,
+          55.616226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/10",
+      "properties": {
+        "name": "Slagthuset",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "10",
+        "registerAddress": "Jörgen Kocksgatan   7A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0040122,
+          55.6118869
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/62",
+      "properties": {
+        "name": "Smak på Malmö Konsthall",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "62",
+        "registerAddress": "S:t Johannesgatan 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9992225,
+          55.5950529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/285",
+      "properties": {
+        "name": "Smakbryggan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "285",
+        "registerAddress": "Klagshamnsvägen 40"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9195677,
+          55.5552926
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1056",
+      "properties": {
+        "name": "Soi",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1056",
+        "registerAddress": "S:t Knuts väg 13"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.015123,
+          55.5973807
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2667",
+      "properties": {
+        "name": "Spazio",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2667",
+        "registerAddress": "Hyllie Boulevard 21"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9745384,
+          55.5627861
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/916",
+      "properties": {
+        "name": "Spazio",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "916",
+        "registerAddress": "Centralplan   4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0023532,
+          55.6087565
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/654",
+      "properties": {
+        "name": "Spegeln Bar & Bistro",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "654",
+        "registerAddress": "Stortorget 29"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0006952,
+          55.605371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1235",
+      "properties": {
+        "name": "Spoonery",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1235",
+        "registerAddress": "S:t Knuts väg   7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0142866,
+          55.5969335
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1028",
+      "properties": {
+        "name": "Spoonery Västergatan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1028",
+        "registerAddress": "Västergatan 11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9970113,
+          55.6065666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/845",
+      "properties": {
+        "name": "Stadion",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "845",
+        "registerAddress": "Eric Perssons väg 19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9900214,
+          55.5828459
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/235",
+      "properties": {
+        "name": "Storasyster MASTIO Möllan",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "235",
+        "registerAddress": "Simrishamnsgatan  20B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0107301,
+          55.591517
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1015",
+      "properties": {
+        "name": "Strandcafé, Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1015",
+        "registerAddress": "Västra Varvsgatan  57"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9758749,
+          55.6164661
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/278",
+      "properties": {
+        "name": "Strandhuset i Sibbarp",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "278",
+        "registerAddress": "Strandgatan 99"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9274342,
+          55.5866053
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/191",
+      "properties": {
+        "name": "Surf Shack´s Beach Diner",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "191",
+        "registerAddress": "Limhamnsvägen 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9285414,
+          55.5864589
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1045",
+      "properties": {
+        "name": "Sushi Yama Malmö Mobilia",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1045",
+        "registerAddress": "Per Albin Hanssons väg 40"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0054576,
+          55.5820983
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/327",
+      "properties": {
+        "name": "T-Bone",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "327",
+        "registerAddress": "S:t Pauli Kyrkogata  11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0143328,
+          55.6025985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2734",
+      "properties": {
+        "name": "Team Pizzeria och Restaurang Oxie",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2734",
+        "registerAddress": "lertegelvägen 134"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.097586,
+          55.5403916
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/253",
+      "properties": {
+        "name": "Texas Longhorn 1",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "253",
+        "registerAddress": "Kanalgatan 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0035325,
+          55.6004746
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/795",
+      "properties": {
+        "name": "Thap Thim Thai Isaan Rest",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "795",
+        "registerAddress": "Västergatan 9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9974035,
+          55.6068026
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1220",
+      "properties": {
+        "name": "Thap Thim Västra Hamnen",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1220",
+        "registerAddress": "Masttorget   5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9811719,
+          55.6118275
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/854",
+      "properties": {
+        "name": "The Green Lion Pub",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "854",
+        "registerAddress": "Skeppsbron   9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9978251,
+          55.6116344
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/943",
+      "properties": {
+        "name": "The Torso",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "943",
+        "registerAddress": "Västra Varvsgatan 42"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9760893,
+          55.6138918
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/258",
+      "properties": {
+        "name": "Tin Tin Thai",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "258",
+        "registerAddress": "Nobelvägen 82"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.028136,
+          55.6041439
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2741",
+      "properties": {
+        "name": "Travers",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2741",
+        "registerAddress": "Södra Bulltoftavägen  51"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.042488,
+          55.6064667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1162",
+      "properties": {
+        "name": "Tugg Burgers",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1162",
+        "registerAddress": "Södra Vallgatan 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0012344,
+          55.6015232
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/791",
+      "properties": {
+        "name": "Tuja Vinbar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "791",
+        "registerAddress": "Stora Nygatan 23"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0060351,
+          55.6039706
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/784",
+      "properties": {
+        "name": "Turning, Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "784",
+        "registerAddress": "Lilla Varvsgatan   4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9743451,
+          55.6128342
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1456",
+      "properties": {
+        "name": "Twins restaurang & pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1456",
+        "registerAddress": "Lundavägen  71"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0444197,
+          55.615093
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2660",
+      "properties": {
+        "name": "Ukrainian Beer Bar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2660",
+        "registerAddress": "Amiralsgatan 6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0079167,
+          55.6000964
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1122",
+      "properties": {
+        "name": "Urban Turban Walking Street",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1122",
+        "registerAddress": "Södra Förstadsgatan 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0007591,
+          55.6004322
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1364",
+      "properties": {
+        "name": "V Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1364",
+        "registerAddress": "Skomakaregatan   5C"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0001916,
+          55.6047278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1598",
+      "properties": {
+        "name": "V.E.S.P.A Davidshall",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1598",
+        "registerAddress": "Holmgatan 11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9970796,
+          55.5980544
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/979",
+      "properties": {
+        "name": "Vapiano (Emporia)",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "979",
+        "registerAddress": "Hyllie Boulevard 19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9732138,
+          55.5642818
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1184",
+      "properties": {
+        "name": "WASABI orangeri",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1184",
+        "registerAddress": "Krombyvägen  77"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0649823,
+          55.526244
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1275",
+      "properties": {
+        "name": "Waynes Coffee",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1275",
+        "registerAddress": "Lilla varvsgatan  20A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9819612,
+          55.6139362
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/933",
+      "properties": {
+        "name": "Vegan Bar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "933",
+        "registerAddress": "Södra Skolgatan 45"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0064384,
+          55.5921217
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/482",
+      "properties": {
+        "name": "Victors Lilla Torg",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "482",
+        "registerAddress": "Lilla Torg 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9983861,
+          55.6053922
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2699",
+      "properties": {
+        "name": "Vinmagasinet",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2699",
+        "registerAddress": "Jagaregatan   4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9887893,
+          55.6112877
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/358",
+      "properties": {
+        "name": "Vinnys Krog",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "358",
+        "registerAddress": "S:t Knuts Torg 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0135272,
+          55.5966169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/151",
+      "properties": {
+        "name": "Wong",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "151",
+        "registerAddress": "Linnégatan 13"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9404045,
+          55.5807891
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/589",
+      "properties": {
+        "name": "Välfärden -  kök & kaffe",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "589",
+        "registerAddress": "Anckargripsgatan 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9943513,
+          55.6113462
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/63",
+      "properties": {
+        "name": "Värnhem, Pizzeria",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "63",
+        "registerAddress": "Östervärnsgatan   2B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0251703,
+          55.6054715
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/301",
+      "properties": {
+        "name": "Ölkaféet",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "301",
+        "registerAddress": "Södra Skolgatan 43"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.006415,
+          55.5923607
+        ]
+      }
+    }
+  ]
+}
