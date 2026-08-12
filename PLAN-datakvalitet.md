@@ -542,7 +542,7 @@ vore en genväg, inte en förutsättning.
    fördröjning mellan anrop, identifierande User-Agent — för
    Allmänheten/Slutet-sällskap-grinden, Uteservering-flaggan och
    inomhus/utomhus-tider
-4. **(Beslutat 2026-08-08, ej byggt än)** för register-ställen med
+4. **(Beslutat 2026-08-08, ✅ byggt 2026-08-11 — se fas 5 del B ovan)** för register-ställen med
    `Serveringstyp: Uteservering` som INTE matchar något i
    `terraces.geojson` alls: geokoda adressen (Nominatim, samma cache som
    taggningslistan redan använder för dubblettfilialer) och visa dem
@@ -706,28 +706,25 @@ nämna som separata, mindre uppslag som kom upp under fas 6-arbetet:
 7. ✅ **Fas 5 del B** — klar 2026-08-11: 246/257 registerställen utan
    OSM-motsvarighet geokodade och visas på kartan, streckade och tydligt
    märkta OSM-overifierade, med direktlänk till att lägga till dem i OSM.
-   Verifierad live i webbläsaren. Se avsnittet ovan för detaljer och
-   kvarstående småsaker (Actions-koppling, "Dölj i appen"-stöd).
+   Verifierad live i webbläsaren. De då kvarstående småsakerna
+   (Actions-koppling, "Dölj i appen"-stöd) blev klara samma dag — se
+   fas 5-avsnittet ovan, inget kvarstår.
+8. ✅ **Fas 6** — mätt och avslutad NO-GO för alla tre delar 2026-08-11
+   (se avsnittet ovan för siffrorna). Två saker byggda utifrån vad
+   utvärderingen hittade: de 12 falska anomaly-fallen fixade 2026-08-12
+   (`src/shadow.js`, se fas 6-avsnittet), och samma dag byggdes SMHI-
+   molntäckningsbadgen (`src/weather.js`) och ett alkoholfilter på
+   kartan — inget av det en del av fas 1–6 i sig, men uppslag som kom ur
+   arbetet.
 
 ### Nästa steg
 
-1. **Fas 3**: klar — mergad till `main`, tre gröna `workflow_dispatch`-
-   körningar, inget kvarstår.
-2. **Fas 4**: avslutad, NO-GO (se avsnittet ovan). Overture slår inte
-   nuvarande modell på den population som räknas (byggnader utan känd
-   höjd: Overture MAE 2,56 m mot nuvarande modells 1,89 m på samma
-   byggnader), och täcker bara 51,4 % av den populationen. Ingen
-   produktionsspec skrivs. Inget kvarstår här.
-3. **Fas 5 parallellt** — oberoende av de andra två, och redan avsevärt
-   mindre jobb än ursprungligen trott (se fas 5-avsnittet).
+**Inget blockerande kvarstår i den här planen.** Fas 1–6 är alla byggda,
+verifierade och live. Det enda öppna förslaget härifrån är en lätt,
+oscopad "favoriter"-funktion (se förbättringsförslagen ovan).
 
-#### Vad Fredrik behöver göra för fas 5
-
-Ingenting längre — löst. En session med nätverksåtkomst (se anmärkningen
-om nätverket ovan) hämtade själv listsidan, en detaljsida (id 809) och
-`robots.txt` 2026-08-07 och analyserade strukturen direkt (resultatet
-står ovan). Exempelfilerna ligger i den sessionens scratchpad, inte
-committade än — detaljsidan innehåller ett ägarnamn (personuppgift, se
-ovan), så Fredrik bör godkänna innan ett exempel eventuellt läggs i repot.
-Listsidans exempel innehåller ingen personuppgift och kan committas fritt
-om det är till nytta för nästa session som bygger parsern.
+Utanför den här planens gränser, men fortsatt öppet (se `CLAUDE.md`):
+Fredriks egen löpande OSM-taggning (konto `FredAspBark`, inte längre
+blockerande sedan registret täcker en del automatiskt), och att lägga
+till de 246 registerplatserna som saknas i OSM helt för en exakt
+position.
