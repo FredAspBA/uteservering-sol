@@ -12,8 +12,8 @@ OSM), så det är här källvalet spelar mest roll.
 | Källa | Höjddata | Licens | Kostnad | Status |
 |---|---|---|---|---|
 | [OpenStreetMap](https://www.openstreetmap.org) via Overpass | `height` 0,4 %, `building:levels` 19,3 % | ODbL | Gratis | **Används idag** |
-| [Overture Maps](https://docs.overturemaps.org/guides/buildings/) | height + levels, ML-härledd där OSM saknar | ODbL/CDLA per tema | Gratis | Fas 4 |
-| [Lantmäteriet Laserdata NH](https://www.lantmateriet.se/sv/geodata/vara-produkter/produktlista/laserdata-nedladdning-nh/) | Verklig taknock via LiDAR, 0,5–1 pkt/m² | CC0 | Gratis | Fas 6 |
+| [Overture Maps](https://docs.overturemaps.org/guides/buildings/) | height + levels, ML-härledd där OSM saknar | ODbL/CDLA per tema | Gratis | **NO-GO** (2026-08-08, se `PLAN-datakvalitet.md` fas 4 — slår inte nuvarande modell) |
+| [Lantmäteriet Laserdata NH](https://www.lantmateriet.se/sv/geodata/vara-produkter/produktlista/laserdata-nedladdning-nh/) | Verklig taknock via LiDAR, 0,5–1 pkt/m² | CC0 | Gratis, men **kräver Geotorget-konto** | **NO-GO** (2026-08-11, se `PLAN-datakvalitet.md` fas 6 — gles/föråldrad data, kontokrav, Overture-precedenset) |
 | [Lantmäteriet Byggnad Nedladdning, vektor](https://www.lantmateriet.se/sv/geodata/vara-produkter/produktlista/byggnad-nedladdning-vektor/) | Byggnadsyta + ändamål; höjd oklart | CC0 | Gratis | Outforskad |
 | [Lantmäteriet Ythöjdmodell (DSM)](https://www.lantmateriet.se/sv/geodata/vara-produkter/produktlista/ytmodell-fran-flygbilder/) | Bäst — ytmodell inkl. tak | — | **Avgift** via Geotorget | Uteslutet |
 
@@ -36,10 +36,24 @@ solcellsanläggningar), astronomy-engine (ingen mätbar vinst här).
 
 ## Väder
 
-**Ingår medvetet inte.** Appen visar *geometriskt möjligt solljus vid klar
-himmel*, inte en väderprognos. Ingen molntäckning, ingen nederbörd. Är det
-mulet stämmer appens "sol" inte med verkligheten — det är ett scope-val,
-inte en bugg.
+**Byggt 2026-08-12** (`src/weather.js`) — det här avsnittet beskrev
+tidigare ett medvetet scope-val att INTE inkludera väder; det beslutet
+reviderades. Appens skuggberäkning visar fortfarande bara *geometriskt
+möjligt solljus vid klar himmel*, men popupen kompletteras nu med en
+molntäckningsbadge när det är relevant (status "Sol", inom prognosfönstret).
+
+| Källa | Innehåll | Licens | Kostnad | Status |
+|---|---|---|---|---|
+| [SMHI öppna data, Meteorologisk prognos (snow1g)](https://opendata.smhi.se/metfcst/snow1gv1) | Molntäckning (`cloud_area_fraction`, oktal 0–8) + fler parametrar, ~10 dagars prognos | **CC BY 4.0** (attribution krävs) | Gratis, ingen nyckel | **Används** |
+
+**Viktigt för framtida sessioner:** det äldre API:t (`pmp3g`, det jag
+mindes från träningsdata) avvecklades **2026-03-31** — rätt endpoint är
+`snow1g`, en annan URL-struktur. Verifierat live innan bygget, inte
+antaget. Se `src/weather.js`s kommentar för detaljer.
+
+Alternativ inte undersökta: SMHI har fler API:er (observationer,
+analyser) som inte var relevanta här — prognosen (framåtblickande) är
+vad en "ska jag gå nu/idag/imorgon"-app faktiskt behöver.
 
 ## Skuggmetod
 
@@ -60,9 +74,17 @@ Kända blinda fläckar i vår metod, oavsett datakälla:
 
 1. **Träd saknas helt.** Stort för uteserveringar — halva Malmös terrasser
    står under en lönn i juli. LiDAR fångar trädkronor; `natural=tree` i
-   OSM är glest.
+   OSM är glest. **Mätt 2026-08-11** (`PLAN-datakvalitet.md` fas 6): bara
+   1,2 % av terrasserna har ett OSM-taggat träd inom verkligt
+   skuggavstånd (8 m) — inte att detta blinda fält är litet i
+   verkligheten, bara att vår enda gratiskälla för trädpositioner (OSM)
+   är för gles för att bygga på. NO-GO att åtgärda med nuvarande data.
 2. **Terrass = punkt, inte yta.** En stråle från en koordinat; halva
-   uteserveringen kan ligga i sol.
+   uteserveringen kan ligga i sol. **Mätt 2026-08-11:** av de 113
+   way-taggade terrasserna (12 % av 939) har bara ~12 (1,3 % av alla) en
+   polygon liten nog att rimligen vara en sittyta — resten är oftast
+   hela byggnadsfotavtryck eller torg. NO-GO: multi-strålsraycast skulle
+   sampla fel utrymme för de flesta av dem, inte förbättra precisionen.
 3. **Marklutning ignoreras.** Försumbart i Malmö.
 
 ## Alkohol — serveringstillstånd
@@ -79,9 +101,16 @@ alkohol — inte att det har uteservering.
 
 ## Uteservering
 
-Ingen öppen datakälla löser detta. Malmö stad ger tillstånd för
-uteservering på offentlig plats, men det publiceras inte som en lista.
-**OSM-taggning (`outdoor_seating`) via taggningslistan förblir vägen.**
+Ingen öppen datakälla löser detta helt, men **fas 5 (2026-08-08–12,
+`PLAN-datakvalitet.md`) täcker en meningsfull del**: Malmö stads
+serveringstillstånd-register har en `Serveringstyp: Uteservering`-flagga
+på varje ställes detaljsida (`restaurang.malmo.se/.../Show/{id}`) — inte
+publicerad som en fristående lista, men skrapningsbar. Ger en hint i
+taggningslistan för 130 OSM-platser vars `outdoor_seating`-tagg saknas
+(av totalt ~760), plus 246 platser som saknas i OSM helt men visas på
+kartan ändå (ungefärlig position). **För de återstående platserna, och
+för exakt position överlag, förblir OSM-taggning
+(`outdoor_seating`) via taggningslistan vägen.**
 
 ## Licenser — vad de betyder för oss
 
