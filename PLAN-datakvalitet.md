@@ -597,11 +597,33 @@ konkreta skäl.
   sittyte-polygon skild från byggnaden), inte raycast-algoritmen — går
   inte att koda sig runt.
 
-  **Bifynd värt en egen liten fix:** 12 av 1 172 terrasser (1,0 %) visar
-  redan `anomaly`-status live i appen just nu — troligen exakt samma
-  grundorsak (en stor way-polygons centroid hamnar inuti fel byggnad).
-  Litet, konkret, fristående från "terrass som yta"-frågan — se
-  förbättringsförslagen nedan.
+  **Bifynd, ✅ fixat 2026-08-12** (se `src/shadow.js`): 12 av 1 172
+  terrasser (1,0 %) visade `anomaly`-status live. **Hypotesen ovan
+  (stor way-polygons centroid i fel byggnad) visade sig vara fel** —
+  verifierat direkt mot `computeShading()` med riktig data innan något
+  kodades: alla 12 var punkt-geometri (node-taggade eller geokodade
+  register-platser), inte way-polygoner. Den verkliga orsaken: punkten
+  låg genuint innanför **två** olika OSM-byggnadsvägar samtidigt (t.ex.
+  "Studio Malmö" way/334279388 OCH "Story Hotel Studio Malmo, Part of
+  JDV by Hyatt" way/1435064303 — uppenbarligen samma fysiska byggnad,
+  mappad två gånger, eller angränsande sektioner vars 0,5m-buffring gör
+  att de överlappar vid en delad vägg). `findHomeBuilding()` valde bara
+  den ena som "hemma"; den andra triggade en falsk anomaly-flagga.
+  Mönstret verifierat generellt (4 extra stickprov, alla samma
+  dubbel-byggnad-mönster) innan fixen skrevs.
+
+  **Fixen:** `findHomeBuilding()` returnerar nu en `Set` av alla
+  byggnader vars fotavtryck genuint innehåller punkten (inte bara den
+  närmaste), och `computeShading()` uteslutar alla dem från både
+  anomaly-kontrollen och skuggkandidaterna. Faller tillbaka till samma
+  avståndsbaserade enda-närmaste-logik som förut när punkten inte ligger
+  inuti någon byggnad (den vanliga "precis utanför min egen vägg"-
+  situationen, som aldrig var problemet). Verifierat med en isolerad
+  före/efter-jämförelse (samma datum, samma data, bara `shadow.js`
+  skiljer): **exakt 12 terrasser bytte status, alla anomaly→sol, och
+  inget annat ändrades** (skugga oförändrat på 39). Verifierat live i
+  webbläsaren: 0 anomaly-markörer kvar, en tidigare drabbad plats
+  ("Kasai in the Sky") visar nu en ren "Sol"-popup.
 - **⛔ Lantmäteriet Laserdata NH.** Research (inte bara antagande):
   1) **Kräver konto/behörighet hos Geotorget** — utanför vad en
      AI-session kan göra själv (kan inte skapa konton), så Fredrik
@@ -647,10 +669,8 @@ nämna som separata, mindre uppslag som kom upp under fas 6-arbetet:
   skala som gamla API:t, nytt namn). Attribution krävs: SMHI:s öppna
   data är **CC BY 4.0**, inte CC0 som Lantmäteriets källor — kredit
   tillagd i sidfoten (`#data-credits`).
-- **Fixa de 12 anomaly-fallen** (se ovan) — sannolikt en liten,
-  fristående fix i hur representativ punkt väljs för stora
-  way-taggade polygoner, oberoende av det större "terrass som
-  yta"-NO-GO:t.
+- **✅ Fixa de 12 anomaly-fallen — klart 2026-08-12** (se fas 6-avsnittet
+  ovan för hela diagnosen och fixen).
 - **Favoriter.** En lätt, localStorage-baserad "spara den här
   terrassen"-funktion (samma mönster som `votes.js` redan använder) för
   snabbåtkomst till stamställen.

@@ -18,6 +18,11 @@ const HOME_BUILDING_THRESHOLD_METERS = 3;
 const DEFAULT_BUILDING_HEIGHT_METERS = 15;
 const METERS_PER_LEVEL = 3.0;
 
+// computeShading()'s default when no home building(s) were precomputed —
+// a single frozen empty Set, not `new Set()` per call, since the default
+// only ever needs to be checked with `.has()`, never mutated.
+const EMPTY_BUILDING_SET = new Set();
+
 // Spatial grid cell size, in degrees (~100-110m at Malmo's latitude).
 // A ray query is a *thin* 500m line, not a 500m x 500m area, so its
 // bounding box is mostly empty space — with the original 500m cells
@@ -349,9 +354,24 @@ function distanceToBoundary(point, polygon) {
 }
 
 /**
- * Finds the building the terrace is directly attached to (if any), so it
- * can be excluded from candidate blockers (a terrace shouldn't be "shaded"
- * by its own wall when the sun happens to be behind it).
+ * Finds the building(s) the terrace is directly attached to (if any), so
+ * they can be excluded from candidate blockers (a terrace shouldn't be
+ * "shaded" by its own wall when the sun happens to be behind it) and never
+ * trigger the "anomaly" self-check in computeShading() below.
+ *
+ * Returns a Set, not a single building — a terrace's point can legitimately
+ * fall inside MORE than one OSM building way/relation at once. Verified
+ * against real cases (2026-08-12, see PLAN-datakvalitet.md): e.g. "Studio
+ * Malmö" and "Story Hotel Studio Malmo, Part of JDV by Hyatt" are two
+ * separate OSM ways for what is clearly one physical building — a general
+ * footprint plus a more specific brand-tagged one, or adjoining sections
+ * whose ~0.5m buffer (see fetch-data.js) makes them overlap at a shared
+ * wall. Treating only the single nearest one as "home" meant the terrace
+ * was flagged as sitting inside a stranger building — a false "anomaly" for
+ * a terrace that's correctly at home, not misplaced. If the point isn't
+ * inside any building, falls back to the single nearest one within
+ * HOME_BUILDING_THRESHOLD_METERS, exactly as before (that "just outside my
+ * own wall" case is by far the common one and was never the problem).
  *
  * This depends only on geometry (not time), so callers should compute it
  * once per terrace at load time and pass the result into computeShading()
@@ -359,44 +379,47 @@ function distanceToBoundary(point, polygon) {
  *
  * @param {GeoJSON.Point} terracePoint
  * @param {{list: Array, grid: Map}} buildingIndex - output of prepareBuildings()
+ * @returns {Set<object>} zero or more buildings; check with `.has(b)`
  */
 export function findHomeBuilding(terracePoint, buildingIndex) {
   const searchBbox = pointBboxMeters(terracePoint, HOME_BUILDING_THRESHOLD_METERS + 5);
   const candidates = queryNearby(buildingIndex, searchBbox);
 
+  const containing = [];
+  for (const b of candidates) {
+    if (!bboxesOverlap(searchBbox, b.bbox)) continue;
+    if (turf.booleanPointInPolygon(terracePoint, b.feature)) containing.push(b);
+  }
+  if (containing.length) return new Set(containing);
+
   let closest = null;
   let closestDist = Infinity;
   for (const b of candidates) {
     if (!bboxesOverlap(searchBbox, b.bbox)) continue;
-    // A point strictly inside a building's footprint is distance 0 from it
-    // (distanceToBoundary would otherwise measure to the nearest edge,
-    // which can exceed the threshold even though the point is enclosed).
-    const dist = turf.booleanPointInPolygon(terracePoint, b.feature)
-      ? 0
-      : distanceToBoundary(terracePoint, b.feature);
+    const dist = distanceToBoundary(terracePoint, b.feature);
     if (dist < closestDist) {
       closestDist = dist;
       closest = b;
     }
   }
-  return closestDist <= HOME_BUILDING_THRESHOLD_METERS ? closest : null;
+  return closestDist <= HOME_BUILDING_THRESHOLD_METERS ? new Set([closest]) : new Set();
 }
 
 /**
  * @param {GeoJSON.Point} terracePoint - turf point feature for the terrace
  * @param {{list: Array, grid: Map}} buildingIndex - output of prepareBuildings()
  * @param {{altitudeDeg: number, bearingDeg: number}} sunInfo
- * @param {object|null} homeBuilding - precomputed via findHomeBuilding(), or null
+ * @param {Set<object>} [homeBuilding] - precomputed via findHomeBuilding()
  * @returns {{ status: 'night'|'sun'|'shade'|'anomaly', blocker: object|null, sunInfo: object }}
  */
-export function computeShading(terracePoint, buildingIndex, sunInfo, homeBuilding = null) {
+export function computeShading(terracePoint, buildingIndex, sunInfo, homeBuilding = EMPTY_BUILDING_SET) {
   if (sunInfo.altitudeDeg <= 0) {
     return { status: "night", blocker: null, sunInfo };
   }
 
   const pointBbox = pointBboxMeters(terracePoint, 1);
   for (const b of queryNearby(buildingIndex, pointBbox)) {
-    if (b === homeBuilding) continue;
+    if (homeBuilding.has(b)) continue;
     if (!bboxesOverlap(pointBbox, b.bbox)) continue; // was missing — every building in the grid cell was getting a full point-in-polygon test
     if (turf.booleanPointInPolygon(terracePoint, b.feature)) {
       return { status: "anomaly", blocker: b, sunInfo };
@@ -424,7 +447,7 @@ export function computeShading(terracePoint, buildingIndex, sunInfo, homeBuildin
   let closestDist = Infinity;
 
   for (const b of queryNearby(buildingIndex, rayBbox)) {
-    if (b === homeBuilding) continue;
+    if (homeBuilding.has(b)) continue;
     if (!bboxesOverlap(rayBbox, b.bbox)) continue;
 
     // The ray's bbox is a wide rectangle spanning start to end, which in a
