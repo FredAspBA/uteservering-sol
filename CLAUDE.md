@@ -64,11 +64,16 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       2026-03-31 — rätt endpoint är `snow1g`, verifierat live, inte
       antaget. Attribution (CC BY 4.0, till skillnad från CC0-källorna) i
       sidfoten, `#data-credits`.
-- [ ] **(Liten) Fixa de 12 anomaly-fallen.** Upptäckt under fas
-      6-utvärderingen: 12 av 1 172 terrasser (1,0 %) visar redan
-      `anomaly`-status live, troligen för att en stor way-taggad
-      terrasspolygons centroid hamnar inuti fel byggnad. Fristående,
-      mindre fix — se `PLAN-datakvalitet.md` fas 6.
+- [x] **Fixa de 12 anomaly-fallen — klart 2026-08-12.** Hypotesen från
+      fas 6 (stor way-polygons centroid i fel byggnad) visade sig vara
+      **fel** vid närmare diagnos — verkliga orsaken: punkten låg
+      genuint innanför två olika OSM-byggnadsvägar för samma fysiska
+      byggnad samtidigt (t.ex. "Studio Malmö" + "Story Hotel Studio
+      Malmo"). `findHomeBuilding()` i `src/shadow.js` returnerar nu en
+      `Set` av alla byggnader som genuint innehåller punkten, inte bara
+      den närmaste. Verifierat: exakt 12 terrasser gick anomaly→sol,
+      inget annat ändrades. Se `PLAN-datakvalitet.md` fas 6 för hela
+      diagnosen.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
