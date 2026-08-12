@@ -53,12 +53,17 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       uteservering-hint** (samma register-mönster som alkohol-hinten,
       nu även för OSM-matchade platser — 130 nya hints). Se
       `PLAN-datakvalitet.md` för alla siffror och detaljer.
-- [ ] **Väder (SMHI:s öppna API), inväntar OK.** Diskuterat 2026-08-11,
-      inte byggt än. Appen vet idag inget om molnighet — "Sol"-status kan
-      vara vilseledande en mulen dag. Gratis, ingen nyckel, per-koordinat-
-      prognos. Begränsning: bara ~10 dagar framåt, så skulle visas
-      villkorat (inom prognosfönstret). Tänkt som tilläggsbadge, inte en
-      ersättning av skuggberäkningen.
+- [x] **Väder (SMHI:s öppna API) — klart 2026-08-12.** `src/weather.js`
+      hämtar en molntäckningsprognos en gång per sidladdning (täcker hela
+      ~10-dagarsfönstret i ett anrop, cachas i minnet — verifierat live:
+      exakt 1 SMHI-anrop trots flera popup-öppningar/datumbyten). Visas
+      som en badge i popupen, bara vid status "Sol" och bara när valt
+      datum ligger inom prognosfönstret (annars tyst utelämnad — verifierat
+      med ett datum 30 dagar fram). **OBS för framtida sessioner:** det
+      gamla API:t (`pmp3g`) jag mindes från träningsdata avvecklades
+      2026-03-31 — rätt endpoint är `snow1g`, verifierat live, inte
+      antaget. Attribution (CC BY 4.0, till skillnad från CC0-källorna) i
+      sidfoten, `#data-credits`.
 - [ ] **(Liten) Fixa de 12 anomaly-fallen.** Upptäckt under fas
       6-utvärderingen: 12 av 1 172 terrasser (1,0 %) visar redan
       `anomaly`-status live, troligen för att en stor way-taggad
@@ -121,6 +126,9 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
 - `src/votes.js` + `src/cloudVotes.js` — tumme upp/ner (lokalt i
   localStorage + delat till Firebase). `cloudVotes.js` har även
   `fetchExcludedKeys()` som sol-appen använder för att dölja ställen.
+- `src/weather.js` — SMHI-molntäckningsprognos, ett anrop per sidladdning
+  (cachas i minnet, hela ~10-dagarsfönstret på en gång). Badge i popupen
+  bara vid status "Sol" och bara inom prognosfönstret.
 - `taggning.html` + `src/tagging.js` + `taggning.css` — gemensam
   taggningslista (se nedan).
 - `scripts/fetch-data.js` — hämtar terrasser + byggnader från Overpass →

@@ -413,6 +413,17 @@ path.terrace-marker:hover {
   gap: 1rem;
 }
 
+#data-credits {
+  padding: 0 1.25rem 1.5rem;
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--color-ink-muted);
+}
+
+#data-credits a {
+  color: inherit;
+}
+
 .link-button {
   background: none;
   border: none;
@@ -516,6 +527,15 @@ path.terrace-marker:hover {
   color: var(--color-ink-muted);
   margin-top: 0.3rem;
   line-height: 1.4;
+}
+
+/* SMHI cloud-cover caveat on a "Sol" verdict — informational, not a
+   warning, so styled close to .popup-detail rather than the anomaly/
+   unverified boxes' alert treatment. */
+.popup-weather {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.3rem;
 }
 
 .popup-timeline {

@@ -3,6 +3,7 @@ import { computeShading } from "./shadow.js";
 import { getSunInfo } from "./sun.js";
 import { getVoteForView, recordVote, getAllVotes, clearAllVotes, exportVotesAsJson } from "./votes.js";
 import { fetchExcludedKeys } from "./cloudVotes.js";
+import { fetchCloudForecast, findClosestForecast } from "./weather.js";
 
 const MALMO_CENTER = [55.605, 13.0038];
 
@@ -64,6 +65,17 @@ const nearMeAlcoholButton = document.getElementById("near-me-alcohol-button");
 let terraces = [];
 let buildings = null;
 let markers = [];
+
+// Fetched once, in the background, without blocking the main data load
+// below — it's a "nice to have" popup badge, not something worth delaying
+// the map for. By the time any popup can actually open (after init()
+// finishes, and popups render lazily on popupopen — see renderMarkers()),
+// this has almost always long since resolved; null just means "no cloud
+// badge yet/at all", which popupHtml() already handles gracefully.
+let cloudForecast = null;
+fetchCloudForecast(MALMO_CENTER[0], MALMO_CENTER[1]).then((data) => {
+  cloudForecast = data;
+});
 
 function minutesToHHMM(minutes) {
   const h = Math.floor(minutes / 60)
@@ -253,6 +265,28 @@ function unverifiedNoticeHtml(properties, lat, lon) {
   `;
 }
 
+// Adds a cloud-cover caveat to a "Sol" verdict — the shadow calculation
+// only knows the sun's geometric position, not whether clouds would
+// actually block it, so a sunny-by-geometry terrace on an overcast day
+// would otherwise show an unqualified "Sol". Only relevant for status
+// "sun" (clouds don't make "Skugga"/"Mörkt"/"Osäker" any more or less
+// true) and only when the viewed moment is within SMHI's forecast window
+// (findClosestForecast() returns null outside it — see weather.js, both
+// for past dates and anything beyond ~10 days out).
+function weatherHtml(status, lastViewedAt) {
+  if (status !== "sun") return "";
+  const forecast = findClosestForecast(cloudForecast, new Date(lastViewedAt));
+  if (!forecast) return "";
+  const { clearPercent } = forecast;
+  // A rough, honest band alongside the number — "73% molnfritt" alone
+  // reads as more precise than an hours-away forecast actually is.
+  let note;
+  if (clearPercent >= 75) note = "sannolikt klar himmel";
+  else if (clearPercent >= 40) note = "delvis molnigt";
+  else note = "mest molnigt — solen kan vara skymd";
+  return `<div class="popup-weather">☁️ SMHI-prognos: ${note} (${clearPercent} % molnfritt)</div>`;
+}
+
 function popupHtml(entry) {
   const { terrace, lastResult: result, lastViewedAt } = entry;
   const { status, blocker, sunInfo } = result;
@@ -278,6 +312,7 @@ function popupHtml(entry) {
     ${unverifiedNoticeHtml(terrace.feature?.properties, lat, lon)}
     <div class="popup-status ${status}">${label}</div>
     <div class="popup-detail">${detail}</div>
+    ${weatherHtml(status, lastViewedAt)}
     <div class="popup-timeline">${timelineSectionHtml(entry)}</div>
     <div class="popup-vote" title="Stämmer sol/skugga-bedömningen ovan med verkligheten just nu? Hjälper till att förbättra beräkningen framöver.">
       Stämmer det just nu?

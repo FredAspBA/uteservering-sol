@@ -628,16 +628,25 @@ Googles Solar API (betalt per anrop) — båda faller på avgiftsfrihetskravet.
 Inte en del av fas 1–6 (som handlar om skugg-/platsdata), men värda att
 nämna som separata, mindre uppslag som kom upp under fas 6-arbetet:
 
-- **Väder (SMHI:s öppna API).** Appen svarar idag "skulle solen nå hit
-  om himlen var klar" men vet inget om molnighet — en "Sol"-status kan
-  vara vilseledande en mulen dag. SMHI:s API är gratis, kräver ingen
-  nyckel, ger prognos per koordinat inklusive molntäckning. Begränsning:
-  prognoser sträcker sig bara ~10 dagar framåt, så det skulle visas
-  villkorat (bara när valt datum ligger inom fönstret) — vilket
-  matchar appens huvudsakliga användning ("ska jag gå nu/idag/imorgon")
-  väl. Föreslagen UI: en tilläggsbadge ("73 % molnfritt"), inte en
-  ersättning av den exakta skuggberäkningen. **Inväntar Fredriks OK att
-  bygga.**
+- **✅ Väder (SMHI:s öppna API) — byggt och verifierat 2026-08-12.**
+  `src/weather.js`. Ett anrop per sidladdning (bekräftat live: exakt 1
+  SMHI-anrop trots flera popup-öppningar och datumbyten under samma
+  session), täcker hela ~10-dagarsfönstret på en gång, cachas i minnet —
+  tidsreglaget/datumbyte behöver aldrig hämta om. Badge i popupen
+  ("☁️ SMHI-prognos: sannolikt klar himmel (100 % molnfritt)") bara vid
+  status "Sol" (skugga/mörkt/osäker blir inte mer eller mindre sant av
+  moln) och bara när valt datum ligger inom prognosfönstret — verifierat
+  med ett datum 30 dagar fram: "Sol"-status kvar (skuggberäkningen
+  opåverkad), ingen badge (tyst utelämnad, som avsett).
+
+  **Viktig upptäckt under bygget:** det API jag mindes från träningsdata
+  (`pmp3g`) var avvecklat **2026-03-31** — ersatt av `snow1g`, en annan
+  URL-struktur. Hittades genom att testa live mot riktig data istället
+  för att bygga blint mot minnet; se `src/weather.js`s kommentar.
+  Molnparametern heter `cloud_area_fraction`, oktal skala 0–8 (samma
+  skala som gamla API:t, nytt namn). Attribution krävs: SMHI:s öppna
+  data är **CC BY 4.0**, inte CC0 som Lantmäteriets källor — kredit
+  tillagd i sidfoten (`#data-credits`).
 - **Fixa de 12 anomaly-fallen** (se ovan) — sannolikt en liten,
   fristående fix i hur representativ punkt väljs för stora
   way-taggade polygoner, oberoende av det större "terrass som
