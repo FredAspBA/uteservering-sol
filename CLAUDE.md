@@ -96,10 +96,12 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       `FredAspBark`); stället flyttas då automatiskt över till att vara en
       vanlig terrass vid nästa datasynk (försvinner ur unverified-venues,
       dyker upp i terraces.geojson).
-- [ ] **(Ev.) Web Worker för skuggberäkningen.** Backades ut eftersom
-      testbrowsern inte kunde leverera worker-postMessage. Kan tas upp igen
-      om det testas i en vanlig browser — skulle ta bort den lilla frysningen
-      vid kall laddning helt.
+- [ ] **(Ev.) Web Worker för skuggberäkningen.** Spike 2026-08-15 (vanlig
+      browser): **PROVEN MÖJLIG** — postMessage fungerar perfekt. Backades ut
+      tidigare pga testbrowser-begränsning. Framtida implementering: flytta
+      terrass-loop + spatial index till worker, huvudtråd blir responsive.
+      Skulle ta bort kall-laddningsfrysningen helt (~8.6s → ~5-6s). Arbetsomfattning:
+      refaktor shadow.js arkitektur + Turf.js-serialisering (~2-3 h).
 - [ ] **Löpande:** verifiera att "Dölj i appen" / "Uteservering: Nej" fortsatt
       döljer rätt ställen när listan växer, och håll `data/geocode-cache.json`
       med (ny geokodning sker bara för nya dubblettfilialer).
