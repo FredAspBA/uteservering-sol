@@ -179,6 +179,29 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
   Kräver `pip install -r scripts/requirements.txt` (repots enda Python-
   beroende, `duckdb`) — körs med `python scripts/overture-height-experiment.py`.
 - `database.rules.json` — Firebase-regler (måste publiceras manuellt, se nedan).
+- `src/favorites.js` — favoriter i localStorage (`isFavorite`,
+  `toggleFavorite`, `getAllFavorites`, `clearAllFavorites`). Används av
+  popupens ⭐-knapp och av "Endast favoriter"-filtret i `app.js`.
+
+### Karta över `src/app.js`
+
+~720 rader, men uppdelad i tydliga block. **Läs bara det block du ska ändra
+i** — hela filen behöver sällan läsas. Blocken ligger i denna ordning uppifrån
+och ner; radnummer utelämnas med flit (de ruttnar vid varje ändring, använd
+`grep -n "function namnet" src/app.js`).
+
+| Block | Innehåll |
+|-------|----------|
+| Konstanter & DOM | `MALMO_CENTER`, `STATUS_LABELS`, `STATUS_COLORS`, `VOTE_STROKE_COLORS`, `cssVar()`, DOM-referenser, modultillstånd (`terraces`, `buildings`, `markers`, `cloudForecast`) |
+| Tid & beräkning | `minutesToHHMM()`, `dateFromInputs()`, `setInputsToNow()`, `predictionSnapshot()`, `computeOne()` |
+| Mini-dagstidslinje | `TIMELINE_STEP_MINUTES`, `computeTimeline()`, `timelineHtml()`, `timelineSectionHtml()`, `ensureTimeline()` |
+| Verksamhetstyp & alkohol | `VENUE_LABELS`, `venueInfo()`, `venueLineHtml()`, `unverifiedNoticeHtml()` |
+| Popup | `weatherHtml()`, `popupHtml()` (bygger även ⭐-knappen), `escapeHtml()` |
+| Röster & favoriter | `updateMarkerVoteStroke()`, `updateVoteCount()`, `wireVoteButtons()` (kopplar både tumme upp/ner och favoritknappen) |
+| Markörer & omberäkning | `renderMarkers()`, `CHUNK_SIZE`, `yieldToBrowser()`, `recompute()` — se **Prestanda** nedan innan du rör dessa |
+| Filter | `applyFilters()` — text + "Endast alkohol" + "Endast favoriter" i ett svep |
+| "Närmast mig" | `EARTH_RADIUS_M`, `haversineMeters()`, `findNearestMatching()`, `findNearestSunny()`, `findNearestSunnyWithAlcohol()` |
+| Start | `downloadVotesJson()`, `debounce()`, `init()` + alla `addEventListener`-kopplingar sist i filen |
 
 ## Datapipeline (OSM → appen)
 
