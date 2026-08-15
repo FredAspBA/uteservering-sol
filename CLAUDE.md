@@ -74,6 +74,10 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       den närmaste. Verifierat: exakt 12 terrasser gick anomaly→sol,
       inget annat ändrades. Se `PLAN-datakvalitet.md` fas 6 för hela
       diagnosen.
+- [x] **Favoriter — klart 2026-08-15.** Lätt localStorage-stöd för att spara
+      favoritställen (★/☆ knapp i popupen), med filtrering ("Endast favoriter"
+      checkbox). Samma mönster som röstloggen, ingen Firebase-integrering. E2E
+      testad: toggle, filter, unfilter.
 - [ ] **Synka in Fredriks OSM-taggningar.** Fredrik taggar löpande i OSM
       (konto `FredAspBark`) — hittills bl.a. `alcohol=yes` på Hygge Mat & Bar.
       När en omgång är gjord: vänta ~1 h (Overpass-uppdatering), kör sedan
