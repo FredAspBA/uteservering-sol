@@ -110,6 +110,9 @@ klara, direkt-till-redigeraren — är alla byggda och live.)
 - `DATAKALLOR.md` — inventering av datakällor för byggnader, sol, skuggor,
   alkohol och uteservering: licenser, kostnad, länkar, och vad som valdes
   bort och varför. Innehåller även mejlmallen för begäran om allmän handling.
+- `PRODUCT.md` — produktschema (plattform, användare, syfte, positionering,
+  principer) enligt `impeccable`-skillets format. Läs vid produktbeslut
+  (t.ex. nya funktioner) för att stämma av mot syfte och principer.
 
 ## Kör och deploya
 
