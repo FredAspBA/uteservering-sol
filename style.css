@@ -261,7 +261,8 @@ input {
   font-size: 0.9rem;
 }
 
-.alcohol-filter-field {
+.alcohol-filter-field,
+.favorites-filter-field {
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -275,12 +276,14 @@ input {
   cursor: pointer;
 }
 
-.alcohol-filter-field:has(#alcohol-filter:checked) {
+.alcohol-filter-field:has(#alcohol-filter:checked),
+.favorites-filter-field:has(#favorites-filter:checked) {
   border-color: var(--color-sun-strong);
   background: color-mix(in srgb, var(--color-sun) 14%, var(--color-bg));
 }
 
-.alcohol-filter-field input {
+.alcohol-filter-field input,
+.favorites-filter-field input {
   width: 15px;
   height: 15px;
   accent-color: var(--color-sun-strong);
@@ -554,18 +557,26 @@ path.terrace-marker:hover {
   font-style: italic;
 }
 
-.popup-vote {
+.popup-actions {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.4rem;
   margin-top: 0.55rem;
   padding-top: 0.45rem;
   border-top: 1px solid var(--color-surface-border);
+}
+
+.popup-vote {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.8rem;
   color: var(--color-ink-muted);
 }
 
-.vote-btn {
+.vote-btn,
+.favorite-btn {
   border: 1px solid var(--color-surface-border);
   background: var(--color-bg);
   border-radius: 8px;
@@ -577,7 +588,8 @@ path.terrace-marker:hover {
   line-height: 1.3;
 }
 
-.vote-btn:hover {
+.vote-btn:hover,
+.favorite-btn:hover {
   filter: brightness(0.97);
 }
 
@@ -589,6 +601,11 @@ path.terrace-marker:hover {
 .vote-btn.active.vote-down {
   background: color-mix(in srgb, var(--color-anomaly) 18%, var(--color-surface));
   border-color: var(--color-anomaly);
+}
+
+.favorite-btn.active {
+  background: color-mix(in srgb, var(--color-sun) 18%, var(--color-surface));
+  border-color: var(--color-sun-strong);
 }
 
 /* ---------- Small screens ---------- */
@@ -666,6 +683,7 @@ path.terrace-marker:hover {
   }
 
   .alcohol-filter-field,
+  .favorites-filter-field,
   #near-me-button,
   #near-me-alcohol-button {
     width: 100%;

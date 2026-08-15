@@ -2,6 +2,7 @@ import { loadData } from "./dataLoad.js";
 import { computeShading } from "./shadow.js";
 import { getSunInfo } from "./sun.js";
 import { getVoteForView, recordVote, getAllVotes, clearAllVotes, exportVotesAsJson } from "./votes.js";
+import { isFavorite, toggleFavorite, getAllFavorites, clearAllFavorites } from "./favorites.js";
 import { fetchExcludedKeys } from "./cloudVotes.js";
 import { fetchCloudForecast, findClosestForecast } from "./weather.js";
 
@@ -54,6 +55,7 @@ const nowButton = document.getElementById("now-button");
 const statusLine = document.getElementById("status-line");
 const searchInput = document.getElementById("search-input");
 const alcoholFilterCheckbox = document.getElementById("alcohol-filter");
+const favoritesFilterCheckbox = document.getElementById("favorites-filter");
 const searchStatus = document.getElementById("search-status");
 const terraceNamesList = document.getElementById("terrace-names");
 const voteCount = document.getElementById("vote-count");
@@ -305,6 +307,7 @@ function popupHtml(entry) {
   }
 
   const vote = getVoteForView(terrace.id, lastViewedAt);
+  const isFav = isFavorite(terrace.id);
   const [lon, lat] = terrace.point.geometry.coordinates;
   return `
     <div class="popup-title">${escapeHtml(terrace.name)}</div>
@@ -314,10 +317,15 @@ function popupHtml(entry) {
     <div class="popup-detail">${detail}</div>
     ${weatherHtml(status, lastViewedAt)}
     <div class="popup-timeline">${timelineSectionHtml(entry)}</div>
-    <div class="popup-vote" title="Stämmer sol/skugga-bedömningen ovan med verkligheten just nu? Hjälper till att förbättra beräkningen framöver.">
-      Stämmer det just nu?
-      <button type="button" class="vote-btn vote-up ${vote === "up" ? "active" : ""}" data-vote="up">👍</button>
-      <button type="button" class="vote-btn vote-down ${vote === "down" ? "active" : ""}" data-vote="down">👎</button>
+    <div class="popup-actions">
+      <div class="popup-vote" title="Stämmer sol/skugga-bedömningen ovan med verkligheten just nu? Hjälper till att förbättra beräkningen framöver.">
+        Stämmer det just nu?
+        <button type="button" class="vote-btn vote-up ${vote === "up" ? "active" : ""}" data-vote="up">👍</button>
+        <button type="button" class="vote-btn vote-down ${vote === "down" ? "active" : ""}" data-vote="down">👎</button>
+      </div>
+      <button type="button" class="favorite-btn ${isFav ? "active" : ""}" data-favorite="${terrace.id}" title="Spara som favorit">
+        ${isFav ? "⭐" : "☆"}
+      </button>
     </div>
   `;
 }
@@ -372,6 +380,17 @@ function wireVoteButtons(entry) {
       }, 0);
     };
   });
+  const favoriteBtn = el.querySelector(".favorite-btn");
+  if (favoriteBtn) {
+    favoriteBtn.onclick = () => {
+      toggleFavorite(entry.terrace.id);
+      setTimeout(() => {
+        entry.marker.setPopupContent(popupHtml(entry));
+        wireVoteButtons(entry);
+        applyFilters();
+      }, 0);
+    };
+  }
 }
 
 function renderMarkers() {
@@ -507,19 +526,21 @@ async function recompute() {
   document.documentElement.style.setProperty("--day-progress", `${(Number(timeSlider.value) / 1439) * 100}%`);
 }
 
-// Combines the text search with the "Endast alkohol" checkbox — both
-// conditions must pass (AND), not two separate/competing filters. Runs on
-// input in either control (see the event listeners below).
+// Combines the text search with the "Endast alkohol" and "Endast favoriter"
+// checkboxes — all conditions must pass (AND), not separate/competing filters.
+// Runs on input in either control (see the event listeners below).
 function applyFilters() {
   const query = searchInput.value.trim().toLowerCase();
   const alcoholOnly = alcoholFilterCheckbox.checked;
+  const favoritesOnly = favoritesFilterCheckbox.checked;
   const matches = [];
   let visibleCount = 0;
 
   for (const entry of markers) {
     const nameMatches = !query || entry.terrace.name.toLowerCase().includes(query);
     const alcoholMatches = !alcoholOnly || servesAlcohol(entry);
-    const isMatch = nameMatches && alcoholMatches;
+    const favoriteMatches = !favoritesOnly || isFavorite(entry.terrace.id);
+    const isMatch = nameMatches && alcoholMatches && favoriteMatches;
     if (isMatch) {
       if (!markersLayer.hasLayer(entry.marker)) markersLayer.addLayer(entry.marker);
       visibleCount++;
@@ -536,8 +557,11 @@ function applyFilters() {
       map.flyTo([lat, lon], Math.max(map.getZoom(), 17));
       matches[0].marker.openPopup();
     }
-  } else if (alcoholOnly) {
-    searchStatus.textContent = `${visibleCount} ställe${visibleCount === 1 ? "" : "n"} med alkohol`;
+  } else if (alcoholOnly || favoritesOnly) {
+    const parts = [];
+    if (alcoholOnly) parts.push("alkohol");
+    if (favoritesOnly) parts.push("favoriter");
+    searchStatus.textContent = `${visibleCount} ställe${visibleCount === 1 ? "" : "n"} med ${parts.join(" och ")}`;
   } else {
     searchStatus.textContent = "";
   }
@@ -658,6 +682,7 @@ nowButton.addEventListener("click", () => {
 });
 searchInput.addEventListener("input", debounce(applyFilters, 120));
 alcoholFilterCheckbox.addEventListener("change", applyFilters);
+favoritesFilterCheckbox.addEventListener("change", applyFilters);
 exportVotesButton.addEventListener("click", downloadVotesJson);
 clearVotesButton.addEventListener("click", () => {
   if (getAllVotes().length && !confirm("Rensa alla dina loggade bedömningar på den här enheten?")) return;
