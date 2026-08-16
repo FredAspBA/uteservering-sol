@@ -166,8 +166,8 @@ en halv sekund.
   HTML (samma `escapeHtml()` som redan användes för uteserveringsnamn), så
   att ingen kan köra skadlig kod i besökarens webbläsare genom att tagga en
   byggnad illvilligt i OpenStreetMap.
-- **SRI (Subresource Integrity)**: Leaflet, SunCalc och Turf.js laddas från
-  CDN:er (unpkg/jsdelivr) med `integrity`-hashar och exakta versioner, så att
+- **SRI (Subresource Integrity)**: SunCalc och Turf.js laddas från CDN:er
+  (jsdelivr) med `integrity`-hashar och exakta versioner, så att
   filerna vägras laddas om en CDN skulle manipuleras eller bytas ut i det
   tysta. (Google Fonts CSS undantaget — det svarar med olika innehåll per
   webbläsare, vilket gör SRI opraktiskt där.)

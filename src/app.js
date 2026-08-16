@@ -5,6 +5,7 @@ import { getVoteForView, recordVote, getAllVotes, clearAllVotes, exportVotesAsJs
 import { isFavorite, toggleFavorite, getAllFavorites, clearAllFavorites } from "./favorites.js";
 import { fetchExcludedKeys } from "./cloudVotes.js";
 import { fetchCloudForecast, findClosestForecast } from "./weather.js";
+import { createIsoHero } from "./isoHero.js";
 
 const MALMO_CENTER = [55.605, 13.0038];
 
@@ -22,6 +23,8 @@ const STATUS_COLOR_VAR = {
   anomaly: "--color-anomaly",
 };
 
+const STATUS_RANK = { sun: 0, shade: 1, anomaly: 2, night: 3 };
+
 // Read from the CSS custom properties (style.css) rather than duplicating
 // hex values here, so the palette only ever lives in one place.
 function cssVar(name) {
@@ -35,20 +38,14 @@ const STATUS_COLORS = {
   anomaly: cssVar("--color-anomaly"),
 };
 
-const VOTE_STROKE_COLORS = {
+const VOTE_RING_COLORS = {
   up: cssVar("--color-confirm"),
   down: cssVar("--color-anomaly"),
-  none: cssVar("--color-ink"),
 };
 
-const map = L.map("map").setView(MALMO_CENTER, 16);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: "&copy; OpenStreetMap-bidragsgivare",
-  maxZoom: 19,
-}).addTo(map);
-const markersLayer = L.layerGroup().addTo(map);
-
 const dateInput = document.getElementById("date-input");
+const datePrevButton = document.getElementById("date-prev");
+const dateNextButton = document.getElementById("date-next");
 const timeSlider = document.getElementById("time-slider");
 const timeDisplay = document.getElementById("time-display");
 const nowButton = document.getElementById("now-button");
@@ -63,17 +60,30 @@ const exportVotesButton = document.getElementById("export-votes-button");
 const clearVotesButton = document.getElementById("clear-votes-button");
 const nearMeButton = document.getElementById("near-me-button");
 const nearMeAlcoholButton = document.getElementById("near-me-alcohol-button");
+const resultsList = document.getElementById("results-list");
+const loadMoreButton = document.getElementById("load-more-button");
+const isoCanvas = document.getElementById("iso-canvas");
+const isoHeroFocusEl = document.getElementById("iso-hero-focus");
+const isoHeroMetaEl = document.getElementById("iso-hero-meta");
+const isoHeroCaptionEl = document.getElementById("iso-hero-caption");
+
+const isoHero = createIsoHero(isoCanvas);
 
 let terraces = [];
 let buildings = null;
-let markers = [];
+let entries = [];
+let filteredSorted = [];
+let visibleCount = 0;
+let focusedEntry = null;
+
+const INITIAL_VISIBLE = 24;
+const LOAD_MORE_STEP = 24;
 
 // Fetched once, in the background, without blocking the main data load
-// below — it's a "nice to have" popup badge, not something worth delaying
-// the map for. By the time any popup can actually open (after init()
-// finishes, and popups render lazily on popupopen — see renderMarkers()),
-// this has almost always long since resolved; null just means "no cloud
-// badge yet/at all", which popupHtml() already handles gracefully.
+// below — it's a "nice to have" card badge, not something worth delaying
+// the page for. By the time any card can actually be rendered (after
+// init() finishes), this has almost always long since resolved; null just
+// means "no cloud badge yet/at all", which weatherHtml() already handles.
 let cloudForecast = null;
 fetchCloudForecast(MALMO_CENTER[0], MALMO_CENTER[1]).then((data) => {
   cloudForecast = data;
@@ -105,6 +115,14 @@ function setInputsToNow() {
   timeDisplay.textContent = minutesToHHMM(Number(timeSlider.value));
 }
 
+function stepDate(days) {
+  const [year, month, day] = dateInput.value.split("-").map(Number);
+  const d = new Date(year, month - 1, day);
+  d.setDate(d.getDate() + days);
+  dateInput.value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  recompute();
+}
+
 function predictionSnapshot(result) {
   return {
     status: result.status,
@@ -122,10 +140,10 @@ function computeOne(terrace, date) {
 }
 
 // ---------- Mini day-timeline ----------
-// Computed on demand (only for the terrace whose popup is open, see
+// Computed on demand (only for the terrace whose card is expanded, see
 // ensureTimeline()) rather than for all terraces up front — a single
-// terrace's 48 half-hour samples is cheap; doing that for ~200 terraces
-// on every load would not be.
+// terrace's 48 half-hour samples is cheap; doing that for ~900 terraces on
+// every load would not be.
 const TIMELINE_STEP_MINUTES = 30;
 const timelineCache = new Map(); // `${terraceId}|${dateOnly}` -> points array
 
@@ -177,8 +195,8 @@ function timelineSectionHtml(entry) {
   return `<span class="timeline-loading">Laddar dagsöversikt…</span>`;
 }
 
-// Only ever called for a terrace whose popup is open (see popupopen
-// handler below), so this never runs 200 times in a row.
+// Only ever called for an entry whose card detail is expanded, so this
+// never runs for all ~900 terraces in a row.
 function ensureTimeline(entry) {
   const dateOnly = dateInput.value;
   if (entry.timelineDateOnly === dateOnly && entry.timelinePoints) return;
@@ -191,15 +209,13 @@ function ensureTimeline(entry) {
   }
   entry.timelinePoints = points;
   entry.timelineDateOnly = dateOnly;
-  if (entry.marker.isPopupOpen() && entry.lastResult) {
-    entry.marker.setPopupContent(popupHtml(entry));
-    updateMarkerVoteStroke(entry.marker, entry.terrace.id, entry.lastViewedAt);
-    wireVoteButtons(entry);
+  if (entry.expanded && entry.card) {
+    const timelineEl = entry.card.querySelector(".card-timeline");
+    if (timelineEl) timelineEl.innerHTML = timelineSectionHtml(entry);
   }
 }
 
 // ---------- Venue type & alcohol ----------
-// Swedish labels for the OSM amenity/shop/leisure value each place carries.
 const VENUE_LABELS = {
   restaurant: "Restaurang",
   cafe: "Kafé",
@@ -247,7 +263,7 @@ function venueLineHtml(properties = {}) {
   if (alcohol === "yes") parts.push(`<span class="venue-alcohol yes">🍷 Serverar alkohol</span>`);
   else if (alcohol === "no") parts.push(`<span class="venue-alcohol no">Ingen alkohol</span>`);
   else parts.push(`<span class="venue-alcohol unknown" title="OpenStreetMap saknar uppgift om alkohol för det här stället">Alkohol: okänt</span>`);
-  return parts.length ? `<div class="popup-venue">${parts.join("")}</div>` : "";
+  return parts.length ? `<div class="card-venue-line">${parts.join("")}</div>` : "";
 }
 
 // Fas 5, del B: a place from Malmö stads serveringstillstånd-register with
@@ -258,7 +274,7 @@ function unverifiedNoticeHtml(properties, lat, lon) {
   if (properties?.verified !== false) return "";
   const editUrl = `https://www.openstreetmap.org/edit#map=19/${lat}/${lon}`;
   return `
-    <div class="popup-unverified">
+    <div class="card-unverified">
       ⚠️ Inte i OpenStreetMap ännu — läget är en ungefärlig geokodning
       av adressen, inte en exakt position. Finns i Malmö stads
       serveringstillståndsregister.
@@ -269,35 +285,61 @@ function unverifiedNoticeHtml(properties, lat, lon) {
 
 // Adds a cloud-cover caveat to a "Sol" verdict — the shadow calculation
 // only knows the sun's geometric position, not whether clouds would
-// actually block it, so a sunny-by-geometry terrace on an overcast day
-// would otherwise show an unqualified "Sol". Only relevant for status
-// "sun" (clouds don't make "Skugga"/"Mörkt"/"Osäker" any more or less
-// true) and only when the viewed moment is within SMHI's forecast window
-// (findClosestForecast() returns null outside it — see weather.js, both
-// for past dates and anything beyond ~10 days out).
+// actually block it. Only relevant for status "sun" and only when the
+// viewed moment is within SMHI's forecast window (findClosestForecast()
+// returns null outside it — see weather.js).
 function weatherHtml(status, lastViewedAt) {
   if (status !== "sun") return "";
   const forecast = findClosestForecast(cloudForecast, new Date(lastViewedAt));
   if (!forecast) return "";
   const { clearPercent } = forecast;
-  // A rough, honest band alongside the number — "73% molnfritt" alone
-  // reads as more precise than an hours-away forecast actually is.
   let note;
   if (clearPercent >= 75) note = "sannolikt klar himmel";
   else if (clearPercent >= 40) note = "delvis molnigt";
   else note = "mest molnigt — solen kan vara skymd";
-  return `<div class="popup-weather">☁️ SMHI-prognos: ${note} (${clearPercent} % molnfritt)</div>`;
+  return `<div class="card-weather">☁️ SMHI-prognos: ${note} (${clearPercent} % molnfritt)</div>`;
 }
 
-function popupHtml(entry) {
-  const { terrace, lastResult: result, lastViewedAt } = entry;
+// Small status glyphs (same shapes as the legend chips) sized for a
+// result card — a leaf for shade specifically encodes *why* (shaded like
+// under foliage), not just "a different color than sun".
+const STATUS_ICON_CLASS = { sun: "icon-sun", shade: "icon-leaf", night: "icon-moon", anomaly: "icon-alert" };
+
+const STATUS_ICON_SVG = {
+  sun: `<svg class="card-status-icon icon-sun" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="3.2" fill="currentColor" />
+    <g stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+      <line x1="8" y1="1" x2="8" y2="2.6" /><line x1="8" y1="13.4" x2="8" y2="15" />
+      <line x1="1" y1="8" x2="2.6" y2="8" /><line x1="13.4" y1="8" x2="15" y2="8" />
+      <line x1="2.9" y1="2.9" x2="4" y2="4" /><line x1="12" y1="12" x2="13.1" y2="13.1" />
+      <line x1="13.1" y1="2.9" x2="12" y2="4" /><line x1="4" y1="12" x2="2.9" y2="13.1" />
+    </g>
+  </svg>`,
+  shade: `<svg class="card-status-icon icon-leaf" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M2 13 C2 6 7 2 14 2 C14 9 10 13 3.5 13 Z" fill="currentColor" />
+    <path d="M3 12.5 C6 9 9 6 13 2.5" stroke="var(--color-surface)" stroke-width="0.9" fill="none" stroke-linecap="round" />
+  </svg>`,
+  night: `<svg class="card-status-icon icon-moon" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="6" fill="currentColor" /><circle cx="11" cy="6" r="5" fill="var(--color-surface)" />
+  </svg>`,
+  anomaly: `<svg class="card-status-icon icon-alert" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M8 1.5 L15 14.5 L1 14.5 Z" fill="currentColor" />
+    <rect x="7.35" y="6" width="1.3" height="4.2" rx="0.6" fill="var(--color-surface)" />
+    <circle cx="8" cy="12" r="0.9" fill="var(--color-surface)" />
+  </svg>`,
+};
+
+function whySummary(result) {
+  if (result.status === "sun") return "Fri sikt mot solen";
+  if (result.status === "shade" && result.blocker) return `Skuggas av ${result.blocker.name} · ${result.blocker.distanceMeters.toFixed(0)} m`;
+  if (result.status === "anomaly") return "Punkten ligger i en byggnad";
+  return "";
+}
+
+function explainHtml(result) {
   const { status, blocker, sunInfo } = result;
-  const label = STATUS_LABELS[status];
   let detail = `Solhöjd: ${sunInfo.altitudeDeg.toFixed(1)}°, riktning mot solen: ${sunInfo.bearingDeg.toFixed(0)}°`;
   if (status === "shade" && blocker) {
-    // blocker.name comes straight from an OSM building's name/addr:street
-    // tag — world-editable data, so it must be escaped like any other
-    // untrusted string before landing in innerHTML (see escapeHtml below).
     detail += `<br>Skuggas av ${escapeHtml(blocker.name)} (${blocker.distanceMeters.toFixed(0)} m bort, behöver ≥${blocker.requiredHeightMeters.toFixed(
       1
     )} m, är ${blocker.actualHeightMeters.toFixed(1)} m)`;
@@ -305,20 +347,21 @@ function popupHtml(entry) {
   if (status === "anomaly") {
     detail += `<br>Punkten hamnar inuti en byggnad i kartdatan – gå inte i god för detta resultat.`;
   }
+  return `<div class="card-explain">${detail}</div>`;
+}
 
+function cardDetailHtml(entry) {
+  const { terrace, lastResult: result, lastViewedAt } = entry;
+  const [lon, lat] = terrace.point.geometry.coordinates;
   const vote = getVoteForView(terrace.id, lastViewedAt);
   const isFav = isFavorite(terrace.id);
-  const [lon, lat] = terrace.point.geometry.coordinates;
   return `
-    <div class="popup-title">${escapeHtml(terrace.name)}</div>
-    ${venueLineHtml(terrace.feature?.properties)}
     ${unverifiedNoticeHtml(terrace.feature?.properties, lat, lon)}
-    <div class="popup-status ${status}">${label}</div>
-    <div class="popup-detail">${detail}</div>
-    ${weatherHtml(status, lastViewedAt)}
-    <div class="popup-timeline">${timelineSectionHtml(entry)}</div>
-    <div class="popup-actions">
-      <div class="popup-vote" title="Stämmer sol/skugga-bedömningen ovan med verkligheten just nu? Hjälper till att förbättra beräkningen framöver.">
+    ${explainHtml(result)}
+    ${weatherHtml(result.status, lastViewedAt)}
+    <div class="card-timeline">${timelineSectionHtml(entry)}</div>
+    <div class="card-actions">
+      <div class="card-vote" title="Stämmer sol/skugga-bedömningen ovan med verkligheten just nu? Hjälper till att förbättra beräkningen framöver.">
         Stämmer det just nu?
         <button type="button" class="vote-btn vote-up ${vote === "up" ? "active" : ""}" data-vote="up">👍</button>
         <button type="button" class="vote-btn vote-down ${vote === "down" ? "active" : ""}" data-vote="down">👎</button>
@@ -336,129 +379,228 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function updateMarkerVoteStroke(marker, terraceId, viewedAt) {
-  const vote = getVoteForView(terraceId, viewedAt);
-  marker.setStyle({
-    color: VOTE_STROKE_COLORS[vote ?? "none"],
-    weight: vote ? 3 : 1.5,
-  });
-}
-
 function updateVoteCount() {
   const n = getAllVotes().length;
   voteCount.textContent = n === 1 ? "1 bedömning loggad" : `${n} bedömningar loggade`;
 }
 
-// Re-attaches vote button click handlers. Needed after every popup content
-// refresh (not just the initial popupopen), since setPopupContent replaces
-// the popup's inner DOM nodes and with them any previously bound listeners.
-// Using onclick (not addEventListener) means re-wiring never stacks up
-// duplicate handlers on the same node.
-function wireVoteButtons(entry) {
-  const el = entry.marker.getPopup()?.getElement();
-  if (!el) return;
-  el.querySelectorAll(".vote-btn").forEach((btn) => {
+// Re-attaches vote/favorite click handlers inside an expanded card's detail
+// region. Needed after every detail refresh (setting .innerHTML replaces
+// the nodes and with them any previously bound listeners). Using onclick
+// (not addEventListener) means re-wiring never stacks up duplicate
+// handlers on the same node.
+function wireCardActions(entry) {
+  const detailEl = entry.card?.querySelector(".card-detail");
+  if (!detailEl) return;
+  detailEl.querySelectorAll(".vote-btn").forEach((btn) => {
     btn.onclick = () => {
-      recordVote(
-        entry.terrace.id,
-        entry.terrace.name,
-        entry.lastViewedAt,
-        predictionSnapshot(entry.lastResult),
-        btn.dataset.vote
-      );
+      recordVote(entry.terrace.id, entry.terrace.name, entry.lastViewedAt, predictionSnapshot(entry.lastResult), btn.dataset.vote);
       updateVoteCount();
-      // Deferred: Leaflet's "don't let map-level click handlers close this
-      // popup" check walks the DOM ancestry when the click finishes
-      // bubbling. Replacing the popup's content synchronously mid-bubble
-      // detaches the very button the click originated on, so that check
-      // finds no ancestors and the map treats it as a plain map click,
-      // closing the popup. Waiting a tick lets the click finish first.
-      setTimeout(() => {
-        entry.marker.setPopupContent(popupHtml(entry));
-        updateMarkerVoteStroke(entry.marker, entry.terrace.id, entry.lastViewedAt);
-        wireVoteButtons(entry);
-      }, 0);
+      refreshCardDetail(entry);
     };
   });
-  const favoriteBtn = el.querySelector(".favorite-btn");
+  const favoriteBtn = detailEl.querySelector(".favorite-btn");
   if (favoriteBtn) {
     favoriteBtn.onclick = () => {
       toggleFavorite(entry.terrace.id);
-      setTimeout(() => {
-        entry.marker.setPopupContent(popupHtml(entry));
-        wireVoteButtons(entry);
-        applyFilters();
-      }, 0);
+      refreshCardDetail(entry);
+      if (favoritesFilterCheckbox.checked) applyFilters({ preserveVisibleCount: true });
     };
   }
 }
 
-function renderMarkers() {
-  markersLayer.clearLayers();
-  markers = [];
+function refreshCardDetail(entry) {
+  const detailEl = entry.card?.querySelector(".card-detail");
+  if (!detailEl || !entry.lastResult) return;
+  detailEl.innerHTML = cardDetailHtml(entry);
+  wireCardActions(entry);
+  ensureTimeline(entry);
+}
 
-  for (const terrace of terraces) {
-    const [lon, lat] = terrace.point.geometry.coordinates;
-    // Fas 5, del B: a dashed stroke marks places not yet in OSM (see
-    // unverifiedNoticeHtml) — must never be visually identical to a
-    // confirmed OSM terrace on the map itself, not just in the popup.
-    const unverified = terrace.feature?.properties?.verified === false;
-    const marker = L.circleMarker([lat, lon], {
-      radius: 8,
-      weight: 1.5,
-      color: VOTE_STROKE_COLORS.none,
-      fillOpacity: unverified ? 0.7 : 0.92,
-      className: unverified ? "terrace-marker terrace-marker-unverified" : "terrace-marker",
-      dashArray: unverified ? "3,3" : null,
-    }).addTo(markersLayer);
-    marker.bindPopup("");
+function toggleExpand(entry) {
+  entry.expanded = !entry.expanded;
+  const summaryEl = entry.card.querySelector(".card-summary");
+  const detailEl = entry.card.querySelector(".card-detail");
+  summaryEl.setAttribute("aria-expanded", String(entry.expanded));
+  detailEl.hidden = !entry.expanded;
+  if (entry.expanded) refreshCardDetail(entry);
+}
 
-    const entry = {
-      terrace,
-      marker,
-      lastResult: null,
-      lastViewedAt: null,
-      timelinePoints: null,
-      timelineDateOnly: null,
-    };
-    marker.on("popupopen", () => {
-      // Closed popups no longer get their content set during recompute(), so
-      // render it here from the latest result when the popup opens. Guarded
-      // against a popup opened before the first recompute has reached this
-      // marker (lastResult still null → popupHtml() would throw).
-      if (entry.lastResult) marker.setPopupContent(popupHtml(entry));
-      wireVoteButtons(entry);
-      ensureTimeline(entry);
-    });
+function cardSummaryInnerHtml(entry) {
+  const { terrace, lastResult: result } = entry;
+  const label = STATUS_LABELS[result.status];
+  return `
+    ${STATUS_ICON_SVG[result.status] ?? STATUS_ICON_SVG.night}
+    <span class="card-main">
+      <span class="card-name">${escapeHtml(terrace.name)}</span>
+      ${venueLineHtml(terrace.feature?.properties)}
+    </span>
+    <span class="card-figures">
+      <span class="card-status-label ${result.status}">${label}</span>
+      <span class="card-why">${escapeHtml(whySummary(result))}${entry.distanceMeters != null ? ` · ${Math.round(entry.distanceMeters)} m` : ""}</span>
+      <span class="card-altitude">Solhöjd: ${result.sunInfo.altitudeDeg.toFixed(1)}°</span>
+    </span>
+    <svg class="card-chevron" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1 L6 6 L11 1" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg>
+  `;
+}
 
-    markers.push(entry);
+/** Builds a card's DOM once. Called only when an entry enters the
+ * rendered/visible set (renderVisibleList()) — NOT on every recompute()
+ * tick, which only patches existing cards (see refreshCardSummary()). */
+function buildCardNode(entry) {
+  const node = document.createElement("article");
+  node.className = "terrace-card";
+  node.dataset.status = entry.lastResult.status;
+
+  const summary = document.createElement("button");
+  summary.type = "button";
+  summary.className = "card-summary";
+  summary.setAttribute("aria-expanded", "false");
+  const detailId = `detail-${String(entry.terrace.id).replace(/[^a-zA-Z0-9_-]/g, "_")}`;
+  summary.setAttribute("aria-controls", detailId);
+  summary.innerHTML = cardSummaryInnerHtml(entry);
+  summary.addEventListener("click", () => {
+    focusEntry(entry);
+    toggleExpand(entry);
+  });
+
+  const detail = document.createElement("div");
+  detail.className = "card-detail";
+  detail.id = detailId;
+  detail.hidden = true;
+
+  node.appendChild(summary);
+  node.appendChild(detail);
+  entry.card = node;
+  entry.expanded = false;
+  return node;
+}
+
+/** Cheap per-tick patch of an already-rendered card: status text/classes,
+ * "why" line, sun altitude, left-border color (via data-status) — mirrors
+ * the old Leaflet build's marker.setStyle(), the one thing every visible
+ * card needs updated every recompute(). Rebuilding the card's innerHTML
+ * here (all ~24 visible cards, every slider tick) was measured as the
+ * obvious next bottleneck once markers became cards, so this only ever
+ * touches text nodes and a class list, never .innerHTML. */
+function refreshCardSummary(entry) {
+  if (!entry.card) return;
+  const { lastResult: result } = entry;
+  entry.card.dataset.status = result.status;
+  const label = entry.card.querySelector(".card-status-label");
+  label.textContent = STATUS_LABELS[result.status];
+  label.className = `card-status-label ${result.status}`;
+  const why = entry.card.querySelector(".card-why");
+  why.textContent = whySummary(result) + (entry.distanceMeters != null ? ` · ${Math.round(entry.distanceMeters)} m` : "");
+  entry.card.querySelector(".card-altitude").textContent = `Solhöjd: ${result.sunInfo.altitudeDeg.toFixed(1)}°`;
+  const currentIcon = entry.card.querySelector(".card-summary svg.card-status-icon");
+  if (currentIcon && !currentIcon.classList.contains(STATUS_ICON_CLASS[result.status])) {
+    currentIcon.outerHTML = STATUS_ICON_SVG[result.status] ?? STATUS_ICON_SVG.night;
   }
+  if (entry.expanded) refreshCardDetail(entry);
+}
 
-  // Build the search datalist via DOM properties, not an HTML string:
-  // escapeHtml() escapes <,>,& but NOT double quotes, and a terrace name
-  // (world-editable OSM data) containing a " would otherwise break out of
-  // the value="..." attribute and inject attributes. Setting opt.value
-  // sidesteps attribute parsing entirely.
+function compareEntries(a, b) {
+  const ra = STATUS_RANK[a.lastResult?.status] ?? 4;
+  const rb = STATUS_RANK[b.lastResult?.status] ?? 4;
+  if (ra !== rb) return ra - rb;
+  if (a.distanceMeters != null && b.distanceMeters != null) return a.distanceMeters - b.distanceMeters;
+  if (a.distanceMeters != null) return -1;
+  if (b.distanceMeters != null) return 1;
+  return a.terrace.name.localeCompare(b.terrace.name, "sv");
+}
+
+function renderVisibleList() {
+  resultsList.replaceChildren();
+  const visible = filteredSorted.slice(0, visibleCount);
+  if (!visible.length) {
+    const empty = document.createElement("p");
+    empty.className = "results-empty";
+    empty.textContent = "Inga uteserveringar matchar just nu.";
+    resultsList.appendChild(empty);
+  }
+  for (const entry of visible) {
+    resultsList.appendChild(buildCardNode(entry));
+    if (entry === focusedEntry) entry.card.classList.add("is-focused");
+  }
+  const remaining = filteredSorted.length - visible.length;
+  if (remaining > 0) {
+    loadMoreButton.hidden = false;
+    loadMoreButton.textContent = `Visa fler (${Math.min(remaining, LOAD_MORE_STEP)} till, ${remaining} kvar)`;
+  } else {
+    loadMoreButton.hidden = true;
+  }
+}
+
+loadMoreButton.addEventListener("click", () => {
+  visibleCount += LOAD_MORE_STEP;
+  renderVisibleList();
+});
+
+/** Sets the isometric hero + card highlight to `entry`. Gathering nearby
+ * real buildings (isoHero.setFocus) only happens here, on a deliberate
+ * focus change — not every recompute() tick, since the set of nearby
+ * buildings doesn't depend on the time of day, only their shadow lengths
+ * do (recomputed every tick in renderIsoHero() below). */
+function focusEntry(entry, { scroll = false } = {}) {
+  if (focusedEntry?.card) focusedEntry.card.classList.remove("is-focused");
+  focusedEntry = entry;
+  entry.card?.classList.add("is-focused");
+  isoHero.setFocus(entry.terrace, buildings);
+  renderIsoHero();
+  if (scroll) entry.card?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function renderIsoHero() {
+  if (!focusedEntry?.lastResult) return;
+  const { terrace, lastResult: result } = focusedEntry;
+  isoHeroFocusEl.textContent = terrace.name;
+  isoHeroMetaEl.textContent = `Solhöjd ${result.sunInfo.altitudeDeg.toFixed(1)}° · riktning ${result.sunInfo.bearingDeg.toFixed(0)}°`;
+  isoHeroCaptionEl.innerHTML =
+    result.status === "shade" && result.blocker
+      ? `<strong>${escapeHtml(terrace.name)}</strong> skuggas av <strong>${escapeHtml(result.blocker.name)}</strong>, ${result.blocker.distanceMeters.toFixed(
+          0
+        )} m bort (behöver ≥${result.blocker.requiredHeightMeters.toFixed(1)} m, är ${result.blocker.actualHeightMeters.toFixed(1)} m). Guld i kartan = den byggnaden.`
+      : result.status === "sun"
+      ? `<strong>${escapeHtml(terrace.name)}</strong> har fri sikt mot solen just nu — ingen byggnad inom räckhåll når över.`
+      : result.status === "anomaly"
+      ? `Osäkert underlag: punkten ligger inuti en byggnad i kartdatan.`
+      : `Solen är under horisonten.`;
+  isoHero.render({ sunInfo: result.sunInfo, statusColor: STATUS_COLORS[result.status] });
+}
+
+function renderResults() {
+  entries = terraces.map((terrace) => ({
+    terrace,
+    card: null,
+    expanded: false,
+    lastResult: null,
+    lastViewedAt: null,
+    distanceMeters: null,
+    timelinePoints: null,
+    timelineDateOnly: null,
+  }));
+
+  // Search datalist via DOM properties, not an HTML string: escapeHtml()
+  // escapes <,>,& but NOT double quotes, and a terrace name (world-editable
+  // OSM data) containing a " would otherwise break out of value="...".
   const options = document.createDocumentFragment();
-  for (const t of terraces) {
+  for (const entry of entries) {
     const opt = document.createElement("option");
-    opt.value = t.name;
+    opt.value = entry.terrace.name;
     options.appendChild(opt);
   }
   terraceNamesList.replaceChildren(options);
 }
 
-// A full recompute of all ~938 terraces measures ~150ms after the spatial-
+// A full recompute of all ~900 terraces measures ~150ms after the spatial-
 // grid and ray-pre-filter optimizations in shadow.js, so chunked yielding
 // is only a light safety valve for much slower devices, not a necessity.
 //
 // The yield itself uses MessageChannel rather than setTimeout(0) on
 // purpose: browsers clamp setTimeout in BACKGROUND tabs to >=1000ms per
-// tick, which turned "47 yields x ~0ms" into "47 yields x ~1s" — a page
-// left loading in another tab took 40-70s to finish for no real reason
-// (this was observed and misdiagnosed as compute cost twice before the
-// throttling was identified). MessageChannel message delivery is exempt
-// from that clamp, so the same code loads fast in fore- and background.
+// tick — see the original note in this file's git history for the
+// measured 40-70s regression that caused.
 const CHUNK_SIZE = 100;
 const yieldChannel = new MessageChannel();
 function yieldToBrowser() {
@@ -480,39 +622,21 @@ async function recompute() {
 
   const centerSun = getSunInfo(MALMO_CENTER[0], MALMO_CENTER[1], date);
 
-  for (let i = 0; i < markers.length; i++) {
+  for (let i = 0; i < entries.length; i++) {
     if (i > 0 && i % CHUNK_SIZE === 0) await yieldToBrowser();
     // A newer recompute() started (e.g. the user kept dragging the time
     // slider) — abandon this stale run rather than race it to the finish.
     if (generation !== computeGeneration) return;
 
-    const entry = markers[i];
-    const { terrace, marker } = entry;
-    const result = computeOne(terrace, date);
+    const entry = entries[i];
+    const result = computeOne(entry.terrace, date);
     entry.lastResult = result;
     entry.lastViewedAt = viewedAt;
 
-    // Fill colour (sun/shade/night) and the vote stroke in a single
-    // setStyle — one redraw per marker instead of two. Every marker on the
-    // map needs this each recompute; it's the actual point of the pass.
-    const vote = getVoteForView(terrace.id, viewedAt);
-    marker.setStyle({
-      fillColor: STATUS_COLORS[result.status],
-      color: VOTE_STROKE_COLORS[vote ?? "none"],
-      weight: vote ? 3 : 1.5,
-    });
-
-    // Popup content is only rebuilt for the ONE popup that's actually open.
-    // Building popupHtml() for all ~938 markers on every time-slider tick (as
-    // this used to) was pure waste — a closed popup's content is rendered
-    // lazily on popupopen instead. If the open popup's date changed since its
-    // timeline was computed, popupHtml() just rendered a "loading"
-    // placeholder, so ensureTimeline() refreshes it (nothing else would).
-    if (marker.isPopupOpen()) {
-      marker.setPopupContent(popupHtml(entry));
-      wireVoteButtons(entry);
-      ensureTimeline(entry);
-    }
+    // Only cards actually in the DOM get patched — see refreshCardSummary()'s
+    // doc comment for why this (not the underlying compute above) is the
+    // part that had to stay cheap.
+    if (entry.card) refreshCardSummary(entry);
 
     if (result.status === "sun") sunCount++;
     else if (result.status === "shade") shadeCount++;
@@ -524,47 +648,48 @@ async function recompute() {
   )}°. ${sunCount} i sol, ${shadeCount} i skugga${nightCount ? `, ${nightCount} i mörker` : ""} av ${terraces.length} uteserveringar.`;
 
   document.documentElement.style.setProperty("--day-progress", `${(Number(timeSlider.value) / 1439) * 100}%`);
+
+  if (focusedEntry) renderIsoHero();
 }
 
-// Combines the text search with the "Endast alkohol" and "Endast favoriter"
-// checkboxes — all conditions must pass (AND), not separate/competing filters.
-// Runs on input in either control (see the event listeners below).
-function applyFilters() {
+// Combines the text search with the "Endast alkohol" and "Endast
+// favoriter" checkboxes — all conditions must pass (AND). Runs on input in
+// either control (see the event listeners below) and rebuilds the visible
+// card list — a rare, user-driven event, unlike recompute()'s per-tick
+// patch path above, so a full rebuild here is not the cost that mattered.
+function applyFilters({ preserveVisibleCount = false } = {}) {
   const query = searchInput.value.trim().toLowerCase();
   const alcoholOnly = alcoholFilterCheckbox.checked;
   const favoritesOnly = favoritesFilterCheckbox.checked;
-  const matches = [];
-  let visibleCount = 0;
 
-  for (const entry of markers) {
-    const nameMatches = !query || entry.terrace.name.toLowerCase().includes(query);
-    const alcoholMatches = !alcoholOnly || servesAlcohol(entry);
-    const favoriteMatches = !favoritesOnly || isFavorite(entry.terrace.id);
-    const isMatch = nameMatches && alcoholMatches && favoriteMatches;
-    if (isMatch) {
-      if (!markersLayer.hasLayer(entry.marker)) markersLayer.addLayer(entry.marker);
-      visibleCount++;
-      if (query) matches.push(entry);
-    } else if (markersLayer.hasLayer(entry.marker)) {
-      markersLayer.removeLayer(entry.marker);
-    }
-  }
+  filteredSorted = entries
+    .filter((entry) => {
+      const nameMatches = !query || entry.terrace.name.toLowerCase().includes(query);
+      const alcoholMatches = !alcoholOnly || servesAlcohol(entry);
+      const favoriteMatches = !favoritesOnly || isFavorite(entry.terrace.id);
+      return nameMatches && alcoholMatches && favoriteMatches;
+    })
+    .sort(compareEntries);
+
+  if (!preserveVisibleCount) visibleCount = INITIAL_VISIBLE;
+  renderVisibleList();
 
   if (query) {
-    searchStatus.textContent = `${matches.length} träff${matches.length === 1 ? "" : "ar"}`;
-    if (matches.length === 1) {
-      const [lon, lat] = matches[0].terrace.point.geometry.coordinates;
-      map.flyTo([lat, lon], Math.max(map.getZoom(), 17));
-      matches[0].marker.openPopup();
+    searchStatus.textContent = `${filteredSorted.length} träff${filteredSorted.length === 1 ? "" : "ar"}`;
+    if (filteredSorted.length === 1) {
+      focusEntry(filteredSorted[0], { scroll: true });
+      if (filteredSorted[0].card) toggleExpand(filteredSorted[0]);
     }
   } else if (alcoholOnly || favoritesOnly) {
     const parts = [];
     if (alcoholOnly) parts.push("alkohol");
     if (favoritesOnly) parts.push("favoriter");
-    searchStatus.textContent = `${visibleCount} ställe${visibleCount === 1 ? "" : "n"} med ${parts.join(" och ")}`;
+    searchStatus.textContent = `${filteredSorted.length} ställe${filteredSorted.length === 1 ? "" : "n"} med ${parts.join(" och ")}`;
   } else {
     searchStatus.textContent = "";
   }
+
+  if (!focusedEntry && filteredSorted.length) focusEntry(filteredSorted[0]);
 }
 
 // ---------- "Nearest sunny terrace to me" ----------
@@ -573,9 +698,7 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   const toRad = (d) => (d * Math.PI) / 180;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(a));
 }
 
@@ -583,10 +706,11 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
  * Shared "nearest terrace matching some condition, to my location" flow —
  * used by both the sun-only and sun+alcohol buttons. Geolocation is only
  * ever read into a local variable to sort by distance and is never stored,
- * logged, or sent anywhere (no security/privacy risk); the browser's own
- * permission prompt gates access.
+ * logged, or sent anywhere; the browser's own permission prompt gates
+ * access. Distances are computed for EVERY entry (not just matches) so the
+ * whole list re-sorts by "closest first" once known, same as before.
  *
- * @param {(entry) => boolean} predicate - which terraces qualify
+ * @param {(entry) => boolean} predicate - which terraces qualify as "found"
  * @param {{ found: (name, meters) => string, none: string }} messages
  */
 function findNearestMatching(predicate, messages) {
@@ -594,10 +718,8 @@ function findNearestMatching(predicate, messages) {
     searchStatus.textContent = "Din webbläsare stödjer inte platsdelning.";
     return;
   }
-  const matches = markers.filter(predicate);
+  const matches = entries.filter(predicate);
   if (!matches.length) {
-    // Nothing qualifies regardless of where the user is, so don't even
-    // bother prompting for location.
     searchStatus.textContent = messages.none;
     return;
   }
@@ -605,33 +727,36 @@ function findNearestMatching(predicate, messages) {
   navigator.geolocation.getCurrentPosition(
     (position) => {
       const { latitude, longitude } = position.coords;
+      for (const entry of entries) {
+        const [lon, lat] = entry.terrace.point.geometry.coordinates;
+        entry.distanceMeters = haversineMeters(latitude, longitude, lat, lon);
+      }
       let closest = null;
       let closestDist = Infinity;
       for (const entry of matches) {
-        const [lon, lat] = entry.terrace.point.geometry.coordinates;
-        const d = haversineMeters(latitude, longitude, lat, lon);
-        if (d < closestDist) {
-          closestDist = d;
+        if (entry.distanceMeters < closestDist) {
+          closestDist = entry.distanceMeters;
           closest = entry;
         }
       }
-      const [lon, lat] = closest.terrace.point.geometry.coordinates;
       searchStatus.textContent = messages.found(closest.terrace.name, Math.round(closestDist));
-      map.flyTo([lat, lon], Math.max(map.getZoom(), 17));
-      closest.marker.openPopup();
+      applyFilters({ preserveVisibleCount: false });
+      const rank = filteredSorted.indexOf(closest);
+      if (rank >= visibleCount) {
+        visibleCount = rank + 1;
+        renderVisibleList();
+      }
+      focusEntry(closest, { scroll: true });
+      if (closest.card && !closest.expanded) toggleExpand(closest);
     },
     (err) => {
-      searchStatus.textContent =
-        err.code === err.PERMISSION_DENIED
-          ? "Platsdelning nekades — kan inte hitta närmaste."
-          : "Kunde inte hämta din plats just nu.";
+      searchStatus.textContent = err.code === err.PERMISSION_DENIED ? "Platsdelning nekades — kan inte hitta närmaste." : "Kunde inte hämta din plats just nu.";
     },
     { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
   );
 }
 
-const servesAlcohol = (entry) =>
-  venueInfo(entry.terrace.feature?.properties).alcohol === "yes";
+const servesAlcohol = (entry) => venueInfo(entry.terrace.feature?.properties).alcohol === "yes";
 
 function findNearestSunny() {
   findNearestMatching((entry) => entry.lastResult?.status === "sun", {
@@ -641,13 +766,10 @@ function findNearestSunny() {
 }
 
 function findNearestSunnyWithAlcohol() {
-  findNearestMatching(
-    (entry) => entry.lastResult?.status === "sun" && servesAlcohol(entry),
-    {
-      found: (name, m) => `Närmast med sol & alkohol: ${name} (${m} m bort)`,
-      none: "Ingen uteservering med (känd) alkohol har sol just nu.",
-    }
-  );
+  findNearestMatching((entry) => entry.lastResult?.status === "sun" && servesAlcohol(entry), {
+    found: (name, m) => `Närmast med sol & alkohol: ${name} (${m} m bort)`,
+    none: "Ingen uteservering med (känd) alkohol har sol just nu.",
+  });
 }
 
 function downloadVotesJson() {
@@ -671,6 +793,8 @@ function debounce(fn, ms) {
 const debouncedRecompute = debounce(recompute, 80);
 
 dateInput.addEventListener("change", recompute);
+datePrevButton.addEventListener("click", () => stepDate(-1));
+dateNextButton.addEventListener("click", () => stepDate(1));
 timeSlider.addEventListener("input", () => {
   timeDisplay.textContent = minutesToHHMM(Number(timeSlider.value));
   document.documentElement.style.setProperty("--day-progress", `${(Number(timeSlider.value) / 1439) * 100}%`);
@@ -680,9 +804,9 @@ nowButton.addEventListener("click", () => {
   setInputsToNow();
   recompute();
 });
-searchInput.addEventListener("input", debounce(applyFilters, 120));
-alcoholFilterCheckbox.addEventListener("change", applyFilters);
-favoritesFilterCheckbox.addEventListener("change", applyFilters);
+searchInput.addEventListener("input", debounce(() => applyFilters(), 120));
+alcoholFilterCheckbox.addEventListener("change", () => applyFilters());
+favoritesFilterCheckbox.addEventListener("change", () => applyFilters());
 exportVotesButton.addEventListener("click", downloadVotesJson);
 clearVotesButton.addEventListener("click", () => {
   if (getAllVotes().length && !confirm("Rensa alla dina loggade bedömningar på den här enheten?")) return;
@@ -701,14 +825,13 @@ async function init() {
     // Fetch the shared "hide from app" list and the terrace/building data in
     // parallel. Excluded = places marked exclude=true or outdoor="no" in the
     // collaborative tagging list (taggning.html). If the fetch fails, the set
-    // is empty and everything is shown — the map never depends on Firebase.
+    // is empty and everything is shown — the app never depends on Firebase.
     const [data, excludedKeys] = await Promise.all([loadData(), fetchExcludedKeys()]);
     buildings = data.buildings;
-    terraces = data.terraces.filter(
-      (t) => !excludedKeys.has(String(t.id).replace("/", "_"))
-    );
-    renderMarkers();
-    recompute();
+    terraces = data.terraces.filter((t) => !excludedKeys.has(String(t.id).replace("/", "_")));
+    renderResults();
+    await recompute();
+    applyFilters();
   } catch (err) {
     statusLine.textContent = `Kunde inte ladda data: ${err.message}. Har du kört "npm run fetch-data"?`;
     console.error(err);

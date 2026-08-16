@@ -1,0 +1,733 @@
+/* ---------- Design tokens ---------- */
+/* Palette grounded in a Swedish summer garden terrace: sun-bleached grass
+   for the ground, marigold gold for sun (the tool's actual subject, not a
+   decorative accent), fern-canopy green for shade (shade under leaves reads
+   green in real life, not blue-grey) and a rare poppy-red spark for alerts. */
+:root {
+  --color-bg: #edf0dc;
+  --color-surface: #fbfaef;
+  --color-surface-border: #d8dcc2;
+  --color-ink: #1e2a16;
+  --color-ink-muted: #5b6b45;
+
+  --color-sun: #f0a31a;
+  --color-sun-strong: #d68a0a;
+  --color-shade: #3f6b44;
+  --color-dusk: #8a5a6b;
+  --color-night: #16210f;
+  --color-anomaly: #d6401f;
+  --color-confirm: #5a8f3c;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius: 10px;
+  --shadow-sm: 0 1px 2px rgba(30, 42, 22, 0.1), 0 1px 1px rgba(30, 42, 22, 0.06);
+  --shadow-md: 0 4px 14px rgba(30, 42, 22, 0.12);
+
+  --day-progress: 55%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* A midnight garden, not a naive invert: still fern-green shade, still
+       marigold sun, just lit by moonlight instead of noon. */
+    --color-bg: #141c10;
+    --color-surface: #1c2717;
+    --color-surface-border: #33422a;
+    --color-ink: #eaf0de;
+    --color-ink-muted: #a8b896;
+
+    --color-sun: #f5b646;
+    --color-sun-strong: #f8c874;
+    --color-shade: #6fa377;
+    --color-dusk: #b07e90;
+    --color-night: #0a100a;
+    --color-anomaly: #e58269;
+    --color-confirm: #7fc26b;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+a,
+button,
+input {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sun-strong);
+  outline-offset: 2px;
+}
+
+/* ---------- Header ---------- */
+/* Dappled light through leaves, not one flat glow: a warm sun-blob that
+   slides with the time-of-day slider, plus a couple of soft, static
+   fern-green blobs standing in for leaf-shadow — the layered look of
+   sitting under a tree on a bright day. */
+#app-header {
+  padding: 1.5rem 1.25rem 1.1rem;
+  background:
+    radial-gradient(420px circle at var(--day-progress) -30%, rgba(240, 163, 26, 0.38), transparent 60%),
+    radial-gradient(220px circle at 12% 15%, rgba(63, 107, 68, 0.14), transparent 65%),
+    radial-gradient(260px circle at 82% 55%, rgba(63, 107, 68, 0.1), transparent 60%),
+    var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #app-header {
+    transition: background 0.6s ease;
+  }
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-sun-strong);
+}
+
+#app-header h1 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.15rem + 1.4vw, 2.1rem);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: 0.92rem;
+  max-width: 62ch;
+  line-height: 1.5;
+}
+
+/* ---------- Controls ---------- */
+#controls,
+#search-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+#controls label,
+.search-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.control-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+#date-input {
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+.time-label {
+  flex: 1;
+  min-width: 260px;
+}
+
+/* Range slider styled as a day-arc: night -> dawn -> gold daylight ->
+   dusk -> night, with a brass sun-disc thumb. Grounded in the subject
+   (a literal arc of the day) rather than a default browser slider. */
+#time-slider {
+  flex: 1;
+  min-width: 180px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-night) 0%,
+    var(--color-night) 15%,
+    var(--color-dusk) 25%,
+    var(--color-sun) 34%,
+    var(--color-sun) 66%,
+    var(--color-dusk) 75%,
+    var(--color-night) 85%,
+    var(--color-night) 100%
+  );
+  cursor: pointer;
+}
+
+#time-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-sun);
+  border: 2px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  margin-top: -5px;
+}
+
+#time-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-sun);
+  border: 2px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+#time-slider::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-night) 0%,
+    var(--color-night) 15%,
+    var(--color-dusk) 25%,
+    var(--color-sun) 34%,
+    var(--color-sun) 66%,
+    var(--color-dusk) 75%,
+    var(--color-night) 85%,
+    var(--color-night) 100%
+  );
+}
+
+#time-display {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  min-width: 3.4em;
+  font-size: 0.95rem;
+}
+
+#now-button {
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--color-sun-strong);
+  background: var(--color-sun);
+  color: var(--color-night);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+#now-button:hover {
+  background: var(--color-sun-strong);
+}
+
+/* ---------- Search ---------- */
+.search-label {
+  flex: 1;
+}
+
+#search-input {
+  flex: 1;
+  max-width: 320px;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-size: 0.9rem;
+}
+
+.alcohol-filter-field,
+.favorites-filter-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.alcohol-filter-field:has(#alcohol-filter:checked),
+.favorites-filter-field:has(#favorites-filter:checked) {
+  border-color: var(--color-sun-strong);
+  background: color-mix(in srgb, var(--color-sun) 14%, var(--color-bg));
+}
+
+.alcohol-filter-field input,
+.favorites-filter-field input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--color-sun-strong);
+  cursor: pointer;
+}
+
+#near-me-button,
+#near-me-alcohol-button {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+#near-me-button:hover,
+#near-me-alcohol-button:hover {
+  border-color: var(--color-sun-strong);
+}
+
+#search-status {
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+/* ---------- Map ---------- */
+#map {
+  height: 65vh;
+  min-height: 420px;
+}
+
+/* Soft elevation + smooth color transitions on the sun/shade markers
+   (Leaflet renders circleMarkers as plain SVG elements this can target). */
+path.terrace-marker {
+  filter: drop-shadow(0 1px 2px rgba(20, 30, 15, 0.35));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  path.terrace-marker {
+    transition: fill 0.35s ease, stroke 0.35s ease, stroke-width 0.2s ease;
+  }
+}
+
+path.terrace-marker:hover {
+  filter: drop-shadow(0 2px 5px rgba(20, 30, 15, 0.45)) brightness(1.08);
+}
+
+/* ---------- Legend ---------- */
+#legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  padding: 0.7rem 1.25rem;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-border);
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-border);
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+}
+
+/* Small status glyphs instead of plain color dots — a leaf for shade
+   specifically encodes *why* (shaded like under foliage), not just "a
+   different color than sun". */
+.status-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.status-icon.icon-sun { color: var(--color-sun); }
+.status-icon.icon-leaf { color: var(--color-shade); }
+.status-icon.icon-moon { color: var(--color-night); }
+.status-icon.icon-alert { color: var(--color-anomaly); }
+
+.ring {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+  background: transparent;
+}
+
+.ring-up { border: 2px solid var(--color-confirm); }
+.ring-down { border: 2px solid var(--color-anomaly); }
+
+/* ---------- Status line & footer ---------- */
+#status-line {
+  padding: 0.6rem 1.25rem 0;
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.vote-explainer {
+  margin: 0.5rem 1.25rem 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-surface-border);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+  max-width: 68ch;
+}
+
+#vote-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+}
+
+.vote-footer-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+#data-credits {
+  padding: 0 1.25rem 1.5rem;
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--color-ink-muted);
+}
+
+#data-credits a {
+  color: inherit;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-shade);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-button-danger {
+  color: var(--color-anomaly);
+}
+
+/* ---------- Popup ---------- */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-md);
+}
+
+.leaflet-popup-tip {
+  background: var(--color-surface);
+}
+
+.popup-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+}
+
+.popup-venue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.15rem 0 0.35rem;
+}
+
+.venue-type,
+.venue-alcohol {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-surface-border);
+  white-space: nowrap;
+}
+
+.venue-type {
+  background: var(--color-bg);
+  color: var(--color-ink-muted);
+  font-weight: 600;
+}
+
+.venue-alcohol.yes {
+  background: color-mix(in srgb, var(--color-shade) 14%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-shade) 45%, var(--color-surface));
+  color: var(--color-shade);
+}
+
+.venue-alcohol.no,
+.venue-alcohol.unknown {
+  background: transparent;
+  color: var(--color-ink-muted);
+  border-style: dashed;
+}
+
+/* Fas 5, del B: notisen på platser som bara finns i Malmö stads register,
+   inte i OSM — samma varningsfärg som .status-icon.icon-alert, så det
+   läses som "kolla det här", inte som bekräftad OSM-data. */
+.popup-unverified {
+  font-size: 0.78rem;
+  margin: 0.15rem 0 0.35rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px dashed var(--color-anomaly);
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--color-anomaly) 10%, var(--color-surface));
+  color: var(--color-ink);
+}
+
+.popup-unverified a {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-weight: 600;
+  color: var(--color-anomaly);
+}
+
+.popup-status {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.popup-status.sun { color: var(--color-sun-strong); }
+.popup-status.shade { color: var(--color-shade); }
+.popup-status.night { color: var(--color-night); }
+.popup-status.anomaly { color: var(--color-anomaly); }
+
+.popup-detail {
+  font-size: 0.83rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.3rem;
+  line-height: 1.4;
+}
+
+/* SMHI cloud-cover caveat on a "Sol" verdict — informational, not a
+   warning, so styled close to .popup-detail rather than the anomaly/
+   unverified boxes' alert treatment. */
+.popup-weather {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.3rem;
+}
+
+.popup-timeline {
+  margin-top: 0.5rem;
+}
+
+.timeline-svg {
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timeline-loading {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+
+.popup-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--color-surface-border);
+}
+
+.popup-vote {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+}
+
+.vote-btn,
+.favorite-btn {
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-bg);
+  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  min-width: 44px;
+  min-height: 40px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.vote-btn:hover,
+.favorite-btn:hover {
+  filter: brightness(0.97);
+}
+
+.vote-btn.active.vote-up {
+  background: color-mix(in srgb, var(--color-confirm) 18%, var(--color-surface));
+  border-color: var(--color-confirm);
+}
+
+.vote-btn.active.vote-down {
+  background: color-mix(in srgb, var(--color-anomaly) 18%, var(--color-surface));
+  border-color: var(--color-anomaly);
+}
+
+.favorite-btn.active {
+  background: color-mix(in srgb, var(--color-sun) 18%, var(--color-surface));
+  border-color: var(--color-sun-strong);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 640px) {
+  #date-input,
+  #search-input {
+    padding: 0.55rem 0.6rem;
+    font-size: 1rem; /* >=16px avoids iOS Safari auto-zoom on focus */
+  }
+
+  .leaflet-control-zoom a {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+  }
+
+  #app-header {
+    padding: 1.1rem 1rem 0.85rem;
+  }
+
+  #app-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  #controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+  }
+
+  #controls label {
+    justify-content: space-between;
+  }
+
+  .time-label {
+    min-width: 0;
+  }
+
+  #time-slider {
+    min-width: 0;
+    height: 10px;
+  }
+
+  #time-slider::-webkit-slider-thumb {
+    width: 26px;
+    height: 26px;
+    margin-top: -8px;
+  }
+
+  #time-slider::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+  }
+
+  #now-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  #search-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+  }
+
+  #search-input {
+    max-width: none;
+  }
+
+  .alcohol-filter-field,
+  .favorites-filter-field,
+  #near-me-button,
+  #near-me-alcohol-button {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    justify-content: center;
+  }
+
+  #map {
+    height: 55vh;
+    min-height: 320px;
+  }
+
+  #legend {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    gap: 0.4rem;
+  }
+
+  #status-line,
+  #vote-footer,
+  .vote-explainer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  #vote-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vote-footer-actions {
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+  }
+
+  .link-button {
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+  }
+
+  .chip {
+    padding: 0.4rem 0.7rem;
+  }
+}

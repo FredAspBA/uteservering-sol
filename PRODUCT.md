@@ -36,7 +36,9 @@ väderapp eller solups-tabell ger.
 
 ## Operating Context
 
-- Statisk webbapp (Leaflet-karta), ingen backend-server; data hämtas
+- Statisk webbapp (isometrisk skuggkarta + resultatlista, ingen tredjeparts
+  kartmotor sedan MALMÖ URBAN GRID-omdesignen 2026-08-15/16), ingen
+  backend-server; data hämtas
   månatligen via en automatiserad GitHub Actions-pipeline (Geofabrik/OSM +
   Malmö stads serveringstillståndsregister) och sparas som statiska
   GeoJSON-filer.

@@ -106,6 +106,32 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       döljer rätt ställen när listan växer, och håll `data/geocode-cache.json`
       med (ny geokodning sker bara för nya dubblettfilialer).
 
+- [x] **MALMÖ URBAN GRID-omdesign — klart 2026-08-16.** Hela sol-appen
+      byggd om från grunden till en svart/guld kartografisk identitet
+      (se `DESIGN.md`), riktning vald av Fredrik 2026-08-15 via
+      `/shape` (4-alternativs-runda). Leaflet + OSM-kaklan är helt
+      borttagna — ersatta av `src/isoHero.js`, en canvas-baserad
+      isometrisk "skuggkarta" som visar RIKTIGA byggnader inom 200 m
+      från det fokuserade resultatet, extruderade efter riktig höjd,
+      med skuggor beräknade av exakt samma fysik som `computeShading()`
+      (skugglängd = höjd / tan(solhöjd)) — den byggnad vars skugga
+      faktiskt når fram highlightas i guld. Resultaten visas som en
+      virtualiserad lista av "building-cards" (kompakt rad + lazy-
+      expanderad detalj, samma mönster som den gamla popup-on-open) i
+      stället för kartnålar. All affärslogik (`shadow.js`, `sun.js`,
+      `votes.js`, `favorites.js`, `weather.js`, `cloudVotes.js`)
+      oförändrad. `taggning.html` är medvetet UNDANTAGEN — den läser nu
+      `taggning-tokens.css` (fryst kopia av den gamla paletten) i
+      stället för `style.css`, så det delade taggningsverktyget ser ut
+      exakt som förut. Känt, oåtgärdat gap: knappar/filter/notiser
+      använder fortfarande ärvda emoji som ikoner (📍🍷⭐👍👎☁️⚠️➕) —
+      bara statusglyferna (sol/skugga/mörkt/osäker) fick egen-ritad SVG;
+      se `DESIGN.md` Do's and Don'ts. Verifierat live via DOM/JS-
+      inspektion (sök, filter, favoriter, röster, datum-stegrare,
+      "nära mig", 375px mobilbredd) — inga skärmdumpar kunde tas
+      denna session (Browser-panelen visades inte), så inspektera
+      visuellt vid nästa tillfälle.
+
 (Tidigare förslag — kopiera-taggar, dubblett-badge, framstegsstapel, dölj
 klara, direkt-till-redigeraren — är alla byggda och live.)
 
@@ -132,8 +158,17 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
 
 ## Filkarta
 
-- `index.html` + `src/app.js` — sol-appen (Leaflet-karta, tidsreglage, sök,
-  "nära mig"-knappar, tumme upp/ner, popup med sol/skugga + typ + alkohol).
+- `index.html` + `src/app.js` — sol-appen (MALMÖ URBAN GRID, se
+  `DESIGN.md`): datum-stegrare, tid-slider, isometrisk skuggkarta,
+  sök/filter, "nära mig"-knappar, resultatlista av building-cards
+  (kompakt rad + lazy-expanderad detalj med sol/skugga + typ + alkohol +
+  tumme upp/ner). Ingen Leaflet/tredjeparts-kartmotor sedan 2026-08-16.
+- `src/isoHero.js` — canvas-renderare för skuggkartan. Läser riktiga
+  byggnader (samma `buildings`-index som `shadow.js`) inom 200 m från
+  det fokuserade resultatet, extruderar isometriskt efter riktig höjd,
+  beräknar skuggor med samma formel som `computeShading()`. Anropas
+  `setFocus()` bara vid fokusbyte (kortklick), `render()` varje
+  tidsreglage-tick.
 - `src/shadow.js` — skuggberäkning (raycasting mot byggnader, spatialt
   rutnätsindex). `src/sun.js` — SunCalc-wrapper. `src/dataLoad.js` — laddar
   geojson + förbereder byggnader/terrasser.
@@ -141,10 +176,16 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
   localStorage + delat till Firebase). `cloudVotes.js` har även
   `fetchExcludedKeys()` som sol-appen använder för att dölja ställen.
 - `src/weather.js` — SMHI-molntäckningsprognos, ett anrop per sidladdning
-  (cachas i minnet, hela ~10-dagarsfönstret på en gång). Badge i popupen
-  bara vid status "Sol" och bara inom prognosfönstret.
+  (cachas i minnet, hela ~10-dagarsfönstret på en gång). Badge i det
+  expanderade kortet bara vid status "Sol" och bara inom prognosfönstret.
 - `taggning.html` + `src/tagging.js` + `taggning.css` — gemensam
-  taggningslista (se nedan).
+  taggningslista (se nedan). Läser `taggning-tokens.css` (fryst kopia av
+  den gamla garden-paletten från före 2026-08-16-omdesignen), INTE
+  `style.css` — se den filens egen kommentar innan du ändrar palett/
+  typsnitt i endera filen.
+- `DESIGN.md` — visuellt designsystem för sol-appen (palett, typografi,
+  komponenter, Do's/Don'ts), skrivet från den byggda MALMÖ URBAN GRID-
+  världen 2026-08-16. Gäller INTE `taggning.html`.
 - `scripts/fetch-data.js` — hämtar terrasser + byggnader från Overpass →
   `data/terraces.geojson`, `data/buildings.geojson`. Manuellt
   reservalternativ sedan fas 3 (se nedan); inte längre huvudvägen där.
@@ -190,14 +231,21 @@ i** — hela filen behöver sällan läsas. Blocken ligger i denna ordning uppif
 och ner; radnummer utelämnas med flit (de ruttnar vid varje ändring, använd
 `grep -n "function namnet" src/app.js`).
 
+Sedan MALMÖ URBAN GRID-omdesignen 2026-08-16 är "markers" ersatt av
+"entries" (ett per terrass, med `.card` = DOM-noden om den är renderad,
+annars `null` — se `renderVisibleList()`s kommentar för varför bara de
+synliga korten har DOM alls).
+
 | Block | Innehåll |
 |-------|----------|
-| Konstanter & DOM | `MALMO_CENTER`, `STATUS_LABELS`, `STATUS_COLORS`, `VOTE_STROKE_COLORS`, `cssVar()`, DOM-referenser, modultillstånd (`terraces`, `buildings`, `markers`, `cloudForecast`) |
-| Tid & beräkning | `minutesToHHMM()`, `dateFromInputs()`, `setInputsToNow()`, `predictionSnapshot()`, `computeOne()` |
+| Konstanter & DOM | `MALMO_CENTER`, `STATUS_LABELS`, `STATUS_COLORS`, `STATUS_RANK`, `cssVar()`, DOM-referenser, modultillstånd (`terraces`, `buildings`, `entries`, `filteredSorted`, `focusedEntry`, `isoHero`) |
+| Tid & beräkning | `minutesToHHMM()`, `dateFromInputs()`, `setInputsToNow()`, `stepDate()`, `predictionSnapshot()`, `computeOne()` |
 | Mini-dagstidslinje | `TIMELINE_STEP_MINUTES`, `computeTimeline()`, `timelineHtml()`, `timelineSectionHtml()`, `ensureTimeline()` |
 | Verksamhetstyp & alkohol | `VENUE_LABELS`, `venueInfo()`, `venueLineHtml()`, `unverifiedNoticeHtml()` |
-| Popup | `weatherHtml()`, `popupHtml()` (bygger även ⭐-knappen), `escapeHtml()` |
-| Röster & favoriter | `updateMarkerVoteStroke()`, `updateVoteCount()`, `wireVoteButtons()` (kopplar både tumme upp/ner och favoritknappen) |
+| Kort (kompakt + detalj) | `STATUS_ICON_SVG`, `whySummary()`, `explainHtml()`, `cardDetailHtml()`, `cardSummaryInnerHtml()`, `buildCardNode()` (bygger en gång), `refreshCardSummary()` (patchar varje tick — läs kommentaren innan du lägger till `.innerHTML` här), `toggleExpand()`, `refreshCardDetail()` |
+| Lista, filter, sortering | `compareEntries()`, `renderVisibleList()`, `applyFilters()`, `loadMoreButton`-hantering |
+| Skuggkarta | `focusEntry()`, `renderIsoHero()` — se även `src/isoHero.js` |
+| Röster & favoriter | `updateVoteCount()`, `wireCardActions()` (kopplar tumme upp/ner + favoritknappen i det expanderade kortet) |
 | Markörer & omberäkning | `renderMarkers()`, `CHUNK_SIZE`, `yieldToBrowser()`, `recompute()` — se **Prestanda** nedan innan du rör dessa |
 | Filter | `applyFilters()` — text + "Endast alkohol" + "Endast favoriter" i ett svep |
 | "Närmast mig" | `EARTH_RADIUS_M`, `haversineMeters()`, `findNearestMatching()`, `findNearestSunny()`, `findNearestSunnyWithAlcohol()` |

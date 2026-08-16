@@ -1,55 +1,45 @@
-/* ---------- Design tokens ---------- */
-/* Palette grounded in a Swedish summer garden terrace: sun-bleached grass
-   for the ground, marigold gold for sun (the tool's actual subject, not a
-   decorative accent), fern-canopy green for shade (shade under leaves reads
-   green in real life, not blue-grey) and a rare poppy-red spark for alerts. */
+/* ---------- Design tokens: MALMÖ URBAN GRID ---------- */
+/* Redesigned 2026-08-15 (Impeccable /shape, user-picked direction — see
+   uteservering-sol-redesign.md). Palette: Malmös byggnader som *agent* —
+   svart (koordinatpapper), guld (solen, den enda varma färgen, med
+   uppsåt), ljusgrå (byggnadslinjer/text). Committed dark: not a
+   color-scheme toggle, the world IS black — a cartographic plan-drawing,
+   not a night-mode variant of a light design. Functional status hues
+   (shade/night/anomaly/confirm) stay low-saturation so gold keeps sole
+   claim on "this matters, act on it."
+   Variable NAMES are unchanged from the previous palette on purpose —
+   app.js reads them via cssVar()/getComputedStyle at module load
+   (--color-sun/-shade/-night/-anomaly/-confirm/-ink etc.), and inline SVG
+   + timelineHtml() reference --color-surface/-bg/-ink-muted/-font-mono
+   directly. Renaming any of these requires updating every reader.
+   taggning.html no longer shares this file — see taggning-tokens.css. */
 :root {
-  --color-bg: #edf0dc;
-  --color-surface: #fbfaef;
-  --color-surface-border: #d8dcc2;
-  --color-ink: #1e2a16;
-  --color-ink-muted: #5b6b45;
+  --color-bg: #141412;
+  --color-surface: #1d1d1a;
+  --color-surface-raised: #242420;
+  --color-surface-border: #3c3c35;
+  --color-ink: #f4f3ec;
+  --color-ink-muted: #a8a79c;
 
-  --color-sun: #f0a31a;
-  --color-sun-strong: #d68a0a;
-  --color-shade: #3f6b44;
-  --color-dusk: #8a5a6b;
-  --color-night: #16210f;
-  --color-anomaly: #d6401f;
-  --color-confirm: #5a8f3c;
+  --color-sun: #d4af37;
+  --color-sun-strong: #e8c766;
+  --color-shade: #85acc9;
+  --color-dusk: #8a6a3a;
+  --color-night: #8f8f88;
+  --color-anomaly: #e2703f;
+  --color-confirm: #82b085;
 
-  --font-display: "Bricolage Grotesque", "Segoe UI", sans-serif;
+  --font-display: "IBM Plex Sans", "Segoe UI", sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --radius: 10px;
-  --shadow-sm: 0 1px 2px rgba(30, 42, 22, 0.1), 0 1px 1px rgba(30, 42, 22, 0.06);
-  --shadow-md: 0 4px 14px rgba(30, 42, 22, 0.12);
+  --radius: 3px;
+  --radius-lg: 5px;
+  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 6px 0 rgba(0, 0, 0, 0.4);
 
   --day-progress: 55%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* A midnight garden, not a naive invert: still fern-green shade, still
-       marigold sun, just lit by moonlight instead of noon. */
-    --color-bg: #141c10;
-    --color-surface: #1c2717;
-    --color-surface-border: #33422a;
-    --color-ink: #eaf0de;
-    --color-ink-muted: #a8b896;
-
-    --color-sun: #f5b646;
-    --color-sun-strong: #f8c874;
-    --color-shade: #6fa377;
-    --color-dusk: #b07e90;
-    --color-night: #0a100a;
-    --color-anomaly: #e58269;
-    --color-confirm: #7fc26b;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
-  }
+  --grid-line: rgba(212, 175, 55, 0.07);
 }
 
 * {
@@ -59,7 +49,10 @@
 body {
   margin: 0;
   font-family: var(--font-body);
-  background: var(--color-bg);
+  background:
+    repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px 40px),
+    var(--color-bg);
   color: var(--color-ink);
 }
 
@@ -69,48 +62,44 @@ input {
   font-family: inherit;
 }
 
+a {
+  color: var(--color-sun-strong);
+}
+
 :focus-visible {
-  outline: 2px solid var(--color-sun-strong);
+  outline: 2px solid var(--color-sun);
   outline-offset: 2px;
 }
 
 /* ---------- Header ---------- */
-/* Dappled light through leaves, not one flat glow: a warm sun-blob that
-   slides with the time-of-day slider, plus a couple of soft, static
-   fern-green blobs standing in for leaf-shadow — the layered look of
-   sitting under a tree on a bright day. */
 #app-header {
-  padding: 1.5rem 1.25rem 1.1rem;
-  background:
-    radial-gradient(420px circle at var(--day-progress) -30%, rgba(240, 163, 26, 0.38), transparent 60%),
-    radial-gradient(220px circle at 12% 15%, rgba(63, 107, 68, 0.14), transparent 65%),
-    radial-gradient(260px circle at 82% 55%, rgba(63, 107, 68, 0.1), transparent 60%),
-    var(--color-surface);
-  border-bottom: 1px solid var(--color-surface-border);
+  padding: 1.4rem 1.25rem 1.15rem;
+  background: #0d0d0b;
+  border-bottom: 2px solid var(--color-sun);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  #app-header {
-    transition: background 0.6s ease;
-  }
-}
-
-.eyebrow {
-  margin: 0 0 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.09em;
+/* The wordmark, not a kicker: it names the product (distinct text from
+   the h1 below, which asks the actual question), the same way a logotype
+   sits above a marketing headline. Set in the display face, not mono —
+   mono is reserved for actual data/measurement elsewhere on the page. */
+.wordmark {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-sun-strong);
+  color: var(--color-sun);
 }
 
 #app-header h1 {
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.45rem;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.5rem, 1.15rem + 1.4vw, 2.1rem);
+  font-size: clamp(1.55rem, 1.2rem + 1.4vw, 2.15rem);
   letter-spacing: -0.01em;
   text-wrap: balance;
+  color: var(--color-ink);
 }
 
 .subtitle {
@@ -128,61 +117,132 @@ input {
   flex-wrap: wrap;
   align-items: center;
   gap: 1.25rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.85rem 1.25rem;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-surface-border);
 }
 
-#controls label,
-.search-label {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.9rem;
-}
-
 .control-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--color-ink-muted);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+/* Date as a compact stepper, in the grid's own vocabulary — the redesign
+   drops the bare native date-picker chrome the old world used, keeping
+   the capability (still a real <input type="date">, still fully
+   accessible/native-pickable) but presenting it as a coordinate readout
+   flanked by day-steppers. */
+.date-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.date-step-button {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.date-step-button:hover {
+  border-color: var(--color-sun);
+  color: var(--color-sun);
 }
 
 #date-input {
   border: 1px solid var(--color-surface-border);
-  border-radius: 8px;
-  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius);
+  padding: 0.4rem 0.5rem;
   background: var(--color-bg);
   color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color-scheme: dark;
 }
 
-.time-label {
+.time-field {
   flex: 1;
   min-width: 260px;
 }
 
-/* Range slider styled as a day-arc: night -> dawn -> gold daylight ->
-   dusk -> night, with a brass sun-disc thumb. Grounded in the subject
-   (a literal arc of the day) rather than a default browser slider. */
+/* Decorative arc the sun-marker rides along (CSS motion path) — a small
+   fixed-size diagram above the slider, not a pixel-synced overlay on the
+   thumb below. "Tid-slider: visuell som solens väg" from the shaped
+   contract, made literal instead of only a gradient. */
+.sun-path {
+  position: relative;
+  width: 200px;
+  max-width: 55%;
+  height: 30px;
+  margin: 0 0 0.15rem;
+}
+
+.sun-path-track {
+  display: block;
+  width: 200px;
+  height: 30px;
+}
+
+.sun-path-track path {
+  fill: none;
+  stroke: var(--color-surface-border);
+  stroke-width: 1;
+  stroke-dasharray: 1 4;
+}
+
+.sun-path-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-sun);
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.7);
+  offset-path: path("M4 26 Q100 -8 196 26");
+  offset-distance: var(--day-progress);
+  transform: translate(-50%, -50%);
+}
+
+@supports not (offset-path: path("M0 0")) {
+  .sun-path {
+    display: none;
+  }
+}
+
+/* Range slider as a day-arc: night -> dawn -> gold daylight -> dusk ->
+   night, brass-disc thumb. */
 #time-slider {
-  flex: 1;
-  min-width: 180px;
+  width: 100%;
   -webkit-appearance: none;
   appearance: none;
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
   background: linear-gradient(
     to right,
-    var(--color-night) 0%,
-    var(--color-night) 15%,
+    var(--color-bg) 0%,
+    var(--color-bg) 15%,
     var(--color-dusk) 25%,
     var(--color-sun) 34%,
     var(--color-sun) 66%,
     var(--color-dusk) 75%,
-    var(--color-night) 85%,
-    var(--color-night) 100%
+    var(--color-bg) 85%,
+    var(--color-bg) 100%
   );
+  border: 1px solid var(--color-surface-border);
   cursor: pointer;
 }
 
@@ -193,9 +253,9 @@ input {
   height: 18px;
   border-radius: 50%;
   background: var(--color-sun);
-  border: 2px solid var(--color-surface);
+  border: 2px solid var(--color-bg);
   box-shadow: var(--shadow-sm);
-  margin-top: -5px;
+  margin-top: -7px;
 }
 
 #time-slider::-moz-range-thumb {
@@ -203,23 +263,23 @@ input {
   height: 18px;
   border-radius: 50%;
   background: var(--color-sun);
-  border: 2px solid var(--color-surface);
+  border: 2px solid var(--color-bg);
   box-shadow: var(--shadow-sm);
 }
 
 #time-slider::-moz-range-track {
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
   background: linear-gradient(
     to right,
-    var(--color-night) 0%,
-    var(--color-night) 15%,
+    var(--color-bg) 0%,
+    var(--color-bg) 15%,
     var(--color-dusk) 25%,
     var(--color-sun) 34%,
     var(--color-sun) 66%,
     var(--color-dusk) 75%,
-    var(--color-night) 85%,
-    var(--color-night) 100%
+    var(--color-bg) 85%,
+    var(--color-bg) 100%
   );
 }
 
@@ -228,37 +288,47 @@ input {
   font-variant-numeric: tabular-nums;
   min-width: 3.4em;
   font-size: 0.95rem;
+  margin-top: 0.3rem;
+  display: inline-block;
+  color: var(--color-sun-strong);
 }
 
 #now-button {
-  padding: 0.45rem 1rem;
-  border: 1px solid var(--color-sun-strong);
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--color-sun);
   background: var(--color-sun);
-  color: var(--color-night);
-  border-radius: 8px;
+  color: #141412;
+  border-radius: var(--radius);
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
 }
 
 #now-button:hover {
   background: var(--color-sun-strong);
+  border-color: var(--color-sun-strong);
 }
 
-/* ---------- Search ---------- */
+/* ---------- Search & filters (cartographic tags) ---------- */
 .search-label {
   flex: 1;
+  min-width: 200px;
 }
 
 #search-input {
-  flex: 1;
+  width: 100%;
   max-width: 320px;
-  padding: 0.4rem 0.65rem;
+  padding: 0.45rem 0.65rem;
   border: 1px solid var(--color-surface-border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--color-bg);
   color: var(--color-ink);
   font-size: 0.9rem;
+}
+
+#search-input::placeholder {
+  color: var(--color-ink-muted);
 }
 
 .alcohol-filter-field,
@@ -266,73 +336,110 @@ input {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.4rem 0.65rem;
+  padding: 0.45rem 0.65rem;
   border: 1px solid var(--color-surface-border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--color-bg);
-  color: var(--color-ink);
-  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  font-size: 0.82rem;
   white-space: nowrap;
   cursor: pointer;
 }
 
 .alcohol-filter-field:has(#alcohol-filter:checked),
 .favorites-filter-field:has(#favorites-filter:checked) {
-  border-color: var(--color-sun-strong);
-  background: color-mix(in srgb, var(--color-sun) 14%, var(--color-bg));
+  border-color: var(--color-sun);
+  color: var(--color-sun-strong);
+  background: color-mix(in srgb, var(--color-sun) 12%, var(--color-bg));
 }
 
 .alcohol-filter-field input,
 .favorites-filter-field input {
   width: 15px;
   height: 15px;
-  accent-color: var(--color-sun-strong);
+  accent-color: var(--color-sun);
   cursor: pointer;
 }
 
 #near-me-button,
 #near-me-alcohol-button {
-  padding: 0.4rem 0.75rem;
+  padding: 0.45rem 0.75rem;
   border: 1px solid var(--color-surface-border);
   background: var(--color-bg);
   color: var(--color-ink);
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   white-space: nowrap;
 }
 
 #near-me-button:hover,
 #near-me-alcohol-button:hover {
-  border-color: var(--color-sun-strong);
+  border-color: var(--color-sun);
+  color: var(--color-sun-strong);
 }
 
 #search-status {
   font-size: 0.8rem;
   color: var(--color-ink-muted);
+}
+
+/* ---------- Isometric hero ---------- */
+#iso-hero {
+  border-bottom: 1px solid var(--color-surface-border);
+  background: var(--color-surface);
+  padding: 1rem 1.25rem 1.15rem;
+}
+
+.iso-hero-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.55rem;
+}
+
+.iso-hero-focus {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.iso-hero-meta {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  text-align: right;
   white-space: nowrap;
 }
 
-/* ---------- Map ---------- */
-#map {
-  height: 65vh;
-  min-height: 420px;
+.iso-hero-canvas-wrap {
+  position: relative;
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, var(--color-surface-raised), var(--color-bg));
+  overflow: hidden;
 }
 
-/* Soft elevation + smooth color transitions on the sun/shade markers
-   (Leaflet renders circleMarkers as plain SVG elements this can target). */
-path.terrace-marker {
-  filter: drop-shadow(0 1px 2px rgba(20, 30, 15, 0.35));
+#iso-canvas {
+  display: block;
+  width: 100%;
+  height: 280px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  path.terrace-marker {
-    transition: fill 0.35s ease, stroke 0.35s ease, stroke-width 0.2s ease;
-  }
+.iso-hero-caption {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  color: var(--color-ink-muted);
+  line-height: 1.45;
 }
 
-path.terrace-marker:hover {
-  filter: drop-shadow(0 2px 5px rgba(20, 30, 15, 0.45)) brightness(1.08);
+.iso-hero-caption strong {
+  color: var(--color-ink);
+  font-weight: 600;
 }
 
 /* ---------- Legend ---------- */
@@ -340,7 +447,7 @@ path.terrace-marker:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 0.75rem;
-  padding: 0.7rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-surface-border);
 }
@@ -349,27 +456,35 @@ path.terrace-marker:hover {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 999px;
+  padding: 0.28rem 0.65rem;
+  border-radius: var(--radius);
   background: var(--color-bg);
   border: 1px solid var(--color-surface-border);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--color-ink-muted);
 }
 
-/* Small status glyphs instead of plain color dots — a leaf for shade
-   specifically encodes *why* (shaded like under foliage), not just "a
-   different color than sun". */
 .status-icon {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
 }
 
-.status-icon.icon-sun { color: var(--color-sun); }
-.status-icon.icon-leaf { color: var(--color-shade); }
-.status-icon.icon-moon { color: var(--color-night); }
-.status-icon.icon-alert { color: var(--color-anomaly); }
+/* Bare .icon-* (not scoped to .status-icon) so the same four status glyphs
+   can be reused at a different size on result cards (.card-status-icon)
+   without a source-order dependency between the two size rules. */
+.icon-sun {
+  color: var(--color-sun);
+}
+.icon-leaf {
+  color: var(--color-shade);
+}
+.icon-moon {
+  color: var(--color-night);
+}
+.icon-alert {
+  color: var(--color-anomaly);
+}
 
 .ring {
   width: 11px;
@@ -379,20 +494,318 @@ path.terrace-marker:hover {
   background: transparent;
 }
 
-.ring-up { border: 2px solid var(--color-confirm); }
-.ring-down { border: 2px solid var(--color-anomaly); }
+.ring-up {
+  border: 2px solid var(--color-confirm);
+}
+.ring-down {
+  border: 2px solid var(--color-anomaly);
+}
 
-/* ---------- Status line & footer ---------- */
+/* ---------- Results ---------- */
+#results {
+  padding: 0 0 0.5rem;
+}
+
+.results-head {
+  padding: 0.7rem 1.25rem 0;
+}
+
 #status-line {
-  padding: 0.6rem 1.25rem 0;
+  margin: 0;
   font-size: 0.85rem;
   color: var(--color-ink-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.vote-explainer {
-  margin: 0.5rem 1.25rem 0;
+#results-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 1.25rem 0;
+  gap: 0.55rem;
+}
+
+/* Status reads through the icon + colored label in .card-summary, not a
+   colored side-stripe on the card itself — a thick one-side accent border
+   is the single most recognizable AI-slop tell (flagged by
+   impeccable's detector), and it would only repeat information the icon
+   and label already carry. */
+.terrace-card {
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.terrace-card.is-focused {
+  border-color: var(--color-sun);
+  box-shadow: 0 0 0 1px var(--color-sun);
+}
+
+.card-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  background: none;
+  border: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.card-summary:hover {
+  background: var(--color-surface-raised);
+}
+
+.card-status-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-venue-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.15rem;
+}
+
+.venue-type,
+.venue-alcohol {
+  font-size: 0.68rem;
+  padding: 0.06rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-surface-border);
+  white-space: nowrap;
+}
+
+.venue-type {
+  background: var(--color-bg);
+  color: var(--color-ink-muted);
+  font-weight: 600;
+}
+
+.venue-alcohol.yes {
+  background: color-mix(in srgb, var(--color-shade) 16%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-shade) 45%, var(--color-surface));
+  color: var(--color-shade);
+}
+
+.venue-alcohol.no,
+.venue-alcohol.unknown {
+  background: transparent;
+  color: var(--color-ink-muted);
+  border-style: dashed;
+}
+
+.card-figures {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.card-status-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.card-status-label.sun {
+  color: var(--color-sun-strong);
+}
+.card-status-label.shade {
+  color: var(--color-shade);
+}
+.card-status-label.night {
+  color: var(--color-night);
+}
+.card-status-label.anomaly {
+  color: var(--color-anomaly);
+}
+
+.card-why {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.1rem;
+  max-width: 22ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-altitude {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.15rem;
+}
+
+.card-chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--color-ink-muted);
+  transition: transform 0.2s ease;
+}
+
+.card-summary[aria-expanded="true"] .card-chevron {
+  transform: rotate(180deg);
+}
+
+.card-detail {
+  padding: 0 0.75rem 0.75rem;
+  border-top: 1px solid var(--color-surface-border);
+  margin-top: -1px;
+}
+
+.card-unverified {
+  font-size: 0.78rem;
+  margin: 0.5rem 0;
+  padding: 0.4rem 0.55rem;
+  border: 1px dashed var(--color-anomaly);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-anomaly) 10%, var(--color-surface));
+  color: var(--color-ink);
+}
+
+.card-unverified a {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-weight: 600;
+  color: var(--color-anomaly);
+}
+
+.card-explain {
+  font-size: 0.83rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.55rem;
+  line-height: 1.45;
+}
+
+.card-weather {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.35rem;
+}
+
+.card-timeline {
+  margin-top: 0.6rem;
+}
+
+.timeline-svg {
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timeline-loading {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
   padding-top: 0.5rem;
+  border-top: 1px solid var(--color-surface-border);
+}
+
+.card-vote {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+}
+
+.vote-btn,
+.favorite-btn {
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-bg);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.6rem;
+  min-width: 44px;
+  min-height: 40px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.vote-btn:hover,
+.favorite-btn:hover {
+  border-color: var(--color-sun);
+}
+
+.vote-btn.active.vote-up {
+  background: color-mix(in srgb, var(--color-confirm) 20%, var(--color-surface));
+  border-color: var(--color-confirm);
+}
+
+.vote-btn.active.vote-down {
+  background: color-mix(in srgb, var(--color-anomaly) 20%, var(--color-surface));
+  border-color: var(--color-anomaly);
+}
+
+.favorite-btn.active {
+  background: color-mix(in srgb, var(--color-sun) 20%, var(--color-surface));
+  border-color: var(--color-sun);
+}
+
+#load-more-button {
+  margin: 0.7rem 1.25rem 0.3rem;
+  padding: 0.6rem 1rem;
+  border: 1px dashed var(--color-surface-border);
+  background: none;
+  color: var(--color-ink-muted);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.85rem;
+  width: calc(100% - 2.5rem);
+}
+
+#load-more-button:hover {
+  border-color: var(--color-sun);
+  color: var(--color-sun-strong);
+}
+
+#load-more-button[hidden] {
+  display: none;
+}
+
+.results-empty {
+  padding: 1.5rem 1.25rem;
+  color: var(--color-ink-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ---------- Status line & footer ---------- */
+.vote-explainer {
+  margin: 0.9rem 1.25rem 0;
+  padding-top: 0.6rem;
   border-top: 1px solid var(--color-surface-border);
   font-size: 0.78rem;
   line-height: 1.5;
@@ -441,173 +854,6 @@ path.terrace-marker:hover {
   color: var(--color-anomaly);
 }
 
-/* ---------- Popup ---------- */
-.leaflet-popup-content-wrapper {
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  color: var(--color-ink);
-  box-shadow: var(--shadow-md);
-}
-
-.leaflet-popup-tip {
-  background: var(--color-surface);
-}
-
-.popup-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.05rem;
-  margin-bottom: 0.2rem;
-}
-
-.popup-venue {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin: 0.15rem 0 0.35rem;
-}
-
-.venue-type,
-.venue-alcohol {
-  font-size: 0.72rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-surface-border);
-  white-space: nowrap;
-}
-
-.venue-type {
-  background: var(--color-bg);
-  color: var(--color-ink-muted);
-  font-weight: 600;
-}
-
-.venue-alcohol.yes {
-  background: color-mix(in srgb, var(--color-shade) 14%, var(--color-surface));
-  border-color: color-mix(in srgb, var(--color-shade) 45%, var(--color-surface));
-  color: var(--color-shade);
-}
-
-.venue-alcohol.no,
-.venue-alcohol.unknown {
-  background: transparent;
-  color: var(--color-ink-muted);
-  border-style: dashed;
-}
-
-/* Fas 5, del B: notisen på platser som bara finns i Malmö stads register,
-   inte i OSM — samma varningsfärg som .status-icon.icon-alert, så det
-   läses som "kolla det här", inte som bekräftad OSM-data. */
-.popup-unverified {
-  font-size: 0.78rem;
-  margin: 0.15rem 0 0.35rem;
-  padding: 0.35rem 0.5rem;
-  border: 1px dashed var(--color-anomaly);
-  border-radius: 0.4rem;
-  background: color-mix(in srgb, var(--color-anomaly) 10%, var(--color-surface));
-  color: var(--color-ink);
-}
-
-.popup-unverified a {
-  display: inline-block;
-  margin-top: 0.2rem;
-  font-weight: 600;
-  color: var(--color-anomaly);
-}
-
-.popup-status {
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.popup-status.sun { color: var(--color-sun-strong); }
-.popup-status.shade { color: var(--color-shade); }
-.popup-status.night { color: var(--color-night); }
-.popup-status.anomaly { color: var(--color-anomaly); }
-
-.popup-detail {
-  font-size: 0.83rem;
-  color: var(--color-ink-muted);
-  margin-top: 0.3rem;
-  line-height: 1.4;
-}
-
-/* SMHI cloud-cover caveat on a "Sol" verdict — informational, not a
-   warning, so styled close to .popup-detail rather than the anomaly/
-   unverified boxes' alert treatment. */
-.popup-weather {
-  font-size: 0.78rem;
-  color: var(--color-ink-muted);
-  margin-top: 0.3rem;
-}
-
-.popup-timeline {
-  margin-top: 0.5rem;
-}
-
-.timeline-svg {
-  display: block;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.timeline-loading {
-  font-size: 0.78rem;
-  color: var(--color-ink-muted);
-  font-style: italic;
-}
-
-.popup-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.4rem;
-  margin-top: 0.55rem;
-  padding-top: 0.45rem;
-  border-top: 1px solid var(--color-surface-border);
-}
-
-.popup-vote {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  color: var(--color-ink-muted);
-}
-
-.vote-btn,
-.favorite-btn {
-  border: 1px solid var(--color-surface-border);
-  background: var(--color-bg);
-  border-radius: 8px;
-  padding: 0.3rem 0.6rem;
-  min-width: 44px;
-  min-height: 40px;
-  cursor: pointer;
-  font-size: 1.05rem;
-  line-height: 1.3;
-}
-
-.vote-btn:hover,
-.favorite-btn:hover {
-  filter: brightness(0.97);
-}
-
-.vote-btn.active.vote-up {
-  background: color-mix(in srgb, var(--color-confirm) 18%, var(--color-surface));
-  border-color: var(--color-confirm);
-}
-
-.vote-btn.active.vote-down {
-  background: color-mix(in srgb, var(--color-anomaly) 18%, var(--color-surface));
-  border-color: var(--color-anomaly);
-}
-
-.favorite-btn.active {
-  background: color-mix(in srgb, var(--color-sun) 18%, var(--color-surface));
-  border-color: var(--color-sun-strong);
-}
-
 /* ---------- Small screens ---------- */
 @media (max-width: 640px) {
   #date-input,
@@ -616,14 +862,8 @@ path.terrace-marker:hover {
     font-size: 1rem; /* >=16px avoids iOS Safari auto-zoom on focus */
   }
 
-  .leaflet-control-zoom a {
-    width: 36px !important;
-    height: 36px !important;
-    line-height: 36px !important;
-  }
-
   #app-header {
-    padding: 1.1rem 1rem 0.85rem;
+    padding: 1.1rem 1rem 0.9rem;
   }
 
   #app-header h1 {
@@ -637,27 +877,22 @@ path.terrace-marker:hover {
   #controls {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.6rem;
-    padding: 0.6rem 1rem;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
   }
 
-  #controls label {
-    justify-content: space-between;
-  }
-
-  .time-label {
+  .time-field {
     min-width: 0;
   }
 
   #time-slider {
-    min-width: 0;
     height: 10px;
   }
 
   #time-slider::-webkit-slider-thumb {
     width: 26px;
     height: 26px;
-    margin-top: -8px;
+    margin-top: -9px;
   }
 
   #time-slider::-moz-range-thumb {
@@ -668,14 +903,14 @@ path.terrace-marker:hover {
   #now-button {
     width: 100%;
     padding: 0.75rem 1rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   #search-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.4rem;
-    padding: 0.6rem 1rem;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
   }
 
   #search-input {
@@ -687,19 +922,46 @@ path.terrace-marker:hover {
   #near-me-button,
   #near-me-alcohol-button {
     width: 100%;
-    padding: 0.6rem 0.75rem;
+    padding: 0.65rem 0.75rem;
     justify-content: center;
   }
 
-  #map {
-    height: 55vh;
-    min-height: 320px;
+  #iso-hero {
+    padding: 0.9rem 1rem 1rem;
+  }
+
+  #iso-canvas {
+    height: 220px;
+  }
+
+  .iso-hero-meta {
+    text-align: left;
   }
 
   #legend {
     padding: 0.6rem 1rem;
     font-size: 0.8rem;
     gap: 0.4rem;
+  }
+
+  .results-head,
+  #results-list {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  #load-more-button {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: calc(100% - 2rem);
+  }
+
+  .card-figures {
+    text-align: right;
+  }
+
+  .card-why {
+    max-width: 16ch;
   }
 
   #status-line,

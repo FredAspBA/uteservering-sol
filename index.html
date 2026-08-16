@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Uteservering i solen – Malmö</title>
   <meta name="description" content="Se vilka uteserveringar i Malmö som har sol just nu, med hänsyn till skuggor från byggnader." />
-  <meta name="theme-color" content="#f0a31a" />
+  <meta name="theme-color" content="#141412" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Var skiner solen just nu i Malmö?" />
@@ -21,18 +21,31 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
-    crossorigin="anonymous"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!--
+    THESIS: Malmös byggnader som *agent* — stadsgeometrin skapar skuggan,
+    inte en gissning. Kartan blir ett planritningsverktyg, inte ett
+    väderorakel. Refuses the "pins on a friendly map" default.
+    OWN-WORLD: Svart koordinatpapper + guld sol + ljusgrå byggnadslinjer.
+    IBM Plex Sans/Mono, kartografiskt rutnät, isometriska byggnadsblock.
+    STORY: Besökaren ser exakt VILKEN byggnad som skuggar VILKEN
+    uteservering just nu, inte bara ett rött/grönt betyg.
+    FIRST VIEWPORT: guld-på-svart header -> dag-stegrare + solens-väg-slider
+    -> isometrisk skuggkarta för det fokuserade resultatet -> sök/filter
+    som kartografiska taggar -> resultatlista av building-cards, varje kort
+    med Solhöjd (beräknad, inte gissad).
+    FORM: pinned by user 2026-08-15 via /shape (4-option round, se
+    uteservering-sol-redesign.md); no seed key this session — the
+    direction was already chosen before this build, not rolled here.
+    Code-led build, no comp.
+    FINISH: unreviewed and undocumented is unfinished; this build ends
+    with the finish review, the verdict, and DESIGN.md.
+  -->
   <header id="app-header">
-    <p class="eyebrow">Ett soltest för Malmös uteserveringar</p>
+    <p class="wordmark">☀️ Malmö Solar Grid</p>
     <h1>Var skiner solen just nu?</h1>
     <p class="subtitle">
       Solens vinkel skiftar med tid på dygnet och årstid — och byggnaderna runt varje
@@ -41,15 +54,25 @@
   </header>
 
   <div id="controls">
-    <label>
+    <div>
       <span class="control-label">Datum</span>
-      <input type="date" id="date-input" />
-    </label>
-    <label class="time-label">
-      <span class="control-label">Tid</span>
+      <div class="date-stepper">
+        <button type="button" id="date-prev" class="date-step-button" aria-label="Föregående dag">◀</button>
+        <input type="date" id="date-input" />
+        <button type="button" id="date-next" class="date-step-button" aria-label="Nästa dag">▶</button>
+      </div>
+    </div>
+    <div class="time-field">
+      <span class="control-label">Tid — solens väg över dagen</span>
+      <div class="sun-path" aria-hidden="true">
+        <svg class="sun-path-track" viewBox="0 0 200 30" width="200" height="30">
+          <path d="M4 26 Q100 -8 196 26" />
+        </svg>
+        <div class="sun-path-marker"></div>
+      </div>
       <input type="range" id="time-slider" min="0" max="1439" step="5" />
       <span id="time-display">--:--</span>
-    </label>
+    </div>
     <button id="now-button">Nu</button>
   </div>
 
@@ -72,7 +95,18 @@
     <span id="search-status"></span>
   </div>
 
-  <div id="map"></div>
+  <section id="iso-hero" aria-label="Skuggkarta för valt resultat">
+    <div class="iso-hero-head">
+      <p class="iso-hero-focus" id="iso-hero-focus">Väljer en uteservering …</p>
+      <p class="iso-hero-meta" id="iso-hero-meta"></p>
+    </div>
+    <div class="iso-hero-canvas-wrap">
+      <canvas id="iso-canvas"></canvas>
+    </div>
+    <p class="iso-hero-caption" id="iso-hero-caption">
+      Byggnader inom 200 m runt det fokuserade resultatet, i verklig höjd. Dra i tidsreglaget — skuggorna räknas om i realtid, med samma metod som betyget nedan.
+    </p>
+  </section>
 
   <div id="legend">
     <div class="chip">
@@ -117,10 +151,16 @@
     <div class="chip"><span class="ring ring-down"></span> Du sa 👎 nu</div>
   </div>
 
-  <p id="status-line"></p>
+  <section id="results" aria-label="Uteserveringar">
+    <div class="results-head">
+      <p id="status-line"></p>
+    </div>
+    <div id="results-list"></div>
+    <button type="button" id="load-more-button" hidden></button>
+  </section>
 
   <p class="vote-explainer">
-    👍/👎 i en uteserverings popup betyder "stämmer sol/skugga-bedömningen med
+    👍/👎 på ett kort betyder "stämmer sol/skugga-bedömningen med
     verkligheten just nu?". Varje svar loggas ihop med exakt tid och vad
     beräkningen visade, så att vi i efterhand kan se mönster i var den
     träffar fel och göra den bättre — ju fler som svarar, desto mer
@@ -139,11 +179,6 @@
     Molnprognos: <a href="https://www.smhi.se/data/oppna-data" target="_blank" rel="noopener noreferrer">SMHI</a> (CC BY 4.0).
   </p>
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
-    crossorigin="anonymous"
-  ></script>
   <script
     src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"
     integrity="sha384-oiKvfHOCwLd5BVeyS4Zc1WW9KNRFXyXCkijYVrNbvw6BzoPFC+HiHzZi8FlRAvQ3"
