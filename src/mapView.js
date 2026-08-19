@@ -209,7 +209,13 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
       lastClientY: ev.clientY,
       distancePx: 0,
     };
-    canvas.setPointerCapture(ev.pointerId);
+    try {
+      canvas.setPointerCapture(ev.pointerId);
+    } catch {
+      // Capture is best-effort — if it fails the drag still tracks fine as
+      // long as the pointer stays over the canvas, it just won't keep
+      // receiving pointermove once the cursor leaves canvas bounds.
+    }
   });
 
   canvas.addEventListener("pointermove", (ev) => {
@@ -231,7 +237,16 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
 
   function endDrag(ev) {
     if (dragState) {
-      canvas.releasePointerCapture(ev.pointerId);
+      // releasePointerCapture can throw (e.g. the browser already released
+      // capture implicitly before pointerup fires, per spec) — that must
+      // never stop lastDragDistance/dragState below from resetting, or
+      // click-to-select stays permanently blocked for the rest of the
+      // page session (dragState would never go back to null).
+      try {
+        canvas.releasePointerCapture(ev.pointerId);
+      } catch {
+        // best-effort; nothing to clean up if capture was already gone.
+      }
       lastDragDistance = dragState.distancePx;
     }
     dragState = null;
