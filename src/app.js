@@ -77,6 +77,15 @@ const mapView = createMapView(mapCanvas, mapControlsEl, {
   onSelectTerrace: (terraceId) => {
     const entry = entries.find((e) => e.terrace.id === terraceId);
     if (!entry) return;
+    // Mirrors findNearestMatching()'s "jump to a possibly-not-yet-visible
+    // entry" pattern below: expand visibleCount/renderVisibleList() before
+    // focusing, so entry.card actually exists for focusEntry()/toggleExpand()
+    // to act on instead of silently no-op-ing on a null card.
+    const rank = filteredSorted.indexOf(entry);
+    if (rank >= visibleCount) {
+      visibleCount = rank + 1;
+      renderVisibleList();
+    }
     focusEntry(entry, { scroll: true });
     if (entry.card && !entry.expanded) toggleExpand(entry);
   },
