@@ -31,7 +31,7 @@ function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-const STATUS_COLORS = {
+export const STATUS_COLORS = {
   sun: cssVar("--color-sun"),
   shade: cssVar("--color-shade"),
   night: cssVar("--color-night"),
