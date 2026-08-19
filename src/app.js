@@ -6,6 +6,7 @@ import { isFavorite, toggleFavorite, getAllFavorites, clearAllFavorites } from "
 import { fetchExcludedKeys } from "./cloudVotes.js";
 import { fetchCloudForecast, findClosestForecast } from "./weather.js";
 import { createIsoHero } from "./isoHero.js";
+import { createMapView } from "./mapView.js";
 
 const MALMO_CENTER = [55.605, 13.0038];
 
@@ -66,8 +67,20 @@ const isoCanvas = document.getElementById("iso-canvas");
 const isoHeroFocusEl = document.getElementById("iso-hero-focus");
 const isoHeroMetaEl = document.getElementById("iso-hero-meta");
 const isoHeroCaptionEl = document.getElementById("iso-hero-caption");
+const heroViewBuildingsButton = document.getElementById("hero-view-buildings-button");
+const heroViewMapButton = document.getElementById("hero-view-map-button");
+const mapCanvas = document.getElementById("map-canvas");
+const mapControlsEl = document.getElementById("map-controls");
 
 const isoHero = createIsoHero(isoCanvas);
+const mapView = createMapView(mapCanvas, mapControlsEl, {
+  onSelectTerrace: (terraceId) => {
+    const entry = entries.find((e) => e.terrace.id === terraceId);
+    if (!entry) return;
+    focusEntry(entry, { scroll: true });
+    if (entry.card && !entry.expanded) toggleExpand(entry);
+  },
+});
 
 let terraces = [];
 let buildings = null;
@@ -78,6 +91,47 @@ let focusedEntry = null;
 
 const INITIAL_VISIBLE = 24;
 const LOAD_MORE_STEP = 24;
+
+// ---------- Hero view mode (map vs. buildings) ----------
+const HERO_VIEW_STORAGE_KEY = "uteservering-sol:hero-view-mode";
+
+function readHeroMode() {
+  try {
+    return localStorage.getItem(HERO_VIEW_STORAGE_KEY) === "map" ? "map" : "buildings";
+  } catch {
+    return "buildings";
+  }
+}
+
+function writeHeroMode(mode) {
+  try {
+    localStorage.setItem(HERO_VIEW_STORAGE_KEY, mode);
+  } catch {
+    // localStorage unavailable — the choice just won't persist, harmless.
+  }
+}
+
+let heroMode = readHeroMode();
+
+function applyHeroMode() {
+  const isMap = heroMode === "map";
+  isoCanvas.hidden = isMap;
+  mapCanvas.hidden = !isMap;
+  mapControlsEl.hidden = !isMap;
+  heroViewMapButton.setAttribute("aria-pressed", String(isMap));
+  heroViewBuildingsButton.setAttribute("aria-pressed", String(!isMap));
+  renderHero();
+}
+
+function setHeroMode(mode) {
+  if (mode === heroMode) return;
+  heroMode = mode;
+  writeHeroMode(mode);
+  applyHeroMode();
+}
+
+heroViewMapButton.addEventListener("click", () => setHeroMode("map"));
+heroViewBuildingsButton.addEventListener("click", () => setHeroMode("buildings"));
 
 // Fetched once, in the background, without blocking the main data load
 // below — it's a "nice to have" card badge, not something worth delaying
@@ -547,7 +601,8 @@ function focusEntry(entry, { scroll = false } = {}) {
   focusedEntry = entry;
   entry.card?.classList.add("is-focused");
   isoHero.setFocus(entry.terrace, buildings);
-  renderIsoHero();
+  mapView.panTo(entry.terrace.id);
+  renderHero();
   if (scroll) entry.card?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
@@ -567,6 +622,15 @@ function renderIsoHero() {
       ? `Osäkert underlag: punkten ligger inuti en byggnad i kartdatan.`
       : `Solen är under horisonten.`;
   isoHero.render({ sunInfo: result.sunInfo, statusColor: STATUS_COLORS[result.status] });
+}
+
+function renderHero() {
+  if (!focusedEntry?.lastResult) return;
+  if (heroMode === "buildings") {
+    renderIsoHero();
+  } else {
+    mapView.render({ statusColorFor: (status) => STATUS_COLORS[status] ?? STATUS_COLORS.night });
+  }
 }
 
 function renderResults() {
@@ -649,7 +713,7 @@ async function recompute() {
 
   document.documentElement.style.setProperty("--day-progress", `${(Number(timeSlider.value) / 1439) * 100}%`);
 
-  if (focusedEntry) renderIsoHero();
+  if (focusedEntry) renderHero();
 }
 
 // Combines the text search with the "Endast alkohol" and "Endast
@@ -670,6 +734,8 @@ function applyFilters({ preserveVisibleCount = false } = {}) {
       return nameMatches && alcoholMatches && favoriteMatches;
     })
     .sort(compareEntries);
+
+  mapView.setData({ buildings, entries: filteredSorted, focusedTerraceId: focusedEntry?.terrace.id ?? null });
 
   if (!preserveVisibleCount) visibleCount = INITIAL_VISIBLE;
   renderVisibleList();
@@ -832,6 +898,7 @@ async function init() {
     renderResults();
     await recompute();
     applyFilters();
+    applyHeroMode();
   } catch (err) {
     statusLine.textContent = `Kunde inte ladda data: ${err.message}. Har du kört "npm run fetch-data"?`;
     console.error(err);

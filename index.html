@@ -100,8 +100,14 @@
       <p class="iso-hero-focus" id="iso-hero-focus">Väljer en uteservering …</p>
       <p class="iso-hero-meta" id="iso-hero-meta"></p>
     </div>
+    <div class="hero-view-toggle" role="group" aria-label="Visningsläge">
+      <button type="button" id="hero-view-buildings-button" class="hero-view-toggle-button" aria-pressed="true">Byggnader</button>
+      <button type="button" id="hero-view-map-button" class="hero-view-toggle-button" aria-pressed="false">Karta</button>
+    </div>
     <div class="iso-hero-canvas-wrap">
       <canvas id="iso-canvas"></canvas>
+      <canvas id="map-canvas" hidden></canvas>
+      <div id="map-controls" class="map-controls" hidden></div>
     </div>
     <p class="iso-hero-caption" id="iso-hero-caption">
       Byggnader inom 200 m runt det fokuserade resultatet, i verklig höjd. Dra i tidsreglaget — skuggorna räknas om i realtid, med samma metod som betyget nedan.
