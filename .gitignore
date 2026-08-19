@@ -2,3 +2,4 @@ node_modules/
 .claude/
 .data-tmp/
 data/*.geojson.new
+.worktrees/
