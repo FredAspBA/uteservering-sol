@@ -191,8 +191,10 @@ function padBboxMeters([minX, minY, maxX, maxY], meters) {
  * the small search boxes around a terrace point. Those used to go
  * through turf's circle-polygon buffer just to get a bounding box out of
  * it, which is real (if small) overhead multiplied by every terrace on
- * every recompute — plain arithmetic is equivalent here and effectively free. */
-function pointBboxMeters(point, meters) {
+ * every recompute — plain arithmetic is equivalent here and effectively free.
+ * Exported 2026-08-19 so src/mapView.js can build a terrace-grid index — see
+ * that module's `buildTerraceIndex()`. */
+export function pointBboxMeters(point, meters) {
   const [lon, lat] = point.geometry.coordinates;
   return padBboxMeters([lon, lat, lon, lat], meters);
 }
@@ -242,7 +244,14 @@ function cellRange(bbox) {
   };
 }
 
-function buildGrid(list) {
+/**
+ * Indexes any list of objects with a `.bbox` [minLon, minLat, maxLon, maxLat]
+ * into a spatial grid for fast bbox-overlap queries. Originally built for
+ * prepareBuildings() below; exported 2026-08-19 so src/mapView.js can build
+ * a second, terrace-only grid instance with the same function — see that
+ * module's `buildTerraceIndex()`.
+ */
+export function buildGrid(list) {
   const grid = new Map();
   list.forEach((building, index) => {
     const { colMin, colMax, rowMin, rowMax } = cellRange(building.bbox);
@@ -263,9 +272,10 @@ function buildGrid(list) {
  * avoid scanning the full building list. May include a few extra buildings
  * from coarse cell overlap — callers that need exact overlap should still
  * bbox-check the returned candidates (cheap, since the candidate set is
- * now small).
+ * now small). Exported 2026-08-19 so src/mapView.js can query a terrace-grid
+ * index — see that module's `buildTerraceIndex()`.
  */
-function queryNearby(index, bbox) {
+export function queryNearby(index, bbox) {
   const { colMin, colMax, rowMin, rowMax } = cellRange(bbox);
   const seen = new Set();
   const result = [];
