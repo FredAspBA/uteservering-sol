@@ -21,6 +21,7 @@ const MAX_RADIUS_M = 6000; // zoomed out to roughly the whole coverage area
 const ZOOM_STEP = 0.85;
 const CLICK_HIT_RADIUS_PX = 14;
 const PADDING_PX = 20;
+const DRAG_CLICK_SUPPRESS_PX = 5; // cumulative pointer movement beyond this means "drag", not "click"
 
 function makeProjector(originLon, originLat) {
   const midLatRad = (originLat * Math.PI) / 180;
@@ -190,16 +191,32 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
     }
   }
 
-  let dragState = null; // { startClientX, startClientY, startLon, startLat }
+  let dragState = null; // { startClientX, startClientY, startLon, startLat, lastClientX, lastClientY, distancePx }
+  // Cumulative pointer movement (px) of the most recently completed drag.
+  // Set by pointerup/pointercancel and read by the click handler — the
+  // synthetic `click` event fires *after* pointerup clears dragState, so
+  // this has to live outside dragState rather than inside it.
+  let lastDragDistance = 0;
 
   canvas.addEventListener("pointerdown", (ev) => {
     if (!scene) return;
-    dragState = { startClientX: ev.clientX, startClientY: ev.clientY, startLon: viewport.lon, startLat: viewport.lat };
+    dragState = {
+      startClientX: ev.clientX,
+      startClientY: ev.clientY,
+      startLon: viewport.lon,
+      startLat: viewport.lat,
+      lastClientX: ev.clientX,
+      lastClientY: ev.clientY,
+      distancePx: 0,
+    };
     canvas.setPointerCapture(ev.pointerId);
   });
 
   canvas.addEventListener("pointermove", (ev) => {
     if (!dragState) return;
+    dragState.distancePx += Math.hypot(ev.clientX - dragState.lastClientX, ev.clientY - dragState.lastClientY);
+    dragState.lastClientX = ev.clientX;
+    dragState.lastClientY = ev.clientY;
     const dxPx = ev.clientX - dragState.startClientX;
     const dyPx = ev.clientY - dragState.startClientY;
     const w = canvas.clientWidth;
@@ -213,7 +230,10 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
   });
 
   function endDrag(ev) {
-    if (dragState) canvas.releasePointerCapture(ev.pointerId);
+    if (dragState) {
+      canvas.releasePointerCapture(ev.pointerId);
+      lastDragDistance = dragState.distancePx;
+    }
     dragState = null;
   }
   canvas.addEventListener("pointerup", endDrag);
@@ -233,6 +253,11 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
 
   canvas.addEventListener("click", (ev) => {
     if (!scene || dragState) return;
+    // A completed drag's release fires a synthetic `click` after pointerup
+    // has already cleared dragState, so that check alone never catches it —
+    // lastDragDistance (set by endDrag, read here) is what actually
+    // distinguishes "this click ended a drag" from "this was a plain click".
+    if (lastDragDistance > DRAG_CLICK_SUPPRESS_PX) return;
     const rect = canvas.getBoundingClientRect();
     const clickX = ev.clientX - rect.left;
     const clickY = ev.clientY - rect.top;
