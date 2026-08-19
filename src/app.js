@@ -602,6 +602,7 @@ function focusEntry(entry, { scroll = false } = {}) {
   entry.card?.classList.add("is-focused");
   isoHero.setFocus(entry.terrace, buildings);
   mapView.panTo(entry.terrace.id);
+  mapView.setFocusedTerrace(entry.terrace.id);
   renderHero();
   if (scroll) entry.card?.scrollIntoView({ behavior: "smooth", block: "center" });
 }

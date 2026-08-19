@@ -42,6 +42,7 @@ function makeProjector(originLon, originLat) {
  *   render: (frame: { statusColorFor: (status: string) => string }) => void,
  *   panTo: (terraceId: string) => void,
  *   hasScene: () => boolean,
+ *   setFocusedTerrace: (terraceId: string|null) => void,
  * }}
  */
 export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
@@ -72,6 +73,15 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
 
   function hasScene() {
     return scene !== null;
+  }
+
+  /** Updates which terrace is drawn with the gold focus ring, without
+   * rebuilding the terrace spatial index — cheap enough to call on every
+   * card click (see docs/superpowers/sdd/2026-08-19-map-view-toggle/task-4-report.md
+   * fix-report for why this exists separately from setData()). */
+  function setFocusedTerrace(terraceId) {
+    if (!scene) return;
+    scene.focusedTerraceId = terraceId;
   }
 
   function panTo(terraceId) {
@@ -178,5 +188,5 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
     }
   }
 
-  return { setData, render, panTo, hasScene };
+  return { setData, render, panTo, hasScene, setFocusedTerrace };
 }
