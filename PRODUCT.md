@@ -101,6 +101,14 @@ inte hitta på siffror utöver vad som faktiskt loggats.
 
 ## Accessibility & Inclusion
 
-Ingen formell standard fastställd. WCAG 44px-tryckytor har tillämpats i
-angränsande projekt (t.ex. Tösabling) men är inte bekräftat som krav här —
-behandla som öppen fråga tills bekräftat.
+**44px WCAG-tryckytor: bekräftat krav** (2026-08-19, beslutat i samband
+med kart-/byggnadsvy-växlingens `/impeccable critique`, se
+`docs/superpowers/specs/2026-08-18-map-view-toggle-design.md` avsnitt 6).
+Alla nya interaktiva kontroller ska ha minst 44×44px tryckyta, samma mått
+som `.card-summary` redan använder. Detta stänger den tidigare öppna
+frågan för framtida arbete — inget behöver längre "behandlas som öppet"
+här. Kravet är inte retroaktivt: `.vote-btn`/`.favorite-btn` (idag
+44×40px) är en känd, oåtgärdad avvikelse, kvar som framtida
+städuppgift, inte en blockare för nytt arbete.
+
+Ingen annan formell tillgänglighetsstandard fastställd utöver detta.
