@@ -413,6 +413,17 @@ function explainHtml(result) {
   return `<div class="card-explain">${detail}</div>`;
 }
 
+function navLineHtml(entry) {
+  const { terrace, distanceMeters } = entry;
+  const [lon, lat] = terrace.point.geometry.coordinates;
+  const street = terrace.feature?.properties?.["addr:street"];
+  const parts = [];
+  if (street) parts.push(`<span class="card-nav-street">${escapeHtml(street)}</span>`);
+  parts.push(`<a class="card-nav-link" href="https://www.google.com/maps/search/?api=1&query=${lat},${lon}" target="_blank" rel="noopener noreferrer">Öppna i kartor</a>`);
+  if (distanceMeters != null) parts.push(`<span class="card-nav-distance">${Math.round(distanceMeters)} m bort</span>`);
+  return `<div class="card-nav-line">${parts.join(" · ")}</div>`;
+}
+
 function cardDetailHtml(entry) {
   const { terrace, lastResult: result, lastViewedAt } = entry;
   const [lon, lat] = terrace.point.geometry.coordinates;
@@ -422,6 +433,7 @@ function cardDetailHtml(entry) {
     ${unverifiedNoticeHtml(terrace.feature?.properties, lat, lon)}
     ${explainHtml(result)}
     ${weatherHtml(result.status, lastViewedAt)}
+    ${navLineHtml(entry)}
     <div class="card-timeline">${timelineSectionHtml(entry)}</div>
     <div class="card-actions">
       <div class="card-vote" title="Stämmer sol/skugga-bedömningen ovan med verkligheten just nu? Hjälper till att förbättra beräkningen framöver.">
