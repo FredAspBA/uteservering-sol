@@ -132,6 +132,55 @@ Prioriterat överst. Bocka av / ta bort rader när de är gjorda.
       denna session (Browser-panelen visades inte), så inspektera
       visuellt vid nästa tillfälle.
 
+- [ ] **Kart-/byggnadsvy-växling — implementation klar 2026-08-19 över 8
+      tasks** (`docs/superpowers/plans/2026-08-19-map-view-toggle.md`,
+      spec `docs/superpowers/specs/2026-08-18-map-view-toggle-design.md`),
+      **men BLOCKERAD av ett CSS-fel som Task 8:s verifiering hittade
+      2026-08-20 — se nästa punkt nedan.** Ny modul
+      `src/mapView.js` (syskon till `isoHero.js`, orörd) ritar byggnader
+      rakt uppifrån + statusfärgade terrasspunkter, med pan/zoom/klick-
+      för-att-fokusera och ett eget litet grid-index (återanvänder
+      `buildGrid()`/`queryNearby()`, nyexporterade från `shadow.js`).
+      "Karta"/"Byggnader"-knapparna ovanför hero-ytan minns valt läge i
+      `localStorage`. "Visa mig"-knappen hämtar en engångsposition
+      (`getCurrentPosition`, aldrig `watchPosition`, aldrig lagrad) och
+      ritar en egen lila prick (`--color-position`, `#9a86c9`, se
+      `DESIGN.md`). Kortets detaljvy fick gatunamn + "Öppna i kartor"-
+      länk + avstånd (`cardDetailHtml()` i `src/app.js`). Task 8
+      verifierade live (DOM/JS, inga skärmdumpar möjliga denna session)
+      att all underliggande funktionalitet faktiskt fungerar: klick på
+      en kart-punkt fokuserar rätt kort, panorering flyttar vyn,
+      "Visa mig" visar rätt laddnings-/nekad-/fel-meddelanden och
+      inaktiverar knappen under hämtning, tid-slidern animerar
+      Byggnader-vyn fortfarande utan regression, gatunamn/Maps-länk
+      stämmer, alla tre nya knappar är ≥44×44px, och resultatlistan
+      förblir en fullständig tangentbordsväg till varje terrass oavsett
+      hero-läge (spec §6:s Sam-persona-löfte). Men det rent visuella
+      växlingsfelet nedan gör att funktionen INTE kan anses klar förrän
+      det är rättat.
+- [ ] **Känt fel, hittat av Task 8 (2026-08-20): kart-/byggnadsvy-
+      togglingen är visuellt verkningslös.** `#iso-canvas` och
+      `#map-canvas` sätter båda `display: block` direkt på ID-selektorn
+      (`style.css` rad ~459–470), och `.map-controls` sätter `display:
+      flex` (rad ~476). En ID/class-selektor från författarens eget
+      stylesheet vinner alltid över webbläsarens inbyggda
+      `[hidden] { display: none }`-regel, oavsett specificitet — så
+      `src/app.js`s `isoCanvas.hidden = isMap` / `mapCanvas.hidden =
+      !isMap` / `mapControlsEl.hidden = !isMap` (funktionen som sätter
+      `heroMode`, ca rad 126–129) har noll visuell effekt. Resultatet:
+      båda hero-canvasarna renderas alltid staplade under varandra
+      (hero-boxen blir dubbelt så hög, t.ex. 220px→440px per canvas vid
+      375px-bredd), och "Visa mig"-kontrollraden (`.map-controls`,
+      `position: absolute` inom `.iso-hero-canvas-wrap`) flyter ovanpå
+      Byggnader-scenen även när "Byggnader" är valt. Koden har redan
+      rätt mönster på ett annat ställe (`#load-more-button[hidden] {
+      display: none; }`, `style.css` rad 896) — det saknas bara för
+      dessa tre nya selektorer. Ren CSS-fix (lägg till motsvarande
+      `[hidden] { display: none; }`-regler för `#iso-canvas`,
+      `#map-canvas`, `.map-controls`), men medvetet INTE fixad av Task 8
+      (dokumentations-/verifieringsuppgift, fick inte röra kod) — nästa
+      session ska fixa detta innan funktionen räknas som klar.
+
 (Tidigare förslag — kopiera-taggar, dubblett-badge, framstegsstapel, dölj
 klara, direkt-till-redigeraren — är alla byggda och live.)
 
@@ -159,16 +208,27 @@ Deploy = `git add -A && git commit && git push` (Pages bygger om automatiskt).
 ## Filkarta
 
 - `index.html` + `src/app.js` — sol-appen (MALMÖ URBAN GRID, se
-  `DESIGN.md`): datum-stegrare, tid-slider, isometrisk skuggkarta,
-  sök/filter, "nära mig"-knappar, resultatlista av building-cards
-  (kompakt rad + lazy-expanderad detalj med sol/skugga + typ + alkohol +
-  tumme upp/ner). Ingen Leaflet/tredjeparts-kartmotor sedan 2026-08-16.
-- `src/isoHero.js` — canvas-renderare för skuggkartan. Läser riktiga
-  byggnader (samma `buildings`-index som `shadow.js`) inom 200 m från
-  det fokuserade resultatet, extruderar isometriskt efter riktig höjd,
-  beräknar skuggor med samma formel som `computeShading()`. Anropas
-  `setFocus()` bara vid fokusbyte (kortklick), `render()` varje
+  `DESIGN.md`): datum-stegrare, tid-slider, isometrisk skuggkarta ELLER
+  topp-vy-karta (växlingsbara, se `src/mapView.js` nedan), sök/filter,
+  "nära mig"-knappar, resultatlista av building-cards (kompakt rad +
+  lazy-expanderad detalj med sol/skugga + typ + alkohol + gatunamn/Maps-
+  länk/avstånd + tumme upp/ner). Ingen Leaflet/tredjeparts-kartmotor
+  sedan 2026-08-16.
+- `src/isoHero.js` — canvas-renderare för skuggkartan (Byggnader-läget).
+  Läser riktiga byggnader (samma `buildings`-index som `shadow.js`) inom
+  200 m från det fokuserade resultatet, extruderar isometriskt efter
+  riktig höjd, beräknar skuggor med samma formel som `computeShading()`.
+  Anropas `setFocus()` bara vid fokusbyte (kortklick), `render()` varje
   tidsreglage-tick.
+- `src/mapView.js` — canvas-renderare för Karta-läget (tillagt
+  2026-08-19, se ovan). Syskon till `isoHero.js`, rör den filen inte.
+  Factory-mönster: `createMapView(canvas, controlsEl, {onSelectTerrace})`
+  returnerar `{setData, render, panTo, hasScene}`. Ritar byggnader rakt
+  uppifrån (linjer, ingen extrudering) + statusfärgade terrasspunkter
+  (`STATUS_COLORS`, exporterad från `app.js`), med pan/zoom/klick-för-
+  att-fokusera och "Visa mig"-positionsprick. **OBS (2026-08-20): visas
+  just nu alltid samtidigt med `isoHero.js`s canvas pga ett CSS-fel, se
+  "Att göra härnäst" ovan.**
 - `src/shadow.js` — skuggberäkning (raycasting mot byggnader, spatialt
   rutnätsindex). `src/sun.js` — SunCalc-wrapper. `src/dataLoad.js` — laddar
   geojson + förbereder byggnader/terrasser.
