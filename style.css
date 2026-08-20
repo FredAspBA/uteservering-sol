@@ -483,6 +483,17 @@ a {
   z-index: 1;
 }
 
+/* [hidden] must win over the display:block/flex rules above — an
+   attribute selector here still beats the bare ID/class selectors above
+   in specificity, and appearing later settles it either way. Without
+   this, app.js's isoCanvas.hidden / mapCanvas.hidden / mapControlsEl.hidden
+   toggling has no visual effect (see CLAUDE.md, Task 8 finding). */
+#iso-canvas[hidden],
+#map-canvas[hidden],
+.map-controls[hidden] {
+  display: none;
+}
+
 #map-locate-button {
   min-height: 44px;
   min-width: 44px;
