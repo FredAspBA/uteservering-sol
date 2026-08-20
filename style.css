@@ -28,6 +28,7 @@
   --color-night: #8f8f88;
   --color-anomaly: #e2703f;
   --color-confirm: #82b085;
+  --color-position: #9a86c9;
 
   --font-display: "IBM Plex Sans", "Segoe UI", sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
@@ -480,6 +481,37 @@ a {
   align-items: center;
   gap: 0.5rem;
   z-index: 1;
+}
+
+#map-locate-button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-surface-border);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+#map-locate-button:hover:not(:disabled) {
+  border-color: var(--color-sun);
+  color: var(--color-sun-strong);
+}
+
+#map-locate-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+#map-locate-status {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius);
 }
 
 .iso-hero-caption {

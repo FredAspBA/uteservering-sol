@@ -186,6 +186,8 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
       drawTerracePoint(ctx, toScreen, item.entry, statusColorFor, item.entry.terrace.id === scene.focusedTerraceId);
     }
 
+    drawPositionDot(toScreen);
+
     if (!nearbyBuildings.length && !nearbyTerraces.length) {
       drawPlaceholder(ctx, w, h, "Inga ställen i det här kartutsnittet");
     }
@@ -265,6 +267,51 @@ export function createMapView(canvas, controlsEl, { onSelectTerrace } = {}) {
     },
     { passive: false }
   );
+
+  const locateButton = document.createElement("button");
+  locateButton.type = "button";
+  locateButton.id = "map-locate-button";
+  locateButton.textContent = "Visa mig";
+  const locateStatus = document.createElement("span");
+  locateStatus.id = "map-locate-status";
+  controlsEl.appendChild(locateButton);
+  controlsEl.appendChild(locateStatus);
+
+  let userPosition = null; // { lon, lat } | null — never persisted, spec §4
+
+  function drawPositionDot(toScreen) {
+    if (!userPosition) return;
+    const p = toScreen(userPosition.lon, userPosition.lat);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = getComputedStyle(canvas).getPropertyValue("--color-position").trim() || "#9a86c9";
+    ctx.fill();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "#141412";
+    ctx.stroke();
+  }
+
+  locateButton.addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      locateStatus.textContent = "Din webbläsare stödjer inte platsdelning.";
+      return;
+    }
+    locateButton.disabled = true;
+    locateStatus.textContent = "Hämtar din plats…";
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        userPosition = { lon: position.coords.longitude, lat: position.coords.latitude };
+        locateStatus.textContent = "";
+        locateButton.disabled = false;
+        render({ statusColorFor: lastStatusColorFor });
+      },
+      (err) => {
+        locateStatus.textContent = err.code === err.PERMISSION_DENIED ? "Platsdelning nekades — kan inte visa din position." : "Kunde inte hämta din plats just nu.";
+        locateButton.disabled = false;
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+    );
+  });
 
   canvas.addEventListener("click", (ev) => {
     if (!scene || dragState) return;
