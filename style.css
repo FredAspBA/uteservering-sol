@@ -467,6 +467,11 @@ a {
   width: 100%;
   height: 280px;
   cursor: grab;
+  /* Without this, the browser's default touch-scroll gesture claims a
+     touch drag before pointermove ever sees it (firing pointercancel
+     instead) — pan-by-touch is otherwise completely broken. See final
+     whole-branch review finding #3. */
+  touch-action: none;
 }
 
 #map-canvas:active {

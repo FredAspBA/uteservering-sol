@@ -69,6 +69,7 @@ const isoHeroMetaEl = document.getElementById("iso-hero-meta");
 const isoHeroCaptionEl = document.getElementById("iso-hero-caption");
 const heroViewBuildingsButton = document.getElementById("hero-view-buildings-button");
 const heroViewMapButton = document.getElementById("hero-view-map-button");
+const isoHeroSectionEl = document.getElementById("iso-hero");
 const mapCanvas = document.getElementById("map-canvas");
 const mapControlsEl = document.getElementById("map-controls");
 
@@ -129,6 +130,10 @@ function applyHeroMode() {
   mapControlsEl.hidden = !isMap;
   heroViewMapButton.setAttribute("aria-pressed", String(isMap));
   heroViewBuildingsButton.setAttribute("aria-pressed", String(!isMap));
+  // The static HTML label ("Skuggkarta för valt resultat") describes the
+  // isometric shadow scene specifically and reads as wrong once the map is
+  // showing instead — keep it accurate to whichever view is actually live.
+  isoHeroSectionEl.setAttribute("aria-label", isMap ? "Karta för valt resultat" : "Skuggkarta för valt resultat");
   renderHero();
 }
 
@@ -141,6 +146,16 @@ function setHeroMode(mode) {
 
 heroViewMapButton.addEventListener("click", () => setHeroMode("map"));
 heroViewBuildingsButton.addEventListener("click", () => setHeroMode("buildings"));
+
+// Reconcile the DOM (aria-pressed, hidden canvases/controls) to heroMode
+// immediately — not only after init()'s data fetch resolves. Safe to call
+// before any data has loaded: renderHero() early-returns with no
+// focusedEntry, and mapView.render() no-ops safely on a null scene. Without
+// this, a returning "Karta"-mode user sees "Byggnader" pressed throughout
+// the multi-second cold-load, and — worse — if init()'s fetch throws before
+// its own applyHeroMode() call, the toggle button is left permanently out
+// of sync with heroMode (see final whole-branch review finding #4).
+applyHeroMode();
 
 // Fetched once, in the background, without blocking the main data load
 // below — it's a "nice to have" card badge, not something worth delaying
@@ -646,12 +661,29 @@ function renderIsoHero() {
   isoHero.render({ sunInfo: result.sunInfo, statusColor: STATUS_COLORS[result.status] });
 }
 
+// Map-mode counterpart to renderIsoHero() above — same focus/meta text
+// (terrace name, altitude/bearing), but a caption describing the top-down
+// map instead of the isometric building scene. Without this, the head/
+// caption text stayed stuck describing the isometric view even while the
+// map was showing (final whole-branch review finding #2): on a fresh load
+// that starts in "Karta" mode, #iso-hero-focus never left its static HTML
+// placeholder even though a terrace was actually focused and ringed gold
+// on the map canvas.
+function renderMapHero() {
+  const { terrace, lastResult: result } = focusedEntry;
+  isoHeroFocusEl.textContent = terrace.name;
+  isoHeroMetaEl.textContent = `Solhöjd ${result.sunInfo.altitudeDeg.toFixed(1)}° · riktning ${result.sunInfo.bearingDeg.toFixed(0)}°`;
+  isoHeroCaptionEl.innerHTML =
+    "Uteserveringar och byggnader uppifrån. Dra för att panorera, scrolla för att zooma — färgen visar sol/skugga just nu.";
+  mapView.render({ statusColorFor: (status) => STATUS_COLORS[status] ?? STATUS_COLORS.night });
+}
+
 function renderHero() {
   if (!focusedEntry?.lastResult) return;
   if (heroMode === "buildings") {
     renderIsoHero();
   } else {
-    mapView.render({ statusColorFor: (status) => STATUS_COLORS[status] ?? STATUS_COLORS.night });
+    renderMapHero();
   }
 }
 
@@ -762,10 +794,20 @@ function applyFilters({ preserveVisibleCount = false } = {}) {
   if (!preserveVisibleCount) visibleCount = INITIAL_VISIBLE;
   renderVisibleList();
 
+  // Tracks whether this call already triggered a renderHero() via
+  // focusEntry() (which calls it internally) — so the unconditional
+  // renderHero() at the end below doesn't fire redundantly right after one
+  // of those paths, while still firing on every other filter-change path
+  // (e.g. ticking a checkbox with an entry already focused), which is what
+  // final whole-branch review finding #1 was about: without it, the map
+  // canvas's data got updated (mapView.setData() above) but never repainted.
+  let focusedThisCall = false;
+
   if (query) {
     searchStatus.textContent = `${filteredSorted.length} träff${filteredSorted.length === 1 ? "" : "ar"}`;
     if (filteredSorted.length === 1) {
       focusEntry(filteredSorted[0], { scroll: true });
+      focusedThisCall = true;
       if (filteredSorted[0].card) toggleExpand(filteredSorted[0]);
     }
   } else if (alcoholOnly || favoritesOnly) {
@@ -777,7 +819,12 @@ function applyFilters({ preserveVisibleCount = false } = {}) {
     searchStatus.textContent = "";
   }
 
-  if (!focusedEntry && filteredSorted.length) focusEntry(filteredSorted[0]);
+  if (!focusedEntry && filteredSorted.length) {
+    focusEntry(filteredSorted[0]);
+    focusedThisCall = true;
+  }
+
+  if (!focusedThisCall) renderHero();
 }
 
 // ---------- "Nearest sunny terrace to me" ----------
@@ -919,8 +966,13 @@ async function init() {
     terraces = data.terraces.filter((t) => !excludedKeys.has(String(t.id).replace("/", "_")));
     renderResults();
     await recompute();
+    // No applyHeroMode() call here: the module-load-time call above already
+    // synced the DOM to heroMode (it doesn't change during this load unless
+    // the user clicks the toggle, which calls applyHeroMode() itself), and
+    // applyFilters() below focuses an entry (via focusEntry(), which calls
+    // renderHero() itself) whenever one isn't already focused — so hero
+    // content is already correctly rendered by the time this try block ends.
     applyFilters();
-    applyHeroMode();
   } catch (err) {
     statusLine.textContent = `Kunde inte ladda data: ${err.message}. Har du kört "npm run fetch-data"?`;
     console.error(err);
