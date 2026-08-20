@@ -15,6 +15,7 @@ colors:
   night: "#8f8f88"
   anomaly: "#e2703f"
   confirm: "#82b085"
+  position: "#9a86c9"
 typography:
   display:
     fontFamily: "IBM Plex Sans, Segoe UI, sans-serif"
@@ -104,6 +105,10 @@ Palettens karaktär: en mörk ritningsyta där guld är det enda som ropar.
 - **Osäker** (`#e2703f`, `--color-anomaly`): rostorange, varningar och
   overifierad data.
 - **Bekräftat** (`#82b085`, `--color-confirm`): 👍-röstringen.
+- **Position** (`#9a86c9`, `--color-position`): kart-lägets "Visa mig"-
+  prick — en egen, avsiktligt icke-guld färg (se The One Gold Rule),
+  tillagd 2026-08-19 för kart-/byggnadsvy-växlingen (se
+  `docs/superpowers/specs/2026-08-18-map-view-toggle-design.md` §4).
 - **Skymning** (`#8a6a3a`, `--color-dusk`): övergångston i tid-slidern
   mellan natt och guld-dag, inget annat.
 
