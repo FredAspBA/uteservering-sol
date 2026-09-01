@@ -939,6 +939,24 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/514",
+      "properties": {
+        "name": "Edda",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "514",
+        "registerAddress": "Erik Dahlbergsgatan 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9975437,
+          55.598702
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/313",
       "properties": {
         "name": "El Sotano",
@@ -2361,6 +2379,24 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/816",
+      "properties": {
+        "name": "Lokal 12",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "816",
+        "registerAddress": "Jungmansgatan 12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9790473,
+          55.6096154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/1179",
       "properties": {
         "name": "Lokal 17",
@@ -3279,6 +3315,24 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/1268",
+      "properties": {
+        "name": "Restaurang Riket",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1268",
+        "registerAddress": "Erik Dahlbergsgatan   5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9975437,
+          55.598702
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/88",
       "properties": {
         "name": "Restaurang Scania",
@@ -4156,6 +4210,24 @@
         "coordinates": [
           13.0444197,
           55.615093
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1560",
+      "properties": {
+        "name": "Two Forks Hummus Shop",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1560",
+        "registerAddress": "Gibraltargatan   3 B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9921346,
+          55.6062381
         ]
       }
     },

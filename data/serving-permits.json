@@ -742,6 +742,24 @@
     "resolvesUnknownAlcohol": false
   },
   {
+    "registerId": "2747",
+    "name": "Barbaren",
+    "address": "Amiralsgatan 47",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—23:00",
+      "23:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": "node/14063428201",
+    "matchConfidence": "weak",
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "1599",
     "name": "Barrelia",
     "address": "Tåtplatsen 2",
@@ -2142,6 +2160,26 @@
     "servingTimes": [
       "11:00—22:00",
       "11:00—22:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
+    "registerId": "514",
+    "name": "Edda",
+    "address": "Erik Dahlbergsgatan 5",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—22:30",
+      "11:00—23:00",
+      "11:00—18:00",
+      "11:00—21:30"
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": null,
@@ -3678,6 +3716,23 @@
     "resolvesUnknownAlcohol": false
   },
   {
+    "registerId": "2764",
+    "name": "Intiman",
+    "address": "Östra Rönneholmsvägen 22",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "87",
     "name": "Jiang Nan",
     "address": "Kronborgsvägen  20",
@@ -4843,6 +4898,25 @@
     "resolvesUnknownAlcohol": true
   },
   {
+    "registerId": "816",
+    "name": "Lokal 12",
+    "address": "Jungmansgatan 12",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—01:00",
+      "11:00—23:00",
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "1179",
     "name": "Lokal 17",
     "address": "Hjälmarekajen  17",
@@ -5125,8 +5199,8 @@
     "aja": true,
     "alp": false,
     "servingTimes": [
-      "11:00—02:00",
-      "11:00—01:00"
+      "11:00—01:00",
+      "11:00—02:00"
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": "node/1179544295",
@@ -5221,7 +5295,7 @@
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": "node/625987396",
-    "matchConfidence": "weak",
+    "matchConfidence": "strong",
     "resolvesUnknownAlcohol": true
   },
   {
@@ -7137,9 +7211,9 @@
     "alp": true,
     "servingTimes": [
       "11:00—16:00",
-      "11:00—23:00",
+      "11:00—01:00",
       "11:00—16:00",
-      "11:00—23:00"
+      "11:00—01:00"
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": null,
@@ -7327,9 +7401,9 @@
       "11:00—01:00"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": "node/6341952008",
-    "matchConfidence": "strong",
-    "resolvesUnknownAlcohol": true
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
   },
   {
     "registerId": "367",
@@ -7495,23 +7569,6 @@
     "resolvesUnknownAlcohol": false
   },
   {
-    "registerId": "1344",
-    "name": "Romelebygdens Catering",
-    "address": "Truckvägen  30",
-    "sprit": true,
-    "vin": true,
-    "starkol": true,
-    "aja": true,
-    "alp": false,
-    "servingTimes": [
-      "12:00—24:00"
-    ],
-    "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
-  },
-  {
     "registerId": "1600",
     "name": "Romelebygdens Catering",
     "address": "Rävstadsvägen  61-10",
@@ -7522,6 +7579,23 @@
     "alp": false,
     "servingTimes": [
       "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
+    "registerId": "1344",
+    "name": "Romelebygdens Catering",
+    "address": "Truckvägen  30",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "12:00—24:00"
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": null,
@@ -8100,6 +8174,23 @@
     "registerId": "217",
     "name": "Siriusorden",
     "address": "Rundelsgatan  17",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
+    "registerId": "840",
+    "name": "Sky Hotel Malmö City",
+    "address": "Kaptensgatan 1",
     "sprit": true,
     "vin": true,
     "starkol": true,
@@ -9390,9 +9481,9 @@
       "11:00—23:00"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": "node/4173014124",
-    "matchConfidence": "strong",
-    "resolvesUnknownAlcohol": true
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
   },
   {
     "registerId": "522",

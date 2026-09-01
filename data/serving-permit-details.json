@@ -280,6 +280,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "2747",
+    "name": "Barbaren",
+    "address": "Amiralsgatan 47",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "1599",
     "name": "Barrelia",
     "address": "Tåtplatsen 2",
@@ -815,6 +822,13 @@
     "registerId": "1400",
     "name": "Dungs Thai Viet Restauang",
     "address": "Bangatan   2",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "514",
+    "name": "Edda",
+    "address": "Erik Dahlbergsgatan 5",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1400,6 +1414,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "2764",
+    "name": "Intiman",
+    "address": "Östra Rönneholmsvägen 22",
+    "uteservering": false,
+    "allmanheten": true
+  },
+  {
     "registerId": "87",
     "name": "Jiang Nan",
     "address": "Kronborgsvägen  20",
@@ -1830,6 +1851,13 @@
     "registerId": "1477",
     "name": "LoCali",
     "address": "Nordenskiöldsgatan  11 A",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "816",
+    "name": "Lokal 12",
+    "address": "Jungmansgatan 12",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2849,16 +2877,16 @@
     "allmanheten": true
   },
   {
-    "registerId": "1344",
+    "registerId": "1600",
     "name": "Romelebygdens Catering",
-    "address": "Truckvägen  30",
+    "address": "Rävstadsvägen  61-10",
     "uteservering": false,
     "allmanheten": false
   },
   {
-    "registerId": "1600",
+    "registerId": "1344",
     "name": "Romelebygdens Catering",
-    "address": "Rävstadsvägen  61-10",
+    "address": "Truckvägen  30",
     "uteservering": false,
     "allmanheten": false
   },
@@ -3085,6 +3113,13 @@
     "address": "Rundelsgatan  17",
     "uteservering": false,
     "allmanheten": false
+  },
+  {
+    "registerId": "840",
+    "name": "Sky Hotel Malmö City",
+    "address": "Kaptensgatan 1",
+    "uteservering": false,
+    "allmanheten": true
   },
   {
     "registerId": "733",
