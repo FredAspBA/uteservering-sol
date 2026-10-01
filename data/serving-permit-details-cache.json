@@ -523,6 +523,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "284": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "285": {
     "uteservering": true,
     "allmanheten": true
@@ -1103,6 +1107,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "886": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "903": {
     "uteservering": true,
     "allmanheten": true
@@ -1609,6 +1617,10 @@
   },
   "1332": {
     "uteservering": false,
+    "allmanheten": true
+  },
+  "1334": {
+    "uteservering": true,
     "allmanheten": true
   },
   "1343": {

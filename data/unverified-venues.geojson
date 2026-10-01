@@ -165,24 +165,6 @@
     },
     {
       "type": "Feature",
-      "id": "malmo-register/1480",
-      "properties": {
-        "name": "Bar Hugo",
-        "alcohol": "yes",
-        "verified": false,
-        "registerId": "1480",
-        "registerAddress": "Kungsgatan  60 B"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          13.0114944,
-          55.601788
-        ]
-      }
-    },
-    {
-      "type": "Feature",
       "id": "malmo-register/1063",
       "properties": {
         "name": "Bar Tgl italia",
@@ -759,6 +741,24 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/886",
+      "properties": {
+        "name": "Cin Cin Vinbar",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "886",
+        "registerAddress": "S:t Knuts väg   7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.014255,
+          55.596844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/1100",
       "properties": {
         "name": "Clarion Hotel & Congress Malmö Live",
@@ -790,6 +790,24 @@
         "coordinates": [
           13.0012562,
           55.6110284
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/284",
+      "properties": {
+        "name": "Couronne Public House",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "284",
+        "registerAddress": "Södra Förstadsgatan  36 A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0062017,
+          55.5864635
         ]
       }
     },
@@ -934,24 +952,6 @@
         "coordinates": [
           13.0106074,
           55.589842
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "malmo-register/514",
-      "properties": {
-        "name": "Edda",
-        "alcohol": "yes",
-        "verified": false,
-        "registerId": "514",
-        "registerAddress": "Erik Dahlbergsgatan 5"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          12.9975437,
-          55.598702
         ]
       }
     },
@@ -2667,6 +2667,24 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/1334",
+      "properties": {
+        "name": "Mist",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1334",
+        "registerAddress": "Mäster Johansgatan   4E"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9978289,
+          55.6062356
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/809",
       "properties": {
         "name": "Modomio, Restaurang",
@@ -3207,6 +3225,24 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/1596",
+      "properties": {
+        "name": "Qoffee",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1596",
+        "registerAddress": "Södergatan 22"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0012103,
+          55.6057448
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/1129",
       "properties": {
         "name": "Quality Hotel View",
@@ -3459,24 +3495,6 @@
     },
     {
       "type": "Feature",
-      "id": "malmo-register/2629",
-      "properties": {
-        "name": "Sabaidee Restaurang",
-        "alcohol": "yes",
-        "verified": false,
-        "registerId": "2629",
-        "registerAddress": "Östra Kristinelundsvägen   9"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          12.9812985,
-          55.5971159
-        ]
-      }
-    },
-    {
-      "type": "Feature",
       "id": "malmo-register/2611",
       "properties": {
         "name": "Sabaidee restaurang",
@@ -3490,6 +3508,24 @@
         "coordinates": [
           13.0057253,
           55.5888455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2629",
+      "properties": {
+        "name": "Sabaidee Restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2629",
+        "registerAddress": "Östra Kristinelundsvägen   9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9812985,
+          55.5971159
         ]
       }
     },

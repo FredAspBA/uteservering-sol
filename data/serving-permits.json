@@ -682,8 +682,8 @@
       "11:00—22:00"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
+    "matchedOsmId": "node/14203041601",
+    "matchConfidence": "strong",
     "resolvesUnknownAlcohol": false
   },
   {
@@ -757,25 +757,6 @@
     "hasAlcoholPermit": true,
     "matchedOsmId": "node/14063428201",
     "matchConfidence": "weak",
-    "resolvesUnknownAlcohol": false
-  },
-  {
-    "registerId": "1599",
-    "name": "Barrelia",
-    "address": "Tåtplatsen 2",
-    "sprit": true,
-    "vin": true,
-    "starkol": true,
-    "aja": true,
-    "alp": false,
-    "servingTimes": [
-      "11:00—01:00",
-      "11:00—23:00",
-      "11:00—01:00"
-    ],
-    "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
     "resolvesUnknownAlcohol": false
   },
   {
@@ -1803,6 +1784,24 @@
     "resolvesUnknownAlcohol": false
   },
   {
+    "registerId": "886",
+    "name": "Cin Cin Vinbar",
+    "address": "S:t Knuts väg   7",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—23:00",
+      "11:00—23:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "1100",
     "name": "Clarion Hotel & Congress Malmö Live",
     "address": "Dag Hammarskjölds torg 2",
@@ -1849,6 +1848,25 @@
     "servingTimes": [
       "11:00—01:00",
       "11:00—23:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
+    "registerId": "284",
+    "name": "Couronne Public House",
+    "address": "Södra Förstadsgatan  36 A",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": true,
+    "servingTimes": [
+      "11:00—01:00",
+      "11:00—23:00",
+      "11:00—01:00"
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": null,
@@ -2182,9 +2200,9 @@
       "11:00—21:30"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
+    "matchedOsmId": "node/9576546413",
+    "matchConfidence": "strong",
+    "resolvesUnknownAlcohol": true
   },
   {
     "registerId": "1428",
@@ -4307,9 +4325,9 @@
       "11:00—00:00"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
+    "matchedOsmId": "node/7283438894",
+    "matchConfidence": "strong",
+    "resolvesUnknownAlcohol": true
   },
   {
     "registerId": "2710",
@@ -5244,24 +5262,6 @@
     "resolvesUnknownAlcohol": false
   },
   {
-    "registerId": "1347",
-    "name": "Malmö Sportbar/T-Rex/The Hook",
-    "address": "Fredsgatan  12",
-    "sprit": true,
-    "vin": true,
-    "starkol": true,
-    "aja": true,
-    "alp": false,
-    "servingTimes": [
-      "11:00—01:00",
-      "11:00—21:00"
-    ],
-    "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
-  },
-  {
     "registerId": "400",
     "name": "Mamma Mia",
     "address": "Föreningsgatan 67",
@@ -5685,6 +5685,25 @@
     "matchedOsmId": "node/7283438893",
     "matchConfidence": "strong",
     "resolvesUnknownAlcohol": true
+  },
+  {
+    "registerId": "1334",
+    "name": "Mist",
+    "address": "Mäster Johansgatan   4E",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—01:00",
+      "11:00—23:00",
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
   },
   {
     "registerId": "1323",
@@ -6501,10 +6520,12 @@
     "sprit": true,
     "vin": true,
     "starkol": true,
-    "aja": true,
+    "aja": false,
     "alp": false,
     "servingTimes": [
-      "11:00—01:00"
+      "11:00—01:00",
+      "11:00—01:00",
+      "11:00—23:00"
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": "node/1343662487",
@@ -7072,9 +7093,9 @@
       "11:00—23:00"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": "node/2293728898",
-    "matchConfidence": "weak",
-    "resolvesUnknownAlcohol": true
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
   },
   {
     "registerId": "267",
@@ -7710,9 +7731,9 @@
     "resolvesUnknownAlcohol": true
   },
   {
-    "registerId": "2629",
-    "name": "Sabaidee Restaurang",
-    "address": "Östra Kristinelundsvägen   9",
+    "registerId": "2611",
+    "name": "Sabaidee restaurang",
+    "address": "Södra förstadsgatan 42",
     "sprit": true,
     "vin": true,
     "starkol": true,
@@ -7728,9 +7749,9 @@
     "resolvesUnknownAlcohol": false
   },
   {
-    "registerId": "2611",
-    "name": "Sabaidee restaurang",
-    "address": "Södra förstadsgatan 42",
+    "registerId": "2629",
+    "name": "Sabaidee Restaurang",
+    "address": "Östra Kristinelundsvägen   9",
     "sprit": true,
     "vin": true,
     "starkol": true,
@@ -9728,7 +9749,7 @@
     "sprit": true,
     "vin": true,
     "starkol": true,
-    "aja": false,
+    "aja": true,
     "alp": true,
     "servingTimes": [
       "11:00—01:00",

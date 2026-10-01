@@ -287,13 +287,6 @@
     "allmanheten": true
   },
   {
-    "registerId": "1599",
-    "name": "Barrelia",
-    "address": "Tåtplatsen 2",
-    "uteservering": false,
-    "allmanheten": true
-  },
-  {
     "registerId": "839",
     "name": "Basta och Lola Maria",
     "address": "Lilla Torg  17",
@@ -686,6 +679,13 @@
     "allmanheten": true
   },
   {
+    "registerId": "886",
+    "name": "Cin Cin Vinbar",
+    "address": "S:t Knuts väg   7",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
     "registerId": "1100",
     "name": "Clarion Hotel & Congress Malmö Live",
     "address": "Dag Hammarskjölds torg 2",
@@ -703,6 +703,13 @@
     "registerId": "9",
     "name": "Comfort Hotel Malmö",
     "address": "Carlsgatan 10 C",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "284",
+    "name": "Couronne Public House",
+    "address": "Södra Förstadsgatan  36 A",
     "uteservering": true,
     "allmanheten": true
   },
@@ -1988,13 +1995,6 @@
     "allmanheten": true
   },
   {
-    "registerId": "1347",
-    "name": "Malmö Sportbar/T-Rex/The Hook",
-    "address": "Fredsgatan  12",
-    "uteservering": false,
-    "allmanheten": true
-  },
-  {
     "registerId": "400",
     "name": "Mamma Mia",
     "address": "Föreningsgatan 67",
@@ -2152,6 +2152,13 @@
     "registerId": "1541",
     "name": "Miss Vietnam",
     "address": "Södra förstadsgatan 91",
+    "uteservering": true,
+    "allmanheten": true
+  },
+  {
+    "registerId": "1334",
+    "name": "Mist",
+    "address": "Mäster Johansgatan   4E",
     "uteservering": true,
     "allmanheten": true
   },
@@ -2933,16 +2940,16 @@
     "allmanheten": true
   },
   {
-    "registerId": "2629",
-    "name": "Sabaidee Restaurang",
-    "address": "Östra Kristinelundsvägen   9",
+    "registerId": "2611",
+    "name": "Sabaidee restaurang",
+    "address": "Södra förstadsgatan 42",
     "uteservering": true,
     "allmanheten": true
   },
   {
-    "registerId": "2611",
-    "name": "Sabaidee restaurang",
-    "address": "Södra förstadsgatan 42",
+    "registerId": "2629",
+    "name": "Sabaidee Restaurang",
+    "address": "Östra Kristinelundsvägen   9",
     "uteservering": true,
     "allmanheten": true
   },
