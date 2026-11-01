@@ -1275,6 +1275,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1043": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "1045": {
     "uteservering": true,
     "allmanheten": true
@@ -1539,6 +1543,10 @@
     "uteservering": true,
     "allmanheten": true
   },
+  "1282": {
+    "uteservering": false,
+    "allmanheten": true
+  },
   "1286": {
     "uteservering": false,
     "allmanheten": true
@@ -1772,6 +1780,10 @@
     "allmanheten": true
   },
   "1471": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "1474": {
     "uteservering": true,
     "allmanheten": true
   },
@@ -2231,7 +2243,19 @@
     "uteservering": false,
     "allmanheten": true
   },
+  "2758": {
+    "uteservering": true,
+    "allmanheten": true
+  },
   "2764": {
+    "uteservering": false,
+    "allmanheten": true
+  },
+  "2767": {
+    "uteservering": true,
+    "allmanheten": true
+  },
+  "2776": {
     "uteservering": false,
     "allmanheten": true
   }

@@ -669,6 +669,23 @@
     "resolvesUnknownAlcohol": true
   },
   {
+    "registerId": "1282",
+    "name": "Bar Anemon",
+    "address": "Claesgatan   8",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—23:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "1480",
     "name": "Bar Hugo",
     "address": "Kungsgatan  60 B",
@@ -1761,7 +1778,7 @@
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": "node/7283459644",
-    "matchConfidence": "weak",
+    "matchConfidence": "strong",
     "resolvesUnknownAlcohol": true
   },
   {
@@ -2665,6 +2682,25 @@
     "resolvesUnknownAlcohol": true
   },
   {
+    "registerId": "2767",
+    "name": "Folk & Bildning",
+    "address": "Södra Vallgatan 5",
+    "sprit": false,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—01:00",
+      "11:00—23:00",
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "913",
     "name": "Folk å Rock",
     "address": "Skomakaregatan 11",
@@ -3061,6 +3097,7 @@
     "alp": true,
     "servingTimes": [
       "11:00—01:00",
+      "11:00—02:00",
       "11:00—01:00",
       "11:00—01:00"
     ],
@@ -3541,6 +3578,26 @@
     "matchedOsmId": null,
     "matchConfidence": null,
     "resolvesUnknownAlcohol": false
+  },
+  {
+    "registerId": "2758",
+    "name": "Hummusson",
+    "address": "Södra Förstadsgatan 57",
+    "sprit": false,
+    "vin": true,
+    "starkol": true,
+    "aja": false,
+    "alp": false,
+    "servingTimes": [
+      "11:00—20:00",
+      "11:00—18:00",
+      "11:00—20:00",
+      "11:00—18:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": "node/12037142251",
+    "matchConfidence": "weak",
+    "resolvesUnknownAlcohol": true
   },
   {
     "registerId": "114",
@@ -4555,6 +4612,24 @@
     "resolvesUnknownAlcohol": false
   },
   {
+    "registerId": "1596",
+    "name": "La Petite",
+    "address": "Södergatan 22",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—23:00",
+      "11:00—23:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": "node/2293728898",
+    "matchConfidence": "weak",
+    "resolvesUnknownAlcohol": true
+  },
+  {
     "registerId": "451",
     "name": "La Roche Vin & Tapas",
     "address": "Larochegatan 5",
@@ -5351,9 +5426,28 @@
       "11:00—01:00"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": "node/6302279918",
-    "matchConfidence": "strong",
-    "resolvesUnknownAlcohol": true
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
+    "registerId": "1474",
+    "name": "Marvin of Malmö",
+    "address": "Erik Dahlbergsgatan   7",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": true,
+    "servingTimes": [
+      "11:00—00:00",
+      "11:00—00:00",
+      "11:00—23:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
   },
   {
     "registerId": "292",
@@ -5660,7 +5754,7 @@
     "aja": true,
     "alp": false,
     "servingTimes": [
-      "11:00—00:00",
+      "11:00—01:00",
       "11:00—00:00"
     ],
     "hasAlcoholPermit": true,
@@ -6329,23 +6423,6 @@
     "resolvesUnknownAlcohol": true
   },
   {
-    "registerId": "54",
-    "name": "Nöjesteatern",
-    "address": "Amiralsgatan 35",
-    "sprit": true,
-    "vin": true,
-    "starkol": true,
-    "aja": true,
-    "alp": false,
-    "servingTimes": [
-      "11:00—01:00"
-    ],
-    "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
-  },
-  {
     "registerId": "362",
     "name": "O´Learys Malmö Central",
     "address": "Skeppsbron   1B",
@@ -6470,9 +6547,9 @@
       "11:30—01:00"
     ],
     "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
+    "matchedOsmId": "node/3986086964",
+    "matchConfidence": "weak",
+    "resolvesUnknownAlcohol": true
   },
   {
     "registerId": "1430",
@@ -6824,24 +6901,6 @@
     "resolvesUnknownAlcohol": false
   },
   {
-    "registerId": "1023",
-    "name": "Pizza Hut",
-    "address": "Bronsåldersgatan 18",
-    "sprit": true,
-    "vin": true,
-    "starkol": true,
-    "aja": true,
-    "alp": false,
-    "servingTimes": [
-      "11:00—01:00",
-      "11:00—00:00"
-    ],
-    "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
-  },
-  {
     "registerId": "329",
     "name": "Pizza Special, Restaurang",
     "address": "Spånehusvägen 81",
@@ -7073,24 +7132,6 @@
     "alp": false,
     "servingTimes": [
       "11:00—01:00"
-    ],
-    "hasAlcoholPermit": true,
-    "matchedOsmId": null,
-    "matchConfidence": null,
-    "resolvesUnknownAlcohol": false
-  },
-  {
-    "registerId": "1596",
-    "name": "Qoffee",
-    "address": "Södergatan 22",
-    "sprit": true,
-    "vin": true,
-    "starkol": true,
-    "aja": true,
-    "alp": false,
-    "servingTimes": [
-      "11:00—23:00",
-      "11:00—23:00"
     ],
     "hasAlcoholPermit": true,
     "matchedOsmId": null,
@@ -7731,9 +7772,9 @@
     "resolvesUnknownAlcohol": true
   },
   {
-    "registerId": "2611",
-    "name": "Sabaidee restaurang",
-    "address": "Södra förstadsgatan 42",
+    "registerId": "2629",
+    "name": "Sabaidee Restaurang",
+    "address": "Östra Kristinelundsvägen   9",
     "sprit": true,
     "vin": true,
     "starkol": true,
@@ -7749,9 +7790,9 @@
     "resolvesUnknownAlcohol": false
   },
   {
-    "registerId": "2629",
-    "name": "Sabaidee Restaurang",
-    "address": "Östra Kristinelundsvägen   9",
+    "registerId": "2611",
+    "name": "Sabaidee restaurang",
+    "address": "Södra förstadsgatan 42",
     "sprit": true,
     "vin": true,
     "starkol": true,
@@ -8226,6 +8267,23 @@
     "resolvesUnknownAlcohol": false
   },
   {
+    "registerId": "2776",
+    "name": "Skymningen",
+    "address": "Västmanlandsgatan 3",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "733",
     "name": "Skånes dansteater",
     "address": "Östra Varvsgatan  13A",
@@ -8613,25 +8671,6 @@
     "matchedOsmId": "node/5239326041",
     "matchConfidence": "strong",
     "resolvesUnknownAlcohol": false
-  },
-  {
-    "registerId": "102",
-    "name": "Srinin",
-    "address": "Nils Forsbergs plats 2",
-    "sprit": true,
-    "vin": true,
-    "starkol": true,
-    "aja": false,
-    "alp": false,
-    "servingTimes": [
-      "11:00—01:00",
-      "11:00—01:00",
-      "11:00—23:00"
-    ],
-    "hasAlcoholPermit": true,
-    "matchedOsmId": "node/8078205799",
-    "matchConfidence": "weak",
-    "resolvesUnknownAlcohol": true
   },
   {
     "registerId": "845",
@@ -9323,6 +9362,25 @@
     "resolvesUnknownAlcohol": true
   },
   {
+    "registerId": "1043",
+    "name": "TKC Malmö",
+    "address": "Östergatan  12",
+    "sprit": false,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
+      "11:00—01:00",
+      "11:00—23:00",
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
     "registerId": "2617",
     "name": "Torstens smakar mera",
     "address": "Triangeln St Johannesgatan 3 V",
@@ -9334,6 +9392,23 @@
     "servingTimes": [
       "11:00—01:00",
       "11:00—23:00",
+      "11:00—01:00"
+    ],
+    "hasAlcoholPermit": true,
+    "matchedOsmId": null,
+    "matchConfidence": null,
+    "resolvesUnknownAlcohol": false
+  },
+  {
+    "registerId": "102",
+    "name": "Trattoria AMICI",
+    "address": "Nils Forsbergs plats 2",
+    "sprit": true,
+    "vin": true,
+    "starkol": true,
+    "aja": true,
+    "alp": false,
+    "servingTimes": [
       "11:00—01:00"
     ],
     "hasAlcoholPermit": true,

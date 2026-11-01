@@ -1227,6 +1227,24 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/2767",
+      "properties": {
+        "name": "Folk & Bildning",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2767",
+        "registerAddress": "Södra Vallgatan 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9999951,
+          55.6013421
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/913",
       "properties": {
         "name": "Folk å Rock",
@@ -2559,6 +2577,42 @@
     },
     {
       "type": "Feature",
+      "id": "malmo-register/1520",
+      "properties": {
+        "name": "MARVIN",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1520",
+        "registerAddress": "Storgatan  41 B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9991652,
+          55.5998443
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1474",
+      "properties": {
+        "name": "Marvin of Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1474",
+        "registerAddress": "Erik Dahlbergsgatan   7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.9969507,
+          55.598693
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "malmo-register/703",
       "properties": {
         "name": "Mat & Dryck på Hörnet",
@@ -2955,24 +3009,6 @@
     },
     {
       "type": "Feature",
-      "id": "malmo-register/1416",
-      "properties": {
-        "name": "Osteria Amore",
-        "alcohol": "yes",
-        "verified": false,
-        "registerId": "1416",
-        "registerAddress": "Södra vallgatan 5"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          12.9999951,
-          55.6013421
-        ]
-      }
-    },
-    {
-      "type": "Feature",
       "id": "malmo-register/1430",
       "properties": {
         "name": "Osteria Di´La",
@@ -3076,24 +3112,6 @@
         "coordinates": [
           13.0047302,
           55.5950151
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "malmo-register/1023",
-      "properties": {
-        "name": "Pizza Hut",
-        "alcohol": "yes",
-        "verified": false,
-        "registerId": "1023",
-        "registerAddress": "Bronsåldersgatan 18"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          13.0342782,
-          55.5506785
         ]
       }
     },
@@ -3220,24 +3238,6 @@
         "coordinates": [
           13.0933523,
           55.5397256
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "malmo-register/1596",
-      "properties": {
-        "name": "Qoffee",
-        "alcohol": "yes",
-        "verified": false,
-        "registerId": "1596",
-        "registerAddress": "Södergatan 22"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          13.0012103,
-          55.6057448
         ]
       }
     },
@@ -3495,24 +3495,6 @@
     },
     {
       "type": "Feature",
-      "id": "malmo-register/2611",
-      "properties": {
-        "name": "Sabaidee restaurang",
-        "alcohol": "yes",
-        "verified": false,
-        "registerId": "2611",
-        "registerAddress": "Södra förstadsgatan 42"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          13.0057253,
-          55.5888455
-        ]
-      }
-    },
-    {
-      "type": "Feature",
       "id": "malmo-register/2629",
       "properties": {
         "name": "Sabaidee Restaurang",
@@ -3526,6 +3508,24 @@
         "coordinates": [
           12.9812985,
           55.5971159
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/2611",
+      "properties": {
+        "name": "Sabaidee restaurang",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "2611",
+        "registerAddress": "Södra förstadsgatan 42"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0057253,
+          55.5888455
         ]
       }
     },
@@ -4156,6 +4156,24 @@
         "coordinates": [
           13.028136,
           55.6041439
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "malmo-register/1043",
+      "properties": {
+        "name": "TKC Malmö",
+        "alcohol": "yes",
+        "verified": false,
+        "registerId": "1043",
+        "registerAddress": "Östergatan  12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.0073805,
+          55.607673
         ]
       }
     },
